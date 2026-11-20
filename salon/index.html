@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mila Beauty Studio — салон краси на Позняках</title>
+<meta name="description" content="Стрижки, фарбування, манікюр, брови, вії та догляд за обличчям на Позняках. Онлайн-запис за хвилину.">
+<meta name="theme-color" content="#FAF7F2">
+<meta property="og:title" content="Mila Beauty Studio — салон краси на Позняках">
+<meta property="og:description" content="Волосся, нігті, брови, вії та догляд. Онлайн-запис за хвилину.">
+<meta property="og:image" content="img/hero.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236F5F52'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='34' fill='%23FAF7F2' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="img/hero-m.jpg" media="(max-width: 767px)">
+<link rel="preload" as="image" href="img/hero.jpg" media="(min-width: 768px)">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap nav__in">
+    <a href="#top" class="logo">Mila<span>beauty studio</span></a>
+    <nav class="nav__links" aria-label="Розділи">
+      <a href="#services">Послуги</a>
+      <a href="#gallery">Роботи</a>
+      <a href="#team">Майстри</a>
+      <a href="#reviews">Відгуки</a>
+      <a href="#contacts">Контакти</a>
+    </nav>
+    <a href="#booking" class="btn btn--sm nav__cta">Записатися</a>
+    <button class="nav__burger" aria-label="Меню" aria-expanded="false" id="burger"><span></span><span></span></button>
+  </div>
+  <div class="mnav" id="mnav">
+    <a href="#services">Послуги і ціни</a>
+    <a href="#gallery">Наші роботи</a>
+    <a href="#team">Майстри</a>
+    <a href="#reviews">Відгуки</a>
+    <a href="#contacts">Контакти</a>
+    <a href="#booking" class="btn">Записатися онлайн</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- 1. HERO -->
+  <section class="hero">
+    <div class="wrap hero__grid">
+      <div class="hero__media">
+        <picture class="hero__img">
+          <source media="(max-width: 767px)" srcset="img/hero-m.jpg">
+          <img src="img/hero.jpg" alt="Локони після укладки в Mila Beauty Studio" fetchpriority="high" width="1000" height="1250">
+        </picture>
+        <div class="hero__badge"><b>Вільні вікна сьогодні</b>Запис онлайн за 1 хвилину</div>
+      </div>
+      <div class="hero__text">
+        <p class="eyebrow">Салон краси · Позняки</p>
+        <h1>Доглянуті&nbsp;— <em>без поспіху</em></h1>
+        <p class="hero__lead">Волосся, нігті, брови, вії та догляд за обличчям в одному місці. Запис онлайн за хвилину, без дзвінків.</p>
+        <div class="hero__actions">
+          <a href="#booking" class="btn">Записатися</a>
+          <a href="#services" class="btn btn--ghost">Ціни</a>
+        </div>
+        <ul class="hero__facts">
+          <li><b>4.9</b><span>рейтинг у Google</span></li>
+          <li><b>7 років</b><span>на Позняках</span></li>
+          <li><b>5 хв</b><span>від метро</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. SERVICES -->
+  <section class="section" id="services">
+    <div class="wrap">
+      <div class="head reveal">
+        <p class="eyebrow">Послуги і ціни</p>
+        <h2>Усе для краси — <em>в одному місці</em></h2>
+        <p class="head__sub">Ціни вказані за базову послугу. Точну вартість майстер назве після консультації.</p>
+      </div>
+      <div class="tabs reveal" role="tablist" id="svcTabs"></div>
+      <div class="prices reveal" id="svcList"></div>
+    </div>
+  </section>
+
+  <!-- 3. GALLERY -->
+  <section class="section section--sand" id="gallery">
+    <div class="wrap">
+      <div class="head reveal">
+        <p class="eyebrow">Наші роботи</p>
+        <h2>Результат, який <em>хочеться показати</em></h2>
+      </div>
+    </div>
+    <div class="gallery reveal" id="gallery-list"></div>
+    <div class="wrap gallery__more reveal">
+      <a href="#" class="link" data-social="instagram">Більше робіт в Instagram →</a>
+    </div>
+  </section>
+
+  <!-- 4. TEAM -->
+  <section class="section" id="team">
+    <div class="wrap">
+      <div class="head reveal">
+        <p class="eyebrow">Майстри</p>
+        <h2>Люди, яким <em>довіряють</em></h2>
+      </div>
+      <div class="team" id="teamList"></div>
+    </div>
+  </section>
+
+  <!-- 5. REVIEWS -->
+  <section class="section section--sand" id="reviews">
+    <div class="wrap">
+      <div class="head reveal">
+        <p class="eyebrow">Відгуки</p>
+        <h2>Що кажуть <em>наші гості</em></h2>
+        <p class="head__sub"><span class="stars" aria-hidden="true">★★★★★</span> 4.9 · 186 відгуків у Google</p>
+      </div>
+    </div>
+    <div class="reviews" id="reviewList"></div>
+  </section>
+
+  <!-- BOOKING -->
+  <section class="section" id="booking">
+    <div class="wrap">
+      <div class="book reveal">
+        <div class="book__intro">
+          <p class="eyebrow">Онлайн-запис</p>
+          <h2>Оберіть зручний <em>час</em></h2>
+          <p class="head__sub">Адміністратор підтвердить запис у Telegram або дзвінком протягом 15 хвилин у робочий час.</p>
+          <ul class="perks">
+            <li>Нагадаємо про візит за день до запису</li>
+            <li>Перенести або скасувати можна безкоштовно за 3 години</li>
+            <li>Оплата на місці, готівкою або карткою</li>
+          </ul>
+        </div>
+
+        <form class="form" id="bookForm" novalidate>
+          <div class="step">
+            <span class="step__n">1</span>
+            <label class="step__t" for="fService">Послуга</label>
+            <select id="fService" name="service" required></select>
+          </div>
+
+          <div class="step">
+            <span class="step__n">2</span>
+            <span class="step__t">Майстер</span>
+            <div class="chips" id="fMaster" role="radiogroup" aria-label="Майстер"></div>
+          </div>
+
+          <div class="step">
+            <span class="step__n">3</span>
+            <span class="step__t">Дата</span>
+            <div class="chips chips--scroll" id="fDate" role="radiogroup" aria-label="Дата"></div>
+          </div>
+
+          <div class="step">
+            <span class="step__n">4</span>
+            <span class="step__t">Час</span>
+            <div class="chips chips--time" id="fTime" role="radiogroup" aria-label="Час"></div>
+          </div>
+
+          <div class="step">
+            <span class="step__n">5</span>
+            <span class="step__t">Ваші контакти</span>
+            <div class="fields">
+              <input type="text" id="fName" name="name" placeholder="Ім'я" autocomplete="given-name" required>
+              <input type="tel" id="fPhone" name="phone" placeholder="+380 __ ___ __ __" autocomplete="tel" inputmode="tel" required>
+              <textarea id="fNote" name="note" rows="2" placeholder="Коментар (необов'язково)"></textarea>
+            </div>
+          </div>
+
+          <div class="summary" id="summary" aria-live="polite"></div>
+          <p class="form__err" id="formErr" role="alert"></p>
+          <button type="submit" class="btn btn--block" id="submitBtn">Записатися</button>
+          <p class="form__note">Натискаючи кнопку, ви погоджуєтесь на обробку контактних даних для запису.</p>
+        </form>
+
+        <div class="done" id="done" hidden>
+          <div class="done__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="30" height="30"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Дякуємо, заявку отримано!</h3>
+          <p id="doneText"></p>
+          <button class="btn btn--ghost" id="again" type="button">Записатися ще раз</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. CONTACTS -->
+  <section class="section section--sand" id="contacts">
+    <div class="wrap contacts">
+      <div class="contacts__info reveal">
+        <p class="eyebrow">Контакти</p>
+        <h2>Чекаємо <em>на вас</em></h2>
+        <dl class="info">
+          <dt>Адреса</dt>
+          <dd>вул. Анни Ахматової, 30<br><span class="muted">м. Позняки, 5 хвилин пішки</span></dd>
+          <dt>Години роботи</dt>
+          <dd>Пн–Сб: 9:00–20:00<br>Нд: 10:00–18:00</dd>
+          <dt>Телефон</dt>
+          <dd><a href="#" data-social="phone" class="link" id="phoneText"></a></dd>
+        </dl>
+        <div class="socials" id="socials"></div>
+      </div>
+      <div class="map reveal" id="map">
+        <button class="map__load" type="button" id="mapLoad">
+          <span>Показати на карті</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer__in">
+    <a href="#top" class="logo logo--sm">Mila<span>beauty studio</span></a>
+    <p class="footer__concept">Концепт-проект. Назва салону, майстри та відгуки вигадані. Фото: Pexels.</p>
+    <p class="muted">© 2026</p>
+  </div>
+</footer>
+
+<a href="#booking" class="fab" id="fab">Записатися</a>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Перегляд фото">
+  <button class="lb__close" id="lbClose" aria-label="Закрити">×</button>
+  <button class="lb__nav lb__prev" id="lbPrev" aria-label="Попереднє">‹</button>
+  <figure class="lb__fig"><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure>
+  <button class="lb__nav lb__next" id="lbNext" aria-label="Наступне">›</button>
+</div>
+
+<script src="config.js"></script>
+<script src="data.js"></script>
+<script src="app.js" defer></script>
+</body>
+</html>
