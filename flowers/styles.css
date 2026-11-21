@@ -527,10 +527,18 @@ h1,h2,h3,.logo,.dl__big b,.ct__addr,.mnav,.sub-h{font-weight:400!important;lette
 .hero__title{line-height:1.02}
 .hero__badge span{font-family:var(--u);font-weight:800}
 .card__name,.ci__name,.fc__top b,.dcard b,.fcard h3{font-family:var(--u)!important;font-weight:700!important;letter-spacing:0}
-.how__list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,44px)}
-.how__list li{display:flex;flex-direction:column;gap:12px}
-.how__e{font-size:40px;line-height:1}
-.how__list h3{font-size:clamp(21px,2vw,26px);margin-bottom:8px;display:flex;align-items:baseline;gap:10px}
-.how__list h3 small{font:800 13px/1 var(--u);color:var(--pink);letter-spacing:.04em}
-.how__list p{margin:0;color:var(--ink2);font-size:15px;max-width:34ch}
-@media (max-width:900px){.how__list{grid-template-columns:1fr;gap:22px}.how__list li{flex-direction:row;gap:16px}.how__e{font-size:34px;margin-top:2px}}
+.how .head--c{display:block;text-align:center;max-width:640px;margin-left:auto;margin-right:auto}
+.how .head--c p{margin:12px auto 0}
+.how__list{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,4vw,64px)}
+.how__list li{display:flex;flex-direction:column;align-items:center;text-align:center}
+.how__ic2{width:104px;height:104px;border-radius:50%;background:#FCEEF2;color:var(--pink);display:grid;place-items:center;margin-bottom:26px}
+.how__ic2 svg{width:56px;height:56px}
+.how__list h3{font-size:clamp(22px,2vw,27px);margin-bottom:12px}
+.how__list p{margin:0;color:var(--ink2);font-size:16px;line-height:1.6;max-width:40ch}
+@media (max-width:900px){.how__list{grid-template-columns:1fr;gap:40px}.how__ic2{width:88px;height:88px;margin-bottom:18px}.how__ic2 svg{width:48px;height:48px}}
+.how .head--c{margin-bottom:clamp(36px,4vw,56px)}
+.how__ic2{width:112px;height:112px}
+.how__ic2 svg{width:64px;height:64px}
+.how{padding-bottom:clamp(24px,3vw,40px)}
+@media (max-width:900px){.how__ic2{width:92px;height:92px}.how__ic2 svg{width:52px;height:52px}}
+.how__ic2 svg{width:74px;height:74px}@media (max-width:900px){.how__ic2 svg{width:60px;height:60px}}
