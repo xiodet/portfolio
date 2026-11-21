@@ -9,8 +9,8 @@
   --accent: #6F5F52;      /* тауп */
   --accent-2: #8E7D6E;
   --white: #FFFDF9;
-  --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
-  --sans: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --serif: "Forum", Georgia, "Times New Roman", serif;
+  --sans: "Jost", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --r: 18px;
   --shadow: 0 10px 30px -12px rgba(60, 45, 30, .18);
   --nav-h: 64px;
@@ -416,3 +416,41 @@ textarea { resize: vertical; min-height: 56px; }
   .reviews .review { grid-column: span 2; }
   .reviews .review:nth-child(4), .reviews .review:nth-child(5) { grid-column: span 3; }
 }
+
+
+/* ---------- v3: шрифти як у референсі (Forum ≈ Marcellus SC, з кирилицею) + Jost ---------- */
+body { font-synthesis-weight: none; font-synthesis-style: none; }
+h1, h2, h3 { font-weight: 400; letter-spacing: 0; }
+h1, h2 { font-variant: small-caps; }
+h1 em, h2 em { font-style: normal; }
+.hero h1 { font-size: clamp(50px, 15vw, 90px); line-height: 1; }
+.hero h1 em { padding-left: .55em; }
+h2 { font-size: clamp(32px, 7.4vw, 52px); line-height: 1.1; }
+.logo { font-weight: 400; font-variant: small-caps; letter-spacing: .02em; }
+.pcard__price, .member h3, .done h3, .review__av, .price__val { font-weight: 400; }
+.pcard__price { letter-spacing: -.01em; }
+.eyebrow { font-weight: 500; }
+.hero__lead, .head__sub { font-weight: 300; }
+.hero__lead { font-size: 18px; color: #3F3731; }
+.review p { font-weight: 300; font-size: 16px; color: #3F3731; }
+
+/* Блок довіри */
+.trust { padding: 64px 0 56px; background: #F4F2EF; text-align: center; }
+.trust__title { font-size: clamp(30px, 7vw, 46px); color: #4A443E; margin-bottom: 36px; }
+.trust__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; }
+.trust__list li { padding: 18px 8px; }
+.trust__list li:nth-child(odd) { border-right: 1px solid #D8D4CF; }
+.trust__list li:nth-child(-n+2) { border-bottom: 1px solid #D8D4CF; }
+.trust__list b { display: block; font-family: var(--serif); font-weight: 400; font-variant: small-caps; font-size: clamp(40px, 11vw, 64px); line-height: 1; color: #4A443E; }
+.trust__list span { display: block; margin-top: 10px; font-size: 14px; color: #5E5750; }
+@media (min-width: 900px) {
+  .trust { padding: 96px 0 88px; }
+  .trust__title { margin-bottom: 48px; }
+  .trust__list { grid-template-columns: repeat(4, 1fr); }
+  .trust__list li { padding: 10px 16px 14px; border: 0 !important; }
+  .trust__list li + li { border-left: 1px solid #D8D4CF !important; }
+  .trust__list span { font-size: 16px; margin-top: 16px; }
+}
+.hero h1 em { margin-top: -.06em; }
+.pcard__name { font-weight: 500; }
+.pcard__price small { vertical-align: 10px; margin-right: 6px; }
