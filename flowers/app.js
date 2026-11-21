@@ -84,6 +84,20 @@
     $("#empty").hidden = list.length > 0;
   }
   renderGrid();
+  // Букети за бюджетом
+  function plural(n) { var a = n % 10, b = n % 100; return n + " " + (a === 1 && b !== 11 ? "букет" : a >= 2 && a <= 4 && (b < 10 || b >= 20) ? "букети" : "букетів"); }
+  $$("[data-cnt]").forEach(function (e) {
+    var p = PRICES.filter(function (x) { return x.id === e.dataset.cnt; })[0];
+    e.textContent = plural(D.bouquets.filter(function (b) { return b.price >= p.t[0] && b.price <= p.t[1]; }).length);
+  });
+  $$("[data-price]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      f.price = btn.dataset.price;
+      $$(".chip", fPrice).forEach(function (x) { x.setAttribute("aria-pressed", x.dataset.v === f.price); });
+      renderGrid();
+      $("#shop").scrollIntoView({ behavior: "smooth" });
+    });
+  });
   grid.addEventListener("click", function (e) {
     var a = e.target.closest("[data-add]"); if (!a) return;
     var b = D.bouquets.filter(function (x) { return x.id === +a.dataset.add; })[0];
@@ -93,126 +107,182 @@
   });
 
   /* ---------- Builder ---------- */
-  var B = { flower: "peony", color: "fuchsia", size: "M", wrap: "film", green: true };
-  var MIX = ["#E8177D", "#FF8A2B", "#FFD23F", "#FF8DBB", "#B69CFF", "#FFF6EA"];
   var byId = function (arr, id) { return arr.filter(function (x) { return x.id === id; })[0]; };
+  var PAL = D.palette;
+  var B = { items: {}, wrap: "film", green: true };
+  Object.keys(D.defaultMix).forEach(function (k) { B.items[k] = { n: D.defaultMix[k][0], c: D.defaultMix[k][1] }; });
+  D.flowers.forEach(function (f) { if (!B.items[f.id]) B.items[f.id] = { n: 0, c: f.colors[0] }; });
   function shade(hex, k) {
     var n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255;
     var m = function (v) { return Math.max(0, Math.min(255, Math.round(k < 0 ? v * (1 + k) : v + (255 - v) * k))); };
     return "#" + ((1 << 24) + (m(r) << 16) + (m(g) << 8) + m(b)).toString(16).slice(1);
   }
+  var f1 = function (v) { return Math.round(v * 10) / 10; };
   function flowerSVG(shape, x, y, r, c, anim, delay) {
-    var d = shade(c, -.22), dd = shade(c, -.4), l = shade(c, .35), g = '<g class="' + (anim ? "fl" : "") + '"' + (anim ? ' style="animation-delay:' + delay + 'ms"' : "") + ">";
+    var d = shade(c, -.22), dd = shade(c, -.4), l = shade(c, .35), i, a;
+    var g = '<g class="' + (anim ? "fl" : "") + '"' + (anim ? ' style="animation-delay:' + delay + 'ms"' : "") + ">";
+    var C = function (cx, cy, rr, fill, extra) { return '<circle cx="' + f1(cx) + '" cy="' + f1(cy) + '" r="' + f1(rr) + '" fill="' + fill + '"' + (extra || "") + "/>"; };
     if (shape === "rose") {
-      g += '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" fill="' + c + '"/>' +
-        '<path d="M' + (x - r * .72) + ' ' + (y + r * .1) + 'a' + r * .72 + ' ' + r * .72 + ' 0 0 1 ' + r * 1.44 + ' 0" fill="none" stroke="' + d + '" stroke-width="' + r * .12 + '" stroke-linecap="round"/>' +
-        '<circle cx="' + x + '" cy="' + (y + r * .05) + '" r="' + r * .45 + '" fill="' + d + '"/>' +
-        '<path d="M' + (x - r * .28) + ' ' + y + 'a' + r * .28 + ' ' + r * .28 + ' 0 1 1 ' + r * .4 + ' ' + r * .2 + '" fill="none" stroke="' + dd + '" stroke-width="' + r * .1 + '" stroke-linecap="round"/>' +
-        '<circle cx="' + (x - r * .35) + '" cy="' + (y - r * .45) + '" r="' + r * .18 + '" fill="' + l + '" opacity=".6"/>';
+      g += C(x, y, r, c) +
+        '<path d="M' + f1(x - r * .72) + " " + f1(y + r * .1) + "a" + f1(r * .72) + " " + f1(r * .72) + " 0 0 1 " + f1(r * 1.44) + ' 0" fill="none" stroke="' + d + '" stroke-width="' + f1(r * .12) + '" stroke-linecap="round"/>' +
+        C(x, y + r * .05, r * .45, d) +
+        '<path d="M' + f1(x - r * .28) + " " + f1(y) + "a" + f1(r * .28) + " " + f1(r * .28) + " 0 1 1 " + f1(r * .4) + " " + f1(r * .2) + '" fill="none" stroke="' + dd + '" stroke-width="' + f1(r * .1) + '" stroke-linecap="round"/>' +
+        C(x - r * .35, y - r * .45, r * .18, l, ' opacity=".6"');
+    } else if (shape === "peony") {
+      for (i = 0; i < 7; i++) { a = i / 7 * Math.PI * 2; g += C(x + Math.cos(a) * r * .55, y + Math.sin(a) * r * .5, r * .55, i % 2 ? c : l); }
+      for (i = 0; i < 5; i++) { a = i / 5 * Math.PI * 2 + .4; g += C(x + Math.cos(a) * r * .28, y + Math.sin(a) * r * .25, r * .38, d); }
+      g += C(x, y, r * .25, dd);
     } else if (shape === "tulip") {
-      g += '<path d="M' + (x - r * .8) + ' ' + (y - r * .5) + 'Q' + (x - r * .9) + ' ' + (y + r) + ' ' + x + ' ' + (y + r) + 'Q' + (x + r * .9) + ' ' + (y + r) + ' ' + (x + r * .8) + ' ' + (y - r * .5) +
-        'L' + (x + r * .4) + ' ' + (y - r * .1) + 'L' + x + ' ' + (y - r * .8) + 'L' + (x - r * .4) + ' ' + (y - r * .1) + 'Z" fill="' + c + '"/>' +
-        '<path d="M' + x + ' ' + (y - r * .8) + 'Q' + (x - r * .5) + ' ' + (y + r * .2) + ' ' + x + ' ' + (y + r) + 'Q' + (x + r * .5) + ' ' + (y + r * .2) + ' ' + x + ' ' + (y - r * .8) + 'Z" fill="' + d + '"/>';
-    } else if (shape === "cup") {
-      for (var i = 0; i < 5; i++) { var a = i * 72 * Math.PI / 180 - Math.PI / 2; g += '<circle cx="' + (x + Math.cos(a) * r * .5) + '" cy="' + (y + Math.sin(a) * r * .5) + '" r="' + r * .55 + '" fill="' + (i % 2 ? c : l) + '" stroke="' + d + '" stroke-width="1"/>'; }
-      g += '<circle cx="' + x + '" cy="' + y + '" r="' + r * .28 + '" fill="' + dd + '"/>';
+      g += '<path d="M' + f1(x - r * .8) + " " + f1(y - r * .5) + "Q" + f1(x - r * .9) + " " + f1(y + r) + " " + f1(x) + " " + f1(y + r) + "Q" + f1(x + r * .9) + " " + f1(y + r) + " " + f1(x + r * .8) + " " + f1(y - r * .5) +
+        "L" + f1(x + r * .4) + " " + f1(y - r * .1) + "L" + f1(x) + " " + f1(y - r * .8) + "L" + f1(x - r * .4) + " " + f1(y - r * .1) + 'Z" fill="' + c + '"/>' +
+        '<path d="M' + f1(x) + " " + f1(y - r * .8) + "Q" + f1(x - r * .5) + " " + f1(y + r * .2) + " " + f1(x) + " " + f1(y + r) + "Q" + f1(x + r * .5) + " " + f1(y + r * .2) + " " + f1(x) + " " + f1(y - r * .8) + 'Z" fill="' + d + '"/>';
+    } else if (shape === "hydr") {
+      g += C(x, y, r, d);
+      for (i = 0; i < 16; i++) {
+        var rr = r * Math.sqrt((i + .5) / 16) * .82; a = i * 2.4;
+        var px = x + Math.cos(a) * rr, py = y + Math.sin(a) * rr, s = r * .2;
+        g += C(px - s * .5, py, s * .6, i % 3 ? c : l) + C(px + s * .5, py, s * .6, i % 3 ? c : l) + C(px, py - s * .5, s * .6, c) + C(px, py + s * .5, s * .6, c) + C(px, py, s * .25, dd);
+      }
+    } else if (shape === "carn") {
+      g += C(x, y, r, c, ' stroke="' + l + '" stroke-width="' + f1(r * .25) + '" stroke-dasharray="' + f1(r * .18) + ' ' + f1(r * .12) + '"') +
+        C(x, y, r * .62, d, ' stroke="' + c + '" stroke-width="' + f1(r * .18) + '" stroke-dasharray="' + f1(r * .14) + ' ' + f1(r * .1) + '"') + C(x, y, r * .25, dd);
     } else {
-      for (var j = 0; j < 10; j++) { var t = j * 36; g += '<ellipse cx="' + x + '" cy="' + (y - r * .55) + '" rx="' + r * .2 + '" ry="' + r * .48 + '" fill="' + (j % 2 ? c : d) + '" transform="rotate(' + t + ' ' + x + ' ' + y + ')"/>'; }
-      g += '<circle cx="' + x + '" cy="' + y + '" r="' + r * .32 + '" fill="#E7B10A"/><circle cx="' + x + '" cy="' + y + '" r="' + r * .16 + '" fill="#9C6B00"/>';
+      var sun = shape === "sun", pc = sun ? "#FFC21A" : c, n = sun ? 14 : 12;
+      for (i = 0; i < n; i++) g += '<ellipse cx="' + f1(x) + '" cy="' + f1(y - r * .58) + '" rx="' + f1(r * (sun ? .2 : .16)) + '" ry="' + f1(r * .45) + '" fill="' + (i % 2 ? pc : shade(pc, -.08)) + '" transform="rotate(' + (i * 360 / n) + " " + f1(x) + " " + f1(y) + ')"/>';
+      g += sun ? C(x, y, r * .45, "#6B3E12") + C(x, y, r * .3, "#4A2A0A") : C(x, y, r * .3, "#F2B705");
     }
     return g + "</g>";
   }
+  function heads(cfg) {
+    var list = [];
+    cfg.items.forEach(function (it) {
+      var f = byId(D.flowers, it.id);
+      for (var k = 0; k < it.n; k++) list.push({ shape: f.shape, c: PAL[it.c].hex, w: f.shape === "hydr" ? 2.6 : f.shape === "peony" ? 1.5 : 1, o: (k + .5) / it.n });
+    });
+    var total = list.reduce(function (s, h) { return s + h.w; }, 0);
+    if (total > 40) { // показуємо пропорційну вибірку
+      var k = 40 / total; list = list.filter(function (h, i) { return (Math.floor((i + 1) * k) - Math.floor(i * k)) > 0 || h.shape === "hydr"; });
+    }
+    list.sort(function (a, b) { return a.o - b.o; });
+    return list;
+  }
   function bouquetSVG(cfg, anim) {
-    var fl = byId(D.flowers, cfg.flower), size = byId(D.sizes, cfg.size), wr = byId(D.wraps, cfg.wrap), col = byId(D.flowerColors, cfg.color);
-    var n = Math.min(size.stems, 37), R = { 9: 25, 15: 21, 25: 17, 51: 13.5 }[size.stems] * (fl.shape === "tulip" ? 1.1 : 1);
-    var cx = 200, cy = 170, rx = 96 + (size.stems > 15 ? 18 : 0) + (size.stems > 25 ? 10 : 0), ry = rx * .72;
-    var s = "";
-    // stems + wrap back
-    var boxy = wr.id === "box", bask = wr.id === "basket";
+    var wr = byId(D.wraps, cfg.wrap), hs = heads(cfg);
+    var W = hs.reduce(function (s, h) { return s + h.w; }, 0) || 1;
+    var cx = 200, cy = 170, rx = Math.min(140, 70 + Math.sqrt(W) * 12), ry = rx * .72;
+    var R = Math.max(12, Math.min(28, rx * 1.05 / Math.sqrt(W)));
+    var s = "", boxy = wr.id === "box", bask = wr.id === "basket";
     if (!boxy && !bask) {
       s += '<g stroke="#2E8B57" stroke-width="5" stroke-linecap="round">';
       for (var k = -3; k <= 3; k++) s += '<line x1="' + (cx + k * 12) + '" y1="250" x2="' + (cx + k * 3) + '" y2="425"/>';
       s += "</g>";
-      s += '<path d="M' + (cx - rx - 18) + ' ' + (cy + 20) + 'L' + (cx - 26) + ' 400L' + (cx + 26) + ' 400L' + (cx + rx + 18) + ' ' + (cy + 20) + 'L' + (cx + 40) + ' ' + (cy + 60) + 'Z" fill="' + shade(wr.color, -.15) + '"/>';
+      s += '<path d="M' + (cx - rx - 18) + " " + (cy + 20) + "L" + (cx - 26) + " 400L" + (cx + 26) + " 400L" + (cx + rx + 18) + " " + (cy + 20) + "L" + (cx + 40) + " " + (cy + 60) + 'Z" fill="' + shade(wr.color, -.15) + '"/>';
     }
-    if (bask) s += '<path d="M' + (cx - rx + 10) + ' 260 C ' + (cx - rx + 10) + ' 40, ' + (cx + rx - 10) + ' 40, ' + (cx + rx - 10) + ' 260" fill="none" stroke="' + shade(wr.color, -.2) + '" stroke-width="12"/>';
-    // greenery
-    if (cfg.green) {
+    if (bask) s += '<path d="M' + (cx - rx + 10) + " 260 C " + (cx - rx + 10) + " 40, " + (cx + rx - 10) + " 40, " + (cx + rx - 10) + ' 260" fill="none" stroke="' + shade(wr.color, -.2) + '" stroke-width="12"/>';
+    if (cfg.green && hs.length) {
       for (var g = 0; g < 14; g++) {
-        var ga = (g / 14) * Math.PI * 2, gx = cx + Math.cos(ga) * (rx + 4), gy = cy + Math.sin(ga) * (ry + 6);
-        s += '<ellipse cx="' + gx.toFixed(1) + '" cy="' + gy.toFixed(1) + '" rx="10" ry="26" fill="' + (g % 2 ? "#3FAE6B" : "#7FC8A0") + '" transform="rotate(' + (ga * 180 / Math.PI + 90).toFixed(0) + ' ' + gx.toFixed(1) + ' ' + gy.toFixed(1) + ')"/>';
+        var ga = (g / 14) * Math.PI * 2, gx = f1(cx + Math.cos(ga) * (rx + 4)), gy = f1(cy + Math.sin(ga) * (ry + 6));
+        s += '<ellipse cx="' + gx + '" cy="' + gy + '" rx="10" ry="26" fill="' + (g % 2 ? "#3FAE6B" : "#7FC8A0") + '" transform="rotate(' + Math.round(ga * 180 / Math.PI + 90) + " " + gx + " " + gy + ')"/>';
       }
     }
-    // heads
-    var pts = [];
-    for (var i = 0; i < n; i++) {
-      var r = Math.sqrt((i + .5) / n), a = i * 2.39996;
-      pts.push({ x: cx + Math.cos(a) * r * rx, y: cy + Math.sin(a) * r * ry, i: i });
-    }
-    pts.sort(function (a, b) { return a.y - b.y; });
-    pts.forEach(function (p, idx) {
-      var c = col.hex === "mix" ? MIX[p.i % MIX.length] : col.hex;
-      s += flowerSVG(fl.shape, +p.x.toFixed(1), +p.y.toFixed(1), R, c, anim, idx * 18);
+    // розкладка голівок: соняшникова спіраль з урахуванням ваги (гортензія займає більше місця)
+    var acc = 0, pts = hs.map(function (h, i) {
+      var r = Math.sqrt((acc + h.w / 2) / W); acc += h.w; var a = i * 2.39996;
+      return { x: cx + Math.cos(a) * r * rx, y: cy + Math.sin(a) * r * ry, h: h };
     });
-    // wrap front
+    pts.sort(function (a, b) { return (a.h.w > 1.5 ? -1 : 0) - (b.h.w > 1.5 ? -1 : 0) || a.y - b.y; });
+    pts.forEach(function (p, idx) {
+      var rr = R * (p.h.w > 2 ? 1.75 : p.h.w > 1 ? 1.25 : 1);
+      s += flowerSVG(p.h.shape, p.x, p.y, rr, p.h.c, anim, idx * 18);
+    });
+    if (!hs.length) s += '<text x="200" y="150" text-anchor="middle" font-family="Manrope,sans-serif" font-weight="700" font-size="16" fill="rgba(255,255,255,.55)">Додайте квіти праворуч</text>';
     if (boxy) {
       s += '<rect x="' + (cx - rx - 4) + '" y="' + (cy + 40) + '" width="' + (2 * rx + 8) + '" height="' + (360 - cy) + '" rx="16" fill="' + wr.color + '"/>' +
         '<ellipse cx="' + cx + '" cy="' + (cy + 40) + '" rx="' + (rx + 4) + '" ry="14" fill="#33243F"/>' +
-        '<text x="' + cx + '" y="' + (cy + 140) + '" text-anchor="middle" font-family="Unbounded,sans-serif" font-weight="800" font-size="20" fill="#FF2E88">bloom lab</text>';
+        '<text x="' + cx + '" y="' + (cy + 140) + '" text-anchor="middle" font-family="Playfair Display,serif" font-style="italic" font-weight="900" font-size="22" fill="#FF2E88">bloom lab</text>';
     } else if (bask) {
-      s += '<path d="M' + (cx - rx - 10) + ' ' + (cy + 50) + 'L' + (cx + rx + 10) + ' ' + (cy + 50) + 'L' + (cx + rx - 20) + ' 380L' + (cx - rx + 20) + ' 380Z" fill="' + wr.color + '"/>';
+      s += '<path d="M' + (cx - rx - 10) + " " + (cy + 50) + "L" + (cx + rx + 10) + " " + (cy + 50) + "L" + (cx + rx - 20) + " 380L" + (cx - rx + 20) + ' 380Z" fill="' + wr.color + '"/>';
       for (var w = 0; w < 6; w++) s += '<line x1="' + (cx - rx) + '" y1="' + (cy + 70 + w * 30) + '" x2="' + (cx + rx) + '" y2="' + (cy + 70 + w * 30) + '" stroke="' + shade(wr.color, -.25) + '" stroke-width="3" stroke-dasharray="14 8"/>';
     } else {
       var op = wr.id === "film" ? ' fill-opacity=".92"' : "";
-      s += '<path d="M' + (cx - rx - 26) + ' ' + (cy + 36) + 'Q' + (cx - 40) + ' ' + (cy + 70) + ' ' + cx + ' ' + (cy + 64) + 'Q' + (cx + 40) + ' ' + (cy + 70) + ' ' + (cx + rx + 26) + ' ' + (cy + 36) + 'L' + (cx + 30) + ' 380L' + (cx - 30) + ' 380Z" fill="' + wr.color + '"' + op + '/>' +
-        '<path d="M' + (cx - rx - 26) + ' ' + (cy + 36) + 'L' + (cx - 30) + ' 380" stroke="' + shade(wr.color, -.2) + '" stroke-width="3" fill="none"/>' +
+      s += '<path d="M' + (cx - rx - 26) + " " + (cy + 36) + "Q" + (cx - 40) + " " + (cy + 70) + " " + cx + " " + (cy + 64) + "Q" + (cx + 40) + " " + (cy + 70) + " " + (cx + rx + 26) + " " + (cy + 36) + "L" + (cx + 30) + " 380L" + (cx - 30) + ' 380Z" fill="' + wr.color + '"' + op + "/>" +
+        '<path d="M' + (cx - rx - 26) + " " + (cy + 36) + "L" + (cx - 30) + ' 380" stroke="' + shade(wr.color, -.2) + '" stroke-width="3" fill="none"/>' +
         '<path d="M' + (cx - 46) + ' 300 q46 18 92 0 l-8 22 q-38 12 -76 0z" fill="#FF2E88"/>' +
         '<circle cx="' + cx + '" cy="312" r="9" fill="#E0186F"/>';
     }
     return s;
   }
-  function bPrice(cfg) {
-    var fl = byId(D.flowers, cfg.flower), size = byId(D.sizes, cfg.size), wr = byId(D.wraps, cfg.wrap);
-    return { flowers: fl.price * size.stems, green: cfg.green ? D.greenPrice : 0, wrap: wr.price, work: D.floristWork,
-      total: fl.price * size.stems + (cfg.green ? D.greenPrice : 0) + wr.price + D.floristWork };
+  function snapshot() {
+    return { items: D.flowers.filter(function (f) { return B.items[f.id].n > 0; }).map(function (f) { return { id: f.id, n: B.items[f.id].n, c: B.items[f.id].c }; }), wrap: B.wrap, green: B.green };
   }
-  var bFlower = $("#bFlower"), bColor = $("#bColor"), bSize = $("#bSize"), bWrap = $("#bWrap"), svg = $("#bldSvg");
-  D.flowers.forEach(function (x) { var b = el("button", "opt", "<b>" + esc(x.name) + "</b><span>" + x.price + " ₴ / шт</span>"); b.type = "button"; b.dataset.v = x.id; bFlower.appendChild(b); });
-  D.flowerColors.forEach(function (x) {
-    var b = el("button", "sw", '<span class="sw__t">' + esc(x.name) + "</span>"); b.type = "button"; b.dataset.v = x.id; b.setAttribute("aria-label", x.name);
-    b.style.background = x.hex === "mix" ? "conic-gradient(" + MIX.join(",") + "," + MIX[0] + ")" : x.hex; bColor.appendChild(b);
+  function stems(cfg) { return cfg.items.reduce(function (s, i) { return s + i.n; }, 0); }
+  function bPrice(cfg) {
+    var fl = cfg.items.reduce(function (s, i) { return s + byId(D.flowers, i.id).price * i.n; }, 0), wr = byId(D.wraps, cfg.wrap);
+    var green = cfg.green ? D.greenPrice : 0;
+    return { flowers: fl, green: green, wrap: wr.price, work: D.floristWork, total: fl ? fl + green + wr.price + D.floristWork : 0 };
+  }
+  function cfgDesc(cfg) {
+    return cfg.items.map(function (i) { return byId(D.flowers, i.id).name + " ×" + i.n + (byId(D.flowers, i.id).colors.length > 1 ? " (" + PAL[i.c].name.toLowerCase() + ")" : ""); }).join(", ") +
+      " · " + byId(D.wraps, cfg.wrap).name.toLowerCase() + (cfg.green ? " · зелень" : "");
+  }
+
+  var bFlowers = $("#bFlowers"), bWrap = $("#bWrap"), svg = $("#bldSvg");
+  D.flowers.forEach(function (f) {
+    var card = el("div", "fc");
+    card.dataset.id = f.id;
+    card.innerHTML = '<div class="fc__img"><img src="' + f.img + '" alt="' + esc(f.name) + '" loading="lazy"><span class="fc__n"></span></div>' +
+      '<div class="fc__body"><div class="fc__top"><b>' + esc(f.name) + '</b><span>' + f.price + " ₴</span></div>" +
+      '<small>' + esc(f.note) + "</small>" +
+      (f.colors.length > 1 ? '<div class="fc__cols">' + f.colors.map(function (c) { return '<button type="button" class="dot" data-c="' + c + '" style="background:' + PAL[c].hex + '" aria-label="' + PAL[c].name + '"></button>'; }).join("") + "</div>" : '<div class="fc__cols fc__cols--one">' + PAL[f.colors[0]].name + "</div>") +
+      '<div class="fc__qty"><button type="button" data-d="-1" aria-label="Менше">−</button><span></span><button type="button" data-d="1" aria-label="Більше">+</button></div></div>';
+    bFlowers.appendChild(card);
   });
-  D.sizes.forEach(function (x) { var b = el("button", "size", "<b>" + x.name + "</b><span>" + x.stems + " шт</span>"); b.type = "button"; b.dataset.v = x.id; bSize.appendChild(b); });
+  bFlowers.addEventListener("click", function (e) {
+    var card = e.target.closest(".fc"); if (!card) return;
+    var it = B.items[card.dataset.id], dot = e.target.closest("[data-c]"), btn = e.target.closest("[data-d]");
+    var total = stems(snapshot());
+    if (dot) { it.c = dot.dataset.c; if (!it.n) it.n = 1; }
+    else if (btn) { var dlt = +btn.dataset.d; if (dlt > 0 && total >= D.maxStems) { toast("Максимум " + D.maxStems + " квітка в одному букеті"); return; } it.n = Math.max(0, it.n + dlt); }
+    else if (e.target.closest(".fc__img") && total < D.maxStems) it.n++;
+    else return;
+    renderBuilder(true);
+  });
   D.wraps.forEach(function (x) { var b = el("button", "opt", "<b>" + esc(x.name) + "</b><span>" + (x.price ? "+" + x.price + " ₴" : "у вартості") + "</span>"); b.type = "button"; b.dataset.v = x.id; bWrap.appendChild(b); });
-  [[bFlower, "flower"], [bColor, "color"], [bSize, "size"], [bWrap, "wrap"]].forEach(function (p) {
-    p[0].addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; B[p[1]] = b.dataset.v; renderBuilder(true); });
-  });
+  bWrap.addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; B.wrap = b.dataset.v; renderBuilder(true); });
   $("#bGreen").addEventListener("change", function (e) { B.green = e.target.checked; renderBuilder(true); });
+  $("#bClear").addEventListener("click", function () { D.flowers.forEach(function (f) { B.items[f.id].n = 0; }); renderBuilder(true); });
   var lastTotal = 0;
   function renderBuilder(anim) {
-    [[bFlower, "flower"], [bColor, "color"], [bSize, "size"], [bWrap, "wrap"]].forEach(function (p) {
-      $$("button", p[0]).forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.v === B[p[1]]); });
+    $$(".fc", bFlowers).forEach(function (card) {
+      var it = B.items[card.dataset.id];
+      card.classList.toggle("is-on", it.n > 0);
+      $(".fc__n", card).textContent = it.n ? "×" + it.n : "";
+      $(".fc__qty span", card).textContent = it.n;
+      $$(".dot", card).forEach(function (d) { d.setAttribute("aria-pressed", d.dataset.c === it.c); });
     });
-    svg.innerHTML = bouquetSVG(B, anim);
-    var p = bPrice(B), fl = byId(D.flowers, B.flower), size = byId(D.sizes, B.size), wr = byId(D.wraps, B.wrap);
-    $("#bldCalc").innerHTML =
-      "<li><span>" + esc(fl.name) + " × " + size.stems + "</span><span>" + money(p.flowers) + "</span></li>" +
-      (B.green ? "<li><span>Зелень</span><span>" + money(p.green) + "</span></li>" : "") +
-      "<li><span>" + esc(wr.name) + "</span><span>" + (p.wrap ? money(p.wrap) : "0 ₴") + "</span></li>" +
-      "<li><span>Робота флориста</span><span>" + money(p.work) + "</span></li>" +
+    $$("button", bWrap).forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.v === B.wrap); });
+    var cfg = snapshot(), p = bPrice(cfg), n = stems(cfg);
+    svg.innerHTML = bouquetSVG(cfg, anim);
+    $("#bCount").textContent = n ? n + " шт" : "";
+    $("#bClear").hidden = !n;
+    $("#bldCalc").innerHTML = cfg.items.map(function (i) { var f = byId(D.flowers, i.id); return "<li><span>" + esc(f.name) + " × " + i.n + "</span><span>" + money(f.price * i.n) + "</span></li>"; }).join("") +
+      (n ? (B.green ? "<li><span>Зелень</span><span>" + money(p.green) + "</span></li>" : "") +
+      "<li><span>" + esc(byId(D.wraps, B.wrap).name) + "</span><span>" + money(p.wrap) + "</span></li>" +
+      "<li><span>Робота флориста</span><span>" + money(p.work) + "</span></li>" : '<li class="muted-li"><span>Оберіть хоча б одну квітку</span><span></span></li>') +
       "<li><span>Разом</span><span>" + money(p.total) + "</span></li>";
     var t = $("#bldTotal"); t.textContent = money(p.total);
     if (p.total !== lastTotal && lastTotal) { t.parentNode.classList.remove("pop"); void t.offsetWidth; t.parentNode.classList.add("pop"); }
     lastTotal = p.total;
+    $("#bldAdd").disabled = !n; $("#barAdd").disabled = !n;
+    $("#barSvg").innerHTML = bouquetSVG(cfg, false);
+    $("#barCount").textContent = n ? "Ваш букет · " + n + " шт" : "Додайте квіти";
+    $("#barTotal").textContent = money(p.total);
   }
   renderBuilder(false);
-  function cfgDesc(cfg) {
-    var fl = byId(D.flowers, cfg.flower), size = byId(D.sizes, cfg.size), wr = byId(D.wraps, cfg.wrap), col = byId(D.flowerColors, cfg.color);
-    return fl.name + ", " + col.name.toLowerCase() + ", " + size.stems + " шт · " + wr.name.toLowerCase() + (cfg.green ? " · зелень" : "");
-  }
+  $("#barAdd").addEventListener("click", function () { $("#bldAdd").click(); });
   $("#bldAdd").addEventListener("click", function () {
-    var cfg = JSON.parse(JSON.stringify(B));
-    addToCart({ key: "c" + [cfg.flower, cfg.color, cfg.size, cfg.wrap, cfg.green ? 1 : 0].join("-"), name: "Ваш букет", desc: cfgDesc(cfg), price: bPrice(cfg).total, cfg: cfg });
+    var cfg = snapshot(); if (!stems(cfg)) return;
+    addToCart({ key: "c" + JSON.stringify(cfg), name: "Ваш букет", desc: cfgDesc(cfg), price: bPrice(cfg).total, cfg: cfg });
   });
 
   /* ---------- Delivery ---------- */
@@ -252,12 +322,12 @@
   else loadMap();
 
   /* ---------- Cart ---------- */
-  var cart = store.get("bl_cart") || [];
+  var cart = store.get("bl_cart2") || [];
   var cartBtn = $("#cartBtn"), drawer = $("#drawer"), toastEl = $("#toast"), tT;
   function subtotal() { return cart.reduce(function (s, i) { return s + i.price * i.qty; }, 0); }
   function count() { return cart.reduce(function (s, i) { return s + i.qty; }, 0); }
   function toast(html) { toastEl.innerHTML = html; toastEl.classList.add("on"); clearTimeout(tT); tT = setTimeout(function () { toastEl.classList.remove("on"); }, 2200); }
-  function saveCart() { store.set("bl_cart", cart); renderCart(); }
+  function saveCart() { store.set("bl_cart2", cart); renderCart(); }
   function addToCart(item) {
     var ex = cart.filter(function (i) { return i.key === item.key; })[0];
     if (ex) ex.qty++; else { item.qty = 1; cart.push(item); }

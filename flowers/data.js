@@ -30,31 +30,24 @@ window.DATA = {
   ],
 
 
-  // Конструктор
+  // Конструктор: квіти поштучно (фото, ціна за стебло, доступні кольори)
+  palette: {
+    red: { name: "Червоний", hex: "#D7263D" }, pink: { name: "Рожевий", hex: "#FF8DBB" }, fuchsia: { name: "Фуксія", hex: "#E8177D" },
+    white: { name: "Білий", hex: "#FFF6EA" }, peach: { name: "Персиковий", hex: "#FFB07A" }, orange: { name: "Помаранчевий", hex: "#FF8A2B" },
+    yellow: { name: "Жовтий", hex: "#FFD23F" }, lilac: { name: "Бузковий", hex: "#B69CFF" }, blue: { name: "Блакитний", hex: "#8FB8FF" }
+  },
   flowers: [
-    { id: "rose", name: "Троянда", price: 75, shape: "rose" },
-    { id: "peony", name: "Піоновидна троянда", price: 130, shape: "rose" },
-    { id: "tulip", name: "Тюльпан", price: 50, shape: "tulip" },
-    { id: "ranunc", name: "Ранункулюс", price: 95, shape: "rose" },
-    { id: "eustoma", name: "Еустома", price: 90, shape: "cup" },
-    { id: "chrys", name: "Кущова хризантема", price: 85, shape: "daisy" }
+    { id: "rose", name: "Троянда", note: "Еквадор, 60 см", price: 75, shape: "rose", img: "img/f-rose.jpg", colors: ["red", "pink", "white", "peach", "yellow"] },
+    { id: "tulip", name: "Тюльпан", note: "Голландія", price: 55, shape: "tulip", img: "img/f-tulip.jpg", colors: ["fuchsia", "pink", "red", "yellow", "white"] },
+    { id: "peony", name: "Півонія", note: "Сара Бернар", price: 190, shape: "peony", img: "img/f-peony.jpg", colors: ["pink", "fuchsia", "white"] },
+    { id: "ranunc", name: "Ранункулюс", note: "Італія", price: 95, shape: "rose", img: "img/f-ranunc.jpg", colors: ["peach", "orange", "pink", "white"] },
+    { id: "hydr", name: "Гортензія", note: "Велика шапка", price: 320, shape: "hydr", img: "img/f-hydr.jpg", colors: ["white", "pink", "blue", "lilac"] },
+    { id: "carn", name: "Гвоздика", note: "Колумбія", price: 60, shape: "carn", img: "img/f-carn.jpg", colors: ["pink", "red", "white"] },
+    { id: "daisy", name: "Ромашка", note: "Гілка, 5–7 квіток", price: 45, shape: "daisy", img: "img/f-daisy.jpg", colors: ["white"] },
+    { id: "sun", name: "Соняшник", note: "Великий", price: 90, shape: "sun", img: "img/f-sun.jpg", colors: ["yellow"] }
   ],
-  flowerColors: [
-    { id: "fuchsia", name: "Фуксія", hex: "#E8177D" },
-    { id: "pink", name: "Рожевий", hex: "#FF8DBB" },
-    { id: "orange", name: "Помаранчевий", hex: "#FF8A2B" },
-    { id: "yellow", name: "Жовтий", hex: "#FFD23F" },
-    { id: "red", name: "Червоний", hex: "#D7263D" },
-    { id: "white", name: "Білий", hex: "#FFF6EA" },
-    { id: "lilac", name: "Бузковий", hex: "#B69CFF" },
-    { id: "mix", name: "Мікс", hex: "mix" }
-  ],
-  sizes: [
-    { id: "S", name: "S", stems: 9 },
-    { id: "M", name: "M", stems: 15 },
-    { id: "L", name: "L", stems: 25 },
-    { id: "XL", name: "XL", stems: 51 }
-  ],
+  defaultMix: { rose: [7, "pink"], ranunc: [4, "peach"], hydr: [1, "white"] },
+  maxStems: 101,
   wraps: [
     { id: "kraft", name: "Крафт", price: 0, color: "#C99A6B" },
     { id: "film", name: "Корейська плівка", price: 90, color: "#FFC2DA" },
