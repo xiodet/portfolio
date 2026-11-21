@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bloom Lab — квіткова майстерня на Печерську, доставка квітів Київ</title>
+<meta name="description" content="Яскраві авторські букети з доставкою по Києву. По Печерську за 2 години. Конструктор букета, листівка, фото перед відправкою.">
+<meta name="theme-color" content="#FF2E88">
+<meta property="og:title" content="Bloom Lab — яскраві букети з доставкою за 2 години">
+<meta property="og:description" content="Квіткова майстерня на Печерську. Доставка по всьому Києву.">
+<meta property="og:image" content="img/hero.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23FF2E88'/%3E%3Cg fill='%23FFF8F0'%3E%3Ccircle cx='32' cy='20' r='9'/%3E%3Ccircle cx='44' cy='32' r='9'/%3E%3Ccircle cx='32' cy='44' r='9'/%3E%3Ccircle cx='20' cy='32' r='9'/%3E%3C/g%3E%3Ccircle cx='32' cy='32' r='7' fill='%23FFD23F'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="img/hero-m.jpg" media="(max-width: 767px)">
+<link rel="preload" as="image" href="img/hero.jpg" media="(min-width: 768px)">
+<link rel="stylesheet" href="styles.css?v=1">
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap nav__in">
+    <a href="#top" class="logo" aria-label="Bloom Lab, на початок">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><g fill="currentColor"><circle cx="20" cy="11" r="7"/><circle cx="29" cy="20" r="7"/><circle cx="20" cy="29" r="7"/><circle cx="11" cy="20" r="7"/></g><circle cx="20" cy="20" r="5" fill="#FFD23F"/></svg>
+      <span>bloom<b>lab</b></span>
+    </a>
+    <nav class="nav__links" aria-label="Розділи">
+      <a href="#shop">Букети</a>
+      <a href="#builder">Конструктор</a>
+      <a href="#delivery">Доставка</a>
+      <a href="#reviews">Відгуки</a>
+      <a href="#contacts">Контакти</a>
+    </nav>
+    <button class="cart-btn" id="cartBtn" type="button" aria-label="Кошик">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+      <span class="cart-btn__n" id="cartCount">0</span>
+    </button>
+    <button class="nav__burger" aria-label="Меню" aria-expanded="false" id="burger"><span></span><span></span></button>
+  </div>
+  <div class="mnav" id="mnav">
+    <a href="#shop">Букети</a>
+    <a href="#builder">Зібрати свій букет</a>
+    <a href="#delivery">Доставка і оплата</a>
+    <a href="#reviews">Відгуки</a>
+    <a href="#contacts">Контакти</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- 1. HERO -->
+  <section class="hero" id="hero">
+    <picture class="hero__bg" id="heroBg">
+      <source media="(max-width: 767px)" srcset="img/hero-m.jpg">
+      <img src="img/hero.jpg" alt="Яскравий букет від Bloom Lab" fetchpriority="high">
+    </picture>
+    <div class="hero__shade"></div>
+    <div class="wrap hero__in">
+      <p class="hero__eyebrow"><span class="dot"></span>Квіткова майстерня · Печерськ</p>
+      <h1 class="hero__title">Квіти, що<br>кажуть <span class="hl">більше</span><br>за слова</h1>
+      <p class="hero__lead">Яскраві авторські букети з доставкою по Києву. По Печерську привеземо за 2 години.</p>
+      <div class="hero__actions">
+        <a href="#shop" class="btn btn--pink btn--lg">Обрати букет</a>
+        <a href="#builder" class="btn btn--glass btn--lg">Зібрати свій</a>
+      </div>
+    </div>
+    <div class="hero__badge" aria-hidden="true">
+      <svg viewBox="0 0 120 120"><defs><path id="circ" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs><text><textPath href="#circ" textLength="272" lengthAdjust="spacing">доставка ✿ печерськ ✿ за 2 години ✿</textPath></text></svg>
+      <span>2<small>год</small></span>
+    </div>
+    <a href="#shop" class="hero__scroll" aria-label="Гортати вниз"><span></span></a>
+  </section>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker__track">
+      <span>Свіжі квіти щодня</span><i>✿</i><span>Фото букета перед відправкою</span><i>✿</i><span>Листівка в подарунок</span><i>✿</i><span>Доставка 8:00–22:00</span><i>✿</i>
+      <span>Свіжі квіти щодня</span><i>✿</i><span>Фото букета перед відправкою</span><i>✿</i><span>Листівка в подарунок</span><i>✿</i><span>Доставка 8:00–22:00</span><i>✿</i>
+    </div>
+  </div>
+
+  <!-- 2. SHOP -->
+  <section class="section shop" id="shop">
+    <div class="wrap">
+      <div class="head reveal">
+        <h2>Букети<span class="h-sticker">в наявності</span></h2>
+        <p>Збираємо в день замовлення з квітів, що приїхали зранку. Ціна вже з упаковкою.</p>
+      </div>
+      <div class="filters reveal" id="filters">
+        <div class="filters__row" id="fOcc" role="group" aria-label="Привід"></div>
+        <div class="filters__row filters__row--split">
+          <div class="filters__group" id="fPrice" role="group" aria-label="Ціна"></div>
+          <div class="filters__group" id="fColor" role="group" aria-label="Колір"></div>
+        </div>
+      </div>
+      <div class="grid" id="grid"></div>
+      <p class="empty" id="empty" hidden>Нічого не знайшли з такими фільтрами. <button type="button" class="link" id="resetF">Скинути фільтри</button> або <a href="#builder" class="link">зберіть свій букет</a>.</p>
+    </div>
+  </section>
+
+  <!-- 3. BUILDER -->
+  <section class="section builder" id="builder">
+    <div class="wrap">
+      <div class="head head--light reveal">
+        <h2>Конструктор<span class="h-sticker h-sticker--lime">ваш букет</span></h2>
+        <p>Оберіть квіти, колір, розмір та упаковку. Ціна рахується одразу, флорист збере саме так.</p>
+      </div>
+      <div class="bld reveal">
+        <div class="bld__preview">
+          <svg id="bldSvg" viewBox="0 0 400 440" role="img" aria-label="Попередній вигляд букета"></svg>
+          <div class="bld__price"><small>Разом</small><b id="bldTotal">0 ₴</b></div>
+        </div>
+        <div class="bld__form">
+          <div class="step"><h3><i>1</i>Квітка</h3><div class="opts" id="bFlower"></div></div>
+          <div class="step"><h3><i>2</i>Колір</h3><div class="swatches" id="bColor"></div></div>
+          <div class="step"><h3><i>3</i>Розмір</h3><div class="sizes" id="bSize"></div></div>
+          <div class="step"><h3><i>4</i>Упаковка</h3><div class="opts" id="bWrap"></div></div>
+          <label class="toggle"><input type="checkbox" id="bGreen" checked><span></span>Додати зелень (евкаліпт, рускус) <b>+120 ₴</b></label>
+          <ul class="bld__calc" id="bldCalc"></ul>
+          <button class="btn btn--pink btn--lg btn--block" id="bldAdd" type="button">Додати в кошик</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. DELIVERY -->
+  <section class="section delivery" id="delivery">
+    <div class="wrap">
+      <div class="head reveal">
+        <h2>Доставка<span class="h-sticker h-sticker--orange">і оплата</span></h2>
+        <p>Возимо щодня з 8:00 до 22:00. Перед відправкою надсилаємо фото букета у Viber або Telegram.</p>
+      </div>
+      <div class="dl">
+        <div class="dl__big reveal">
+          <div class="dl__big-n">2<small>год</small></div>
+          <div><b>Доставка по Печерську</b><p>Від замовлення до дверей. Арсенальна, Кловська, Липки, Звіринець, Печерськ.</p></div>
+        </div>
+        <ul class="zones reveal" id="zones"></ul>
+        <div class="dl__cards">
+          <div class="dcard reveal"><span class="dcard__ic">🎁</span><b>Безкоштовно від 3&nbsp;000&nbsp;₴</b><p>Доставка по Києву в подарунок для великих замовлень.</p></div>
+          <div class="dcard reveal"><span class="dcard__ic">⏰</span><b>Точно до години</b><p>Обираєте дату і двогодинне вікно, кур'єр дзвонить за 15 хвилин.</p></div>
+          <div class="dcard reveal"><span class="dcard__ic">🤫</span><b>Можна анонімно</b><p>Не скажемо, від кого букет, якщо попросите. Листівка від руки.</p></div>
+          <div class="dcard reveal"><span class="dcard__ic">💳</span><b>Як зручно</b><p>Карткою онлайн, Apple Pay та Google Pay, переказом або готівкою кур'єру.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. REVIEWS -->
+  <section class="section reviews" id="reviews">
+    <div class="wrap">
+      <div class="head reveal">
+        <h2>Відгуки</h2>
+        <div class="rating"><b>4.9</b><span class="stars">★★★★★</span><span>312 відгуків у Google</span></div>
+      </div>
+    </div>
+    <div class="rv" id="rv"></div>
+  </section>
+
+  <!-- 6. CONTACTS -->
+  <section class="section contacts" id="contacts">
+    <div class="wrap ct">
+      <div class="ct__info reveal">
+        <h2>Заходьте<br>в гості</h2>
+        <p class="ct__addr" id="ctAddr"></p>
+        <p class="muted" id="ctHours"></p>
+        <a class="ct__phone" id="ctPhone"></a>
+        <div class="socials" id="socials"></div>
+      </div>
+      <div class="ct__map reveal" id="map"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer__in">
+    <span>© 2026 Bloom Lab. Концепт-сайт для портфоліо, бренд вигаданий.</span>
+    <span>Фото: StockSnap (CC0), Wikimedia Commons (CC BY, Selena N. B. H.)</span>
+  </div>
+</footer>
+
+<!-- Cart -->
+<div class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer__bg" data-close></div>
+  <aside class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+    <div class="drawer__head"><h3 id="drawerTitle">Кошик</h3><button class="x" type="button" data-close aria-label="Закрити">✕</button></div>
+    <div class="drawer__body" id="cartBody"></div>
+    <div class="drawer__foot" id="cartFoot"></div>
+  </aside>
+</div>
+
+<!-- Checkout -->
+<div class="modal" id="checkout" aria-hidden="true">
+  <div class="modal__bg" data-close></div>
+  <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="coTitle">
+    <button class="x" type="button" data-close aria-label="Закрити">✕</button>
+    <form id="coForm" novalidate>
+      <h3 id="coTitle">Оформлення</h3>
+      <fieldset>
+        <legend>Ваші контакти</legend>
+        <div class="row2">
+          <label class="fld"><span>Ім'я</span><input id="cName" autocomplete="name" required></label>
+          <label class="fld"><span>Телефон</span><input id="cPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+380" required></label>
+        </div>
+        <label class="toggle toggle--sm"><input type="checkbox" id="cOther"><span></span>Букет отримає інша людина</label>
+        <div class="row2" id="recipient" hidden>
+          <label class="fld"><span>Ім'я отримувача</span><input id="rName"></label>
+          <label class="fld"><span>Телефон отримувача</span><input id="rPhone" type="tel" inputmode="tel" placeholder="+380"></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Доставка</legend>
+        <div class="chips" id="cZone"></div>
+        <label class="fld" id="addrFld"><span>Адреса</span><input id="cAddr" autocomplete="street-address" placeholder="Вулиця, будинок, квартира"></label>
+        <span class="lbl">Дата</span>
+        <div class="chips chips--scroll" id="cDate"></div>
+        <span class="lbl">Час</span>
+        <div class="chips" id="cTime"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Листівка</legend>
+        <label class="fld"><span>Текст листівки <em id="cardLeft">200</em></span><textarea id="cCard" maxlength="200" rows="3" placeholder="Напишемо від руки. Можна залишити порожнім"></textarea></label>
+        <label class="toggle toggle--sm"><input type="checkbox" id="cAnon"><span></span>Анонімно, не казати від кого</label>
+      </fieldset>
+      <fieldset>
+        <legend>Оплата</legend>
+        <div class="chips" id="cPay"></div>
+      </fieldset>
+      <div class="co-sum" id="coSum"></div>
+      <p class="err" id="coErr" role="alert"></p>
+      <button class="btn btn--pink btn--lg btn--block" type="submit" id="coSubmit">Замовити</button>
+      <p class="muted small">Після замовлення флорист зв'яжеться з вами протягом 10 хвилин для підтвердження.</p>
+    </form>
+    <div class="done" id="coDone" hidden>
+      <div class="done__ic">💐</div>
+      <h3>Замовлення прийнято!</h3>
+      <p id="doneText"></p>
+      <button class="btn btn--pink" type="button" data-close>Чудово</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="config.js?v=1"></script>
+<script src="data.js?v=1"></script>
+<script src="app.js?v=1"></script>
+</body>
+</html>
