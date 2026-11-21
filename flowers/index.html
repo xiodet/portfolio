@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Bloom Lab — квіткова майстерня на Печерську, доставка квітів Київ</title>
-<meta name="description" content="Яскраві авторські букети з доставкою по Києву. По Печерську за 2 години. Конструктор букета, листівка, фото перед відправкою.">
-<meta name="theme-color" content="#FF2E88">
+<meta name="description" content="Авторські букети і свіжі квіти з доставкою по Києву. По Печерську за 2 години. Букети і квіти поштучно, листівка, фото перед відправкою.">
+<meta name="theme-color" content="#FBF7F3">
 <meta property="og:title" content="Bloom Lab — яскраві букети з доставкою за 2 години">
 <meta property="og:description" content="Квіткова майстерня на Печерську. Доставка по всьому Києву.">
 <meta property="og:image" content="img/hero.jpg">
@@ -16,7 +16,7 @@
 <link rel="preload" as="image" href="img/hero-m.jpg" media="(max-width: 767px)">
 <link rel="preload" as="image" href="img/hero.jpg" media="(min-width: 768px)">
 <script>try{if(/[?&]font=2/.test(location.search))document.documentElement.classList.add("font-alt")}catch(e){}</script>
-<link rel="stylesheet" href="styles.css?v=5">
+<link rel="stylesheet" href="styles.css?v=7">
 </head>
 <body>
 
@@ -27,8 +27,8 @@
       <span>bloom<b>lab</b></span>
     </a>
     <nav class="nav__links" aria-label="Розділи">
-      <a href="#shop">Букети</a>
-      <a href="#builder">Конструктор</a>
+      <a href="#shop" data-tab-link="bouquets">Букети</a>
+      <a href="#shop" data-tab-link="flowers">Квіти</a>
       <a href="#delivery">Доставка</a>
       <a href="#reviews">Відгуки</a>
       <a href="#contacts">Контакти</a>
@@ -40,8 +40,8 @@
     <button class="nav__burger" aria-label="Меню" aria-expanded="false" id="burger"><span></span><span></span></button>
   </div>
   <div class="mnav" id="mnav">
-    <a href="#shop">Букети</a>
-    <a href="#builder">Зібрати свій букет</a>
+    <a href="#shop" data-tab-link="bouquets">Букети</a>
+    <a href="#shop" data-tab-link="flowers">Квіти поштучно</a>
     <a href="#delivery">Доставка і оплата</a>
     <a href="#reviews">Відгуки</a>
     <a href="#contacts">Контакти</a>
@@ -60,10 +60,10 @@
     <div class="wrap hero__in">
       <p class="hero__eyebrow"><span class="dot"></span>Квіткова майстерня · Печерськ</p>
       <h1 class="hero__title">Квіти, що<br>кажуть <span class="hl">більше</span><br>за слова</h1>
-      <p class="hero__lead">Яскраві авторські букети з доставкою по Києву. По Печерську привеземо за 2 години.</p>
+      <p class="hero__lead">Авторські букети і свіжі квіти з доставкою по Києву. По Печерську привеземо за 2 години.</p>
       <div class="hero__actions">
-        <a href="#shop" class="btn btn--pink btn--lg">Обрати букет</a>
-        <a href="#builder" class="btn btn--glass btn--lg">Зібрати свій</a>
+        <a href="#shop" class="btn btn--pink btn--lg" data-tab-link="bouquets">Обрати букет</a>
+        <a href="#shop" class="btn btn--glass btn--lg" data-tab-link="flowers">Квіти поштучно</a>
       </div>
     </div>
     <div class="hero__badge" aria-hidden="true">
@@ -97,10 +97,15 @@
   <section class="section shop" id="shop">
     <div class="wrap">
       <div class="head reveal">
-        <h2>Наші <em class="it">букети</em><span class="h-sticker">в наявності</span></h2>
-        <p>Збираємо в день замовлення з квітів, що приїхали зранку. Ціна вже з упаковкою.</p>
+        <h2>Каталог</h2>
+        <div class="tabs" role="tablist" aria-label="Каталог">
+          <button type="button" class="tab" role="tab" data-tab="bouquets" aria-selected="true">Букети <small>12</small></button>
+          <button type="button" class="tab" role="tab" data-tab="flowers" aria-selected="false">Квіти поштучно <small>8</small></button>
+        </div>
       </div>
-      <div class="filters reveal" id="filters">
+      <div class="pane" id="pane-bouquets">
+      <p class="pane__lead">Збираємо в день замовлення з квітів, що приїхали зранку. Ціна вже з упаковкою.</p>
+      <div class="filters" id="filters">
         <div class="filters__row" id="fOcc" role="group" aria-label="Привід"></div>
         <div class="filters__row filters__row--split">
           <div class="filters__group" id="fPrice" role="group" aria-label="Ціна"></div>
@@ -108,45 +113,21 @@
         </div>
       </div>
       <div class="grid" id="grid"></div>
-      <p class="empty" id="empty" hidden>Нічого не знайшли з такими фільтрами. <button type="button" class="link" id="resetF">Скинути фільтри</button> або <a href="#builder" class="link">зберіть свій букет</a>.</p>
-    </div>
-  </section>
-
-  <!-- 3. BUILDER -->
-  <section class="section builder" id="builder">
-    <div class="wrap">
-      <div class="head head--light reveal">
-        <h2>Конструктор<span class="h-sticker h-sticker--lime">ваш букет</span></h2>
-        <p>Квіти поштучно: оберіть, які хочете, скільки і якого кольору. Букет і ціна збираються одразу, флорист збере саме так.</p>
+      <p class="empty" id="empty" hidden>Нічого не знайшли з такими фільтрами. <button type="button" class="link" id="resetF">Скинути фільтри</button> або подивіться <button type="button" class="link" data-tab-link="flowers">квіти поштучно</button>.</p>
       </div>
-      <div class="bld reveal">
-        <div class="bld__preview">
-          <svg id="bldSvg" viewBox="0 0 400 440" role="img" aria-label="Попередній вигляд букета"></svg>
-          <div class="bld__price"><small>Разом</small><b id="bldTotal">0 ₴</b></div>
-        </div>
-        <div class="bld__form">
-          <div class="step"><h3><i>1</i>Квіти <span class="step__count" id="bCount"></span><button type="button" class="step__clear" id="bClear" hidden>Очистити</button></h3><p class="step__hint">Натисніть на фото або «+», оберіть колір. Можна змішувати різні квіти.</p><div class="fgrid" id="bFlowers"></div></div>
-          <div class="step"><h3><i>2</i>Упаковка</h3><div class="opts" id="bWrap"></div></div>
-          <label class="toggle"><input type="checkbox" id="bGreen" checked><span></span>Додати зелень (евкаліпт, рускус) <b>+120 ₴</b></label>
-          <ul class="bld__calc" id="bldCalc"></ul>
-          <button class="btn btn--pink btn--lg btn--block" id="bldAdd" type="button">Додати в кошик</button>
-          <div class="bld__bar" id="bldBar">
-            <svg id="barSvg" viewBox="20 30 360 380" aria-hidden="true"></svg>
-            <div class="bld__bar-t"><small id="barCount"></small><b id="barTotal"></b></div>
-            <button class="btn btn--pink" id="barAdd" type="button">У кошик</button>
-          </div>
-        </div>
+      <div class="pane" id="pane-flowers" hidden>
+        <p class="pane__lead">Оберіть квіти, колір і кількість. Флорист збере їх у букет з упаковкою і зеленню, робота флориста 150 ₴ за замовлення.</p>
+        <div class="fgrid2" id="flowerGrid"></div>
       </div>
     </div>
   </section>
-
 
   <!-- HOW -->
   <section class="section how" id="how">
     <div class="wrap">
       <div class="head reveal"><h2>Як це <em class="it">працює</em></h2><p>Три кроки від кліку до усмішки. Ви бачите букет ще до того, як його отримають.</p></div>
       <div class="how__grid">
-        <div class="how__s reveal"><span class="how__n">01</span><span class="how__ic"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="17" cy="13" r="5"/><circle cx="31" cy="13" r="5"/><circle cx="24" cy="20" r="5"/><path d="M14 24l10 20 10-20"/><path d="M19 34h10"/><path d="M24 25v8"/></svg></span><h3>Оберіть букет</h3><p>Готовий з каталогу або зберіть свій у конструкторі. Вкажіть дату, час і дані отримувача.</p></div>
+        <div class="how__s reveal"><span class="how__n">01</span><span class="how__ic"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="17" cy="13" r="5"/><circle cx="31" cy="13" r="5"/><circle cx="24" cy="20" r="5"/><path d="M14 24l10 20 10-20"/><path d="M19 34h10"/><path d="M24 25v8"/></svg></span><h3>Оберіть букет</h3><p>Готовий букет з каталогу або квіти поштучно. Вкажіть дату, час і дані отримувача.</p></div>
         <div class="how__s reveal"><span class="how__n">02</span><span class="how__ic"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="15" width="36" height="25" rx="5"/><path d="M17 15l3-5h8l3 5"/><circle cx="24" cy="27" r="7"/><circle cx="24" cy="27" r="3"/><path d="M24 3v3M14 5l2 3M34 5l-2 3"/></svg></span><h3>Надішлемо фото</h3><p>Флорист збере букет зі свіжих квітів і надішле фото у Viber або Telegram перед відправкою.</p></div>
         <div class="how__s reveal"><span class="how__n">03</span><span class="how__ic"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 34l8-3c3-1 5-1 8 0l7 2c2 1 2 4-1 4h-7"/><path d="M4 44l9-3 16 2 15-8c2-2 0-5-3-4l-11 4"/><rect x="22" y="12" width="18" height="14" rx="2"/><path d="M31 12v14M22 17h18"/><path d="M31 12c-2-4-7-5-7-2s4 2 7 2zM31 12c2-4 7-5 7-2s-4 2-7 2z"/></svg></span><h3>Доставимо отримувачу</h3><p>Кур'єр вручить букет у погоджений час. По Печерську за 2 години, по Києву того ж дня.</p></div>
       </div>
@@ -272,8 +253,8 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="config.js?v=5"></script>
-<script src="data.js?v=5"></script>
-<script src="app.js?v=5"></script>
+<script src="config.js?v=7"></script>
+<script src="data.js?v=7"></script>
+<script src="app.js?v=7"></script>
 </body>
 </html>

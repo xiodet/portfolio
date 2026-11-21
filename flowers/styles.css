@@ -451,3 +451,87 @@ html.font-alt .logo,html.font-alt .hl{font-style:normal}
 /* цифри: Manrope (у Playfair старостильні цифри) */
 .price,.bld__price b,.bud__c b,.tot b,.co-sum div:last-child,.ci__price,.dl__big-n,.rating b,.ct__phone,.bld__bar-t b{font-family:var(--u);letter-spacing:-.02em}
 .price,.bld__price b,.bld__bar-t b,.tot b{font-weight:800}
+
+/* ===== v3: тихіша версія ===== */
+:root{--bg:#FBF7F3;--bg2:#F4EBE5;--line:#EADFD7;--pink:#C24E74;--pink-d:#A83F61;--orange:#D9875A;--yellow:#F1D58A;--lime:#E4EBCB;--green:#5E9A6E;--ink:#2A2230;--ink2:#6E6470;--shadow:0 16px 36px -20px rgba(42,34,48,.35)}
+.btn--pink{box-shadow:none}
+.btn--pink:hover{transform:none}
+.dot{animation:none}
+.hero__eyebrow .dot{width:8px;height:8px;background:#E9C9D5}
+.hero__shade{background:linear-gradient(180deg,rgba(42,34,48,.35) 0%,rgba(42,34,48,.15) 30%,rgba(42,34,48,.3) 55%,rgba(42,34,48,.8) 100%),linear-gradient(90deg,rgba(42,34,48,.6),rgba(42,34,48,.05) 70%)}
+.hero__bg img{filter:saturate(.8)}
+.hl{color:#F6C9D8;padding:0;transform:none}
+.hl::before{display:none}
+.hero__title{text-shadow:none}
+.hero__badge{background:rgba(255,255,255,.92);transform:none;width:118px;height:118px;box-shadow:none}
+.hero__badge svg{animation:none}
+.hero__badge text{fill:var(--ink2)}
+.hero__badge span{color:var(--pink)}
+.ticker{transform:none;margin:0;background:var(--bg2);color:var(--ink);padding:12px 0}
+.ticker__track{animation-duration:60s;font:600 13.5px/1 var(--u);text-transform:none;letter-spacing:.02em}
+.ticker i{color:var(--pink)}
+.h-sticker{display:none}
+.card:hover{transform:translateY(-3px)}
+.card:hover .card__img img{transform:scale(1.03)}
+.tag{transform:none;box-shadow:none;font-size:11px}
+.tag--new{background:#fff;color:var(--ink)}
+.tag--prem{background:var(--ink);color:#fff}
+.add:hover{transform:none;background:var(--pink-d)}
+.bud__c:hover{transform:translateY(-2px);box-shadow:none}
+.bud__c--1{background:#F6E4EA}.bud__c--2{background:#ECEFDF}.bud__c--3{background:#F6EADF}
+.bud__c--2 .bud__ic{color:var(--green)}
+.bud__hit{transform:none}
+.dl__big{background:#F3E4DA;color:var(--ink)}
+.dl__big-n{color:var(--pink)}
+.dl__big p{opacity:1;color:var(--ink2)}
+.dl__big::after{animation:none;color:rgba(194,78,116,.08)}
+.dcard:hover{transform:none}
+.dcard:nth-child(1){background:#ECEFDF}.dcard:nth-child(4){background:#F6E4EA}
+.rcard:nth-child(3n+1),.rcard:nth-child(3n+2){transform:none}
+.stars{color:#D9A15A}
+.cart-btn:hover{transform:none}
+.cart-btn__n{background:#fff;color:var(--pink);box-shadow:0 0 0 1.5px var(--pink)}
+.how__s:nth-child(1) .how__ic{background:#F6E4EA}
+.how__s:nth-child(2) .how__ic{background:#F6EADF}
+.how__s:nth-child(3) .how__ic{background:#ECEFDF}
+
+/* tabs */
+.tabs{display:inline-flex;background:#fff;border-radius:999px;padding:5px;box-shadow:inset 0 0 0 1.5px var(--line)}
+.tab{border:0;background:none;border-radius:999px;padding:11px 20px;font:700 15px var(--u);color:var(--ink2);display:inline-flex;align-items:center;gap:8px;transition:background .2s,color .2s}
+.tab small{font-size:12px;background:var(--bg2);color:var(--ink2);border-radius:999px;padding:2px 8px}
+.tab[aria-selected=true]{background:var(--ink);color:#fff}
+.tab[aria-selected=true] small{background:rgba(255,255,255,.15);color:#fff}
+.pane__lead{margin:-8px 0 18px;color:var(--ink2);max-width:640px}
+
+/* квіти поштучно */
+.fgrid2{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.fcard{background:#fff;border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 0 var(--line)}
+.fcard__img{aspect-ratio:1;overflow:hidden;background:var(--bg2)}
+.fcard__img img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.fcard:hover .fcard__img img{transform:scale(1.03)}
+.fcard__body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.fcard__top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.fcard__top h3{font-size:19px;font-weight:800}
+.fcard__p{font:800 17px var(--u);white-space:nowrap}
+.fcard__p small{font-size:12px;font-weight:600;color:var(--ink2);margin-left:2px}
+.fcard__note{margin:-6px 0 0;font-size:13px;color:var(--ink2)}
+.fcard__cols{display:flex;align-items:center;gap:7px;min-height:24px;flex-wrap:wrap}
+.fcard__cn{font-size:13px;color:var(--ink2);margin-left:4px}
+.fcard .dot{box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
+.fcard .dot[aria-pressed=true]{outline:2px solid var(--ink);outline-offset:2px}
+.fcard__foot{display:flex;gap:8px;align-items:center;margin-top:auto;padding-top:4px}
+.fcard__foot .qty{flex:none}
+.fcard__add{flex:1;padding:12px 10px;font-size:13.5px}
+.ci-work{display:flex;justify-content:space-between;gap:12px;padding:14px 0;font-size:13.5px;color:var(--ink2);border-bottom:1px solid var(--line)}
+.ci-work b{color:var(--ink);white-space:nowrap}
+@media (max-width:1080px){.fgrid2{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:767px){
+  .tabs{width:100%}.tab{flex:1;justify-content:center;padding:11px 8px;font-size:14px}
+  .fgrid2{grid-template-columns:1fr 1fr;gap:12px}
+  .fcard__body{padding:10px 10px 12px}
+  .fcard__top{flex-direction:column;gap:2px}
+  .fcard__top h3{font-size:16px}
+  .fcard__foot{flex-direction:column;align-items:stretch}
+  .fcard__foot .qty{justify-content:space-between}
+  .fcard__add{padding:11px 6px;font-size:12.5px}
+}
