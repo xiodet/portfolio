@@ -16,6 +16,7 @@
 <link rel="preload" as="image" href="img/hero-m.jpg" media="(max-width: 767px)">
 <link rel="preload" as="image" href="img/hero.jpg" media="(min-width: 768px)">
 <link rel="stylesheet" href="styles.css">
+<script>if (/[?&]hero=full/.test(location.search)) document.documentElement.classList.add("hero-full");</script>
 </head>
 <body>
 
@@ -52,7 +53,13 @@
           <source media="(max-width: 767px)" srcset="img/hero-m.jpg">
           <img src="img/hero.jpg" alt="Локони після укладки в Mila Beauty Studio" fetchpriority="high" width="1000" height="1250">
         </picture>
-        <div class="hero__badge"><b>Вільні вікна сьогодні</b>Запис онлайн за 1 хвилину</div>
+        <script>
+          if (document.documentElement.classList.contains("hero-full")) {
+            var pic = document.currentScript.previousElementSibling;
+            pic.querySelector("source").srcset = "img/hero-full-m.jpg";
+            pic.querySelector("img").src = "img/hero-full.jpg";
+          }
+        </script>
       </div>
       <div class="hero__text" id="heroText">
         <p class="eyebrow">Салон краси · Позняки</p>
