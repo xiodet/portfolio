@@ -2,7 +2,7 @@
   --bg:#FFF8F0; --bg2:#FFEFE3; --ink:#1C1326; --ink2:#5B4E66; --line:#F0DCCF;
   --pink:#FF2E88; --pink-d:#E0186F; --orange:#FF7A1A; --yellow:#FFD23F; --green:#17B26A; --lime:#C8F25A; --violet:#8C6CFF;
   --r:22px; --r-sm:14px;
-  --h:"Playfair Display",Georgia,serif; --u:"Manrope",system-ui,sans-serif; --b:"Manrope",system-ui,sans-serif;
+  --h:"Prata",Georgia,serif; --u:"Manrope",system-ui,sans-serif; --b:"Manrope",system-ui,sans-serif;
   --shadow:0 18px 40px -18px rgba(28,19,38,.35);
 }
 *{box-sizing:border-box}
@@ -413,8 +413,6 @@ body.lock{overflow:hidden}
 }
 
 /* alt font for comparison: ?font=2 */
-html.font-alt{--h:"Montserrat Alternates",system-ui,sans-serif}
-html.font-alt .logo,html.font-alt .hl{font-style:normal}
 
 .it{font-style:italic;color:var(--pink)}
 /* budget */
@@ -519,3 +517,20 @@ html.font-alt .logo,html.font-alt .hl{font-style:normal}
   .fcard__add{padding:11px 6px;font-size:12.5px}
 }
 .dcard b{font-family:var(--u);font-weight:800}
+
+/* ===== v5: стриманий шрифт Prata (альтернатива ?font=2 Oranienbaum), «Як це працює» текстом ===== */
+:root{--h:"Prata",Georgia,serif}
+html.font-alt{--h:"Oranienbaum",Georgia,serif}
+h1,h2,h3,.logo,.dl__big b,.ct__addr,.mnav,.sub-h{font-weight:400!important;letter-spacing:-.005em}
+.logo{font-style:normal}
+.it,.hl{font-synthesis:style}
+.hero__title{line-height:1.02}
+.hero__badge span{font-family:var(--u);font-weight:800}
+.card__name,.ci__name,.fc__top b,.dcard b,.fcard h3{font-family:var(--u)!important;font-weight:700!important;letter-spacing:0}
+.how__list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,44px)}
+.how__list li{display:flex;flex-direction:column;gap:12px}
+.how__e{font-size:40px;line-height:1}
+.how__list h3{font-size:clamp(21px,2vw,26px);margin-bottom:8px;display:flex;align-items:baseline;gap:10px}
+.how__list h3 small{font:800 13px/1 var(--u);color:var(--pink);letter-spacing:.04em}
+.how__list p{margin:0;color:var(--ink2);font-size:15px;max-width:34ch}
+@media (max-width:900px){.how__list{grid-template-columns:1fr;gap:22px}.how__list li{flex-direction:row;gap:16px}.how__e{font-size:34px;margin-top:2px}}
