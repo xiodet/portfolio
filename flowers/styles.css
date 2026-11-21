@@ -452,48 +452,31 @@ html.font-alt .logo,html.font-alt .hl{font-style:normal}
 .price,.bld__price b,.bud__c b,.tot b,.co-sum div:last-child,.ci__price,.dl__big-n,.rating b,.ct__phone,.bld__bar-t b{font-family:var(--u);letter-spacing:-.02em}
 .price,.bld__price b,.bld__bar-t b,.tot b{font-weight:800}
 
-/* ===== v3: тихіша версія ===== */
-:root{--bg:#FBF7F3;--bg2:#F4EBE5;--line:#EADFD7;--pink:#C24E74;--pink-d:#A83F61;--orange:#D9875A;--yellow:#F1D58A;--lime:#E4EBCB;--green:#5E9A6E;--ink:#2A2230;--ink2:#6E6470;--shadow:0 16px 36px -20px rgba(42,34,48,.35)}
-.btn--pink{box-shadow:none}
+/* ===== v4: ті самі кольори, але м'якші (не кислотні), без нахилів ===== */
+:root{--bg:#FFF8F2;--bg2:#FCEDE3;--line:#F0DED3;--pink:#E5487F;--pink-d:#CC356A;--orange:#F2803A;--yellow:#F7CD52;--lime:#D5EC8C;--green:#3FA56E;--violet:#8F78E8;--ink:#241A2C;--ink2:#625668;--shadow:0 16px 36px -18px rgba(36,26,44,.35)}
+.btn--pink{box-shadow:0 8px 18px -10px rgba(229,72,127,.7)}
 .btn--pink:hover{transform:none}
-.dot{animation:none}
-.hero__eyebrow .dot{width:8px;height:8px;background:#E9C9D5}
-.hero__shade{background:linear-gradient(180deg,rgba(42,34,48,.35) 0%,rgba(42,34,48,.15) 30%,rgba(42,34,48,.3) 55%,rgba(42,34,48,.8) 100%),linear-gradient(90deg,rgba(42,34,48,.6),rgba(42,34,48,.05) 70%)}
-.hero__bg img{filter:saturate(.8)}
-.hl{color:#F6C9D8;padding:0;transform:none}
-.hl::before{display:none}
-.hero__title{text-shadow:none}
-.hero__badge{background:rgba(255,255,255,.92);transform:none;width:118px;height:118px;box-shadow:none}
-.hero__badge svg{animation:none}
-.hero__badge text{fill:var(--ink2)}
-.hero__badge span{color:var(--pink)}
-.ticker{transform:none;margin:0;background:var(--bg2);color:var(--ink);padding:12px 0}
-.ticker__track{animation-duration:60s;font:600 13.5px/1 var(--u);text-transform:none;letter-spacing:.02em}
-.ticker i{color:var(--pink)}
-.h-sticker{display:none}
-.card:hover{transform:translateY(-3px)}
-.card:hover .card__img img{transform:scale(1.03)}
-.tag{transform:none;box-shadow:none;font-size:11px}
-.tag--new{background:#fff;color:var(--ink)}
-.tag--prem{background:var(--ink);color:#fff}
+.hero__eyebrow .dot{background:var(--lime)}
+.hl{transform:rotate(-2deg)}
+.hl::before{background:var(--lime)}
+.hero__badge{transform:rotate(12deg)}
+.ticker{transform:none;margin:0}
+.ticker__track{animation-duration:40s}
+.h-sticker{transform:rotate(4deg)}
+.card:hover{transform:translateY(-4px)}
+.card:hover .card__img img{transform:scale(1.04)}
+.tag{transform:none}
 .add:hover{transform:none;background:var(--pink-d)}
-.bud__c:hover{transform:translateY(-2px);box-shadow:none}
-.bud__c--1{background:#F6E4EA}.bud__c--2{background:#ECEFDF}.bud__c--3{background:#F6EADF}
-.bud__c--2 .bud__ic{color:var(--green)}
+.bud__c:hover{transform:translateY(-3px)}
+.bud__c--1{background:#FBDCE8}.bud__c--2{background:var(--lime)}.bud__c--3{background:#FDE0C8}
 .bud__hit{transform:none}
-.dl__big{background:#F3E4DA;color:var(--ink)}
-.dl__big-n{color:var(--pink)}
-.dl__big p{opacity:1;color:var(--ink2)}
-.dl__big::after{animation:none;color:rgba(194,78,116,.08)}
-.dcard:hover{transform:none}
-.dcard:nth-child(1){background:#ECEFDF}.dcard:nth-child(4){background:#F6E4EA}
+.dcard:hover{transform:translateY(-3px)}
+.dcard:nth-child(1){background:var(--lime)}.dcard:nth-child(4){background:#FBDCE8}
 .rcard:nth-child(3n+1),.rcard:nth-child(3n+2){transform:none}
-.stars{color:#D9A15A}
 .cart-btn:hover{transform:none}
-.cart-btn__n{background:#fff;color:var(--pink);box-shadow:0 0 0 1.5px var(--pink)}
-.how__s:nth-child(1) .how__ic{background:#F6E4EA}
-.how__s:nth-child(2) .how__ic{background:#F6EADF}
-.how__s:nth-child(3) .how__ic{background:#ECEFDF}
+.how__s:nth-child(1) .how__ic{background:#FBDCE8}
+.how__s:nth-child(2) .how__ic{background:#FDE0C8}
+.how__s:nth-child(3) .how__ic{background:#E6F3C3}
 
 /* tabs */
 .tabs{display:inline-flex;background:#fff;border-radius:999px;padding:5px;box-shadow:inset 0 0 0 1.5px var(--line)}
@@ -535,3 +518,4 @@ html.font-alt .logo,html.font-alt .hl{font-style:normal}
   .fcard__foot .qty{justify-content:space-between}
   .fcard__add{padding:11px 6px;font-size:12.5px}
 }
+.dcard b{font-family:var(--u);font-weight:800}

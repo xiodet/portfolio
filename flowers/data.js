@@ -8,11 +8,11 @@ window.DATA = {
     { id: "sorry", name: "Вибачення" }
   ],
   colors: [
-    { id: "pink", name: "Рожевий", hex: "#FF6FA8" },
-    { id: "orange", name: "Помаранчевий", hex: "#FF8A2B" },
-    { id: "red", name: "Червоний", hex: "#D7263D" },
+    { id: "pink", name: "Рожевий", hex: "#F27BAA" },
+    { id: "orange", name: "Помаранчевий", hex: "#F28B45" },
+    { id: "red", name: "Червоний", hex: "#D9404F" },
     { id: "white", name: "Білий", hex: "#F4EEE6" },
-    { id: "mix", name: "Мікс", hex: "conic-gradient(#FF2E88,#FF8A2B,#FFD23F,#2BB673,#8C6CFF,#FF2E88)" }
+    { id: "mix", name: "Мікс", hex: "conic-gradient(#FF2E88,#F28B45,#F5D05A,#2BB673,#8C6CFF,#FF2E88)" }
   ],
   bouquets: [
     { id: 1, name: "Малиновий джем", desc: "Піоновидні троянди, кущова троянда, гортензія", price: 1850, img: "img/b1.jpg", color: "pink", occ: ["love", "bday"], tag: "Хіт" },
@@ -32,9 +32,9 @@ window.DATA = {
 
   // Квіти поштучно (фото, ціна за стебло, доступні кольори)
   palette: {
-    red: { name: "Червоний", hex: "#D7263D" }, pink: { name: "Рожевий", hex: "#FF8DBB" }, fuchsia: { name: "Фуксія", hex: "#E8177D" },
-    white: { name: "Білий", hex: "#FFF6EA" }, peach: { name: "Персиковий", hex: "#FFB07A" }, orange: { name: "Помаранчевий", hex: "#FF8A2B" },
-    yellow: { name: "Жовтий", hex: "#FFD23F" }, lilac: { name: "Бузковий", hex: "#B69CFF" }, blue: { name: "Блакитний", hex: "#8FB8FF" }
+    red: { name: "Червоний", hex: "#D9404F" }, pink: { name: "Рожевий", hex: "#F59BBF" }, fuchsia: { name: "Фуксія", hex: "#E0407F" },
+    white: { name: "Білий", hex: "#FFF6EA" }, peach: { name: "Персиковий", hex: "#F7B386" }, orange: { name: "Помаранчевий", hex: "#F28B45" },
+    yellow: { name: "Жовтий", hex: "#F5D05A" }, lilac: { name: "Бузковий", hex: "#B7A2F2" }, blue: { name: "Блакитний", hex: "#9DBFF2" }
   },
   flowers: [
     { id: "rose", name: "Троянда", note: "Еквадор, 60 см", price: 75, min: 9, shape: "rose", img: "img/f-rose.jpg", colors: ["red", "pink", "white", "peach", "yellow"] },
