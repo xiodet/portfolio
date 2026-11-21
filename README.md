@@ -26,3 +26,8 @@
 2. Написати боту будь-що з потрібного акаунта/групи, взяти `chat_id` (наприклад, через `https://api.telegram.org/bot<TOKEN>/getUpdates`).
 3. Для тесту: вписати `telegramBotToken` і `telegramChatId` у `config.js`.
 4. Для реального клієнта краще не світити токен у коді сторінки: поставити безкоштовний Cloudflare Worker, який приймає JSON заявки і пересилає в Telegram, і вказати його адресу в `bookingEndpoint`.
+
+## Версії і відкат
+
+- `salon-v1/` — перша версія (прайс списком), лежить поруч для порівняння: `/portfolio/salon-v1/`. Також є git-тег `v1`.
+- Відкат: `git checkout v1 -- salon` і пуш, або просто скопіювати `salon-v1/` поверх `salon/`.

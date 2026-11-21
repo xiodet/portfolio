@@ -5,7 +5,7 @@
   var el = function (tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
   var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]; }); };
   var money = function (n) { return n.toLocaleString("uk-UA").replace(/,/g, " ") + " грн"; };
-  var catImg = { hair: "img/g3.jpg", nails: "img/g2.jpg", brows: "img/g6.jpg", care: "img/g4.jpg" };
+  var dur = function (m) { var h = Math.floor(m / 60), r = m % 60; return "≈ " + (h ? h + " год" : "") + (h && r ? " " : "") + (r ? r + " хв" : ""); };
 
   /* ---------- Nav ---------- */
   var nav = $("#nav"), burger = $("#burger"), mnav = $("#mnav"), fab = $("#fab");
@@ -14,7 +14,9 @@
     nav.classList.toggle("is-solid", y > 30);
     var book = $("#booking").getBoundingClientRect();
     var inBooking = book.top < window.innerHeight * .8 && book.bottom > 0;
-    fab.classList.toggle("is-on", y > window.innerHeight * .7 && !inBooking);
+    var ha = $("#heroActions").getBoundingClientRect();
+    var heroCtaVisible = ha.top < window.innerHeight && ha.bottom > 0;
+    fab.classList.toggle("is-on", !heroCtaVisible && !inBooking);
   }
   window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
   burger.addEventListener("click", function () {
@@ -30,15 +32,17 @@
     t.type = "button"; t.setAttribute("role", "tab"); t.setAttribute("aria-selected", i === 0); t.dataset.cat = c.id;
     tabs.appendChild(t);
     var g = el("div", "price-group" + (i === 0 ? " is-active" : "")); g.dataset.cat = c.id; g.setAttribute("role", "tabpanel");
-    g.appendChild(el("div", "price-group__img", '<img src="' + catImg[c.id] + '" alt="" loading="lazy">'));
-    D.services.filter(function (s) { return s.cat === c.id; }).forEach(function (s) {
-      g.appendChild(el("div", "price",
-        '<span class="price__name">' + esc(s.name) + '</span>' +
-        '<span class="price__val">' + (s.from ? "<small>від</small>" : "") + money(s.price) + '</span>' +
-        (s.note ? '<span class="price__note">' + esc(s.note) + '</span>' : "")));
+    D.services.forEach(function (s, idx) {
+      if (s.cat !== c.id) return;
+      var card = el(s.addon ? "div" : "button", "pcard" + (s.hit ? " pcard--hit" : ""),
+        (s.hit ? '<span class="pcard__tag">Хіт</span>' : "") +
+        '<span class="pcard__name">' + esc(s.name) + '</span>' +
+        (s.note ? '<span class="pcard__note">' + esc(s.note) + '</span>' : "") +
+        '<span class="pcard__price">' + (s.from ? "<small>від</small>" : "") + s.price.toLocaleString("uk-UA").replace(/,/g, " ") + '<span>₴</span></span>' +
+        '<span class="pcard__foot"><span>' + (s.dur ? dur(s.dur) : "доповнення") + '</span>' + (s.addon ? "" : '<span class="pcard__go" aria-hidden="true">→</span>') + '</span>');
+      if (!s.addon) { card.type = "button"; card.dataset.svc = idx; card.setAttribute("aria-label", "Записатися: " + s.name); }
+      g.appendChild(card);
     });
-    var cta = el("div", "price-group__cta", '<a href="#booking" class="btn btn--ghost" data-book-cat="' + c.id + '">Записатися на ' + esc(c.name.toLowerCase()) + '</a>');
-    g.appendChild(cta);
     list.appendChild(g);
   });
   tabs.addEventListener("click", function (e) {
@@ -192,11 +196,11 @@
   fDate.addEventListener("click", function (e) { var c = e.target.closest(".chip"); if (!c) return; st.date = +c.dataset.v; select(fDate, st.date); renderTimes(); renderSummary(); });
   fTime.addEventListener("click", function (e) { var c = e.target.closest(".chip"); if (!c || c.disabled) return; st.time = c.dataset.v; select(fTime, st.time); renderSummary(); err.textContent = ""; });
 
-  // Кнопки «Записатися на …» в прайсі
-  document.addEventListener("click", function (e) {
-    var a = e.target.closest("[data-book-cat]"); if (!a) return;
-    var idx = D.services.findIndex(function (s) { return s.cat === a.dataset.bookCat && !s.addon; });
-    fService.value = idx; fService.dispatchEvent(new Event("change"));
+  // Картки прайсу: клік → запис на цю послугу
+  list.addEventListener("click", function (e) {
+    var c = e.target.closest("[data-svc]"); if (!c) return;
+    fService.value = c.dataset.svc; fService.dispatchEvent(new Event("change"));
+    $("#booking").scrollIntoView({ behavior: "smooth" });
   });
 
   // Маска телефону

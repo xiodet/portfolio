@@ -8,7 +8,7 @@ window.DATA = {
   ],
 
   services: [
-    { cat: "hair", name: "Жіноча стрижка", note: "з миттям і укладкою", price: 750, from: true, dur: 60 },
+    { cat: "hair", name: "Жіноча стрижка", note: "з миттям і укладкою", price: 750, from: true, dur: 60, hit: true },
     { cat: "hair", name: "Чоловіча стрижка", price: 450, dur: 45 },
     { cat: "hair", name: "Укладка", note: "фен, локони, вечірня", price: 500, from: true, dur: 45 },
     { cat: "hair", name: "Фарбування в один тон", price: 1600, from: true, dur: 120 },
@@ -16,7 +16,7 @@ window.DATA = {
     { cat: "hair", name: "Кератин або ботокс", price: 2200, from: true, dur: 180 },
     { cat: "hair", name: "Відновлюючий догляд", note: "Olaplex, K18", price: 900, dur: 45 },
 
-    { cat: "nails", name: "Манікюр з покриттям гель-лак", price: 750, dur: 90 },
+    { cat: "nails", name: "Манікюр з покриттям гель-лак", note: "зняття, догляд, покриття", price: 750, dur: 90, hit: true },
     { cat: "nails", name: "Манікюр без покриття", price: 400, dur: 45 },
     { cat: "nails", name: "Нарощування нігтів", price: 1100, from: true, dur: 150 },
     { cat: "nails", name: "Педикюр з покриттям", price: 950, dur: 90 },
@@ -24,12 +24,12 @@ window.DATA = {
     { cat: "nails", name: "Дизайн", note: "за ніготь", price: 30, from: true, dur: 0, addon: true },
 
     { cat: "brows", name: "Корекція і фарбування брів", price: 450, dur: 45 },
-    { cat: "brows", name: "Ламінування брів", price: 650, dur: 60 },
+    { cat: "brows", name: "Ламінування брів", note: "з фарбуванням і корекцією", price: 650, dur: 60, hit: true },
     { cat: "brows", name: "Ламінування вій", price: 750, dur: 60 },
     { cat: "brows", name: "Нарощування вій, класика", price: 900, dur: 120 },
     { cat: "brows", name: "Нарощування вій, 2D–3D", price: 1100, dur: 150 },
 
-    { cat: "care", name: "Комбінована чистка обличчя", price: 1300, dur: 90 },
+    { cat: "care", name: "Комбінована чистка обличчя", note: "ультразвук + мануальна", price: 1300, dur: 90, hit: true },
     { cat: "care", name: "Хімічний пілінг", price: 1000, from: true, dur: 60 },
     { cat: "care", name: "Доглядова процедура з масажем", price: 900, dur: 60 },
     { cat: "care", name: "Карбоксітерапія", price: 1100, dur: 45 }
