@@ -49,7 +49,7 @@ window.DATA = {
     { src: "img/g4.jpg", cap: "Догляд за обличчям" },
     { src: "img/g5.jpg", cap: "Манікюр з дизайном" },
     { src: "img/g6.jpg", cap: "Нарощування вій" },
-    { src: "img/g7.jpg", cap: "Локони на вечір" },
+    { src: "img/g7.jpg", cap: "Відновлення і блиск" },
     { src: "img/g8.jpg", cap: "Наша зала" }
   ],
 
