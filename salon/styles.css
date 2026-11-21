@@ -489,3 +489,27 @@ h2 { font-size: clamp(32px, 7.4vw, 52px); line-height: 1.1; }
   .hero-full .hero__img { left: 26%; }
   .hero-full .hero::after { background: linear-gradient(90deg, var(--bg) 0%, var(--bg) 30%, rgba(250,247,242,.75) 39%, rgba(250,247,242,0) 56%), linear-gradient(180deg, rgba(250,247,242,.6) 0%, rgba(250,247,242,0) 14%); }
 }
+
+/* Телефон: фото зверху, плавно переходить у фон, текст нижче — як дзеркало десктопу */
+@media (max-width: 767px) {
+  .hero-full .hero__img { bottom: auto; height: 64svh; }
+  .hero-full .hero__img img { object-position: 50% 20%; }
+  .hero-full .hero::after {
+    background: linear-gradient(180deg, rgba(250,247,242,.7) 0%, rgba(250,247,242,0) 13%, rgba(250,247,242,0) 34%, rgba(250,247,242,.85) 52%, var(--bg) 63%, var(--bg) 100%);
+  }
+  .hero-full .hero__grid { padding-bottom: 32px; }
+  .hero-full .hero .eyebrow { margin-bottom: 8px; }
+  .hero-full .hero h1 { margin-bottom: 14px; }
+  .hero-full .hero__lead { font-size: 16px; color: #4A413A; }
+}
+/* На сенсорних екранах наведення немає — майстри в оригінальних кольорах */
+@media (hover: none) {
+  .member__photo img { filter: none; }
+}
+@media (max-width: 767px) and (max-height: 720px) {
+  .hero-full .hero__img { height: 52svh; }
+  .hero-full .hero::after { background: linear-gradient(180deg, rgba(250,247,242,.7) 0%, rgba(250,247,242,0) 13%, rgba(250,247,242,0) 26%, rgba(250,247,242,.88) 40%, var(--bg) 48%, var(--bg) 100%); }
+  .hero-full .hero h1 { font-size: 13vw; }
+  .hero-full .hero__lead { font-size: 15px; line-height: 1.5; }
+  .hero-full .hero__actions { margin-top: 18px; }
+}
