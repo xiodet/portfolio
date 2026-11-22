@@ -14,7 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="img/g4.jpg" media="(min-width: 681px)">
 <link rel="preload" as="image" href="img/g6.jpg" media="(max-width: 680px)">
-<link rel="stylesheet" href="styles.css?v=3">
+<link rel="stylesheet" href="styles.css?v=4">
 <script>/* палітра ?c=lime|red|mint і шрифт ?f=2 для порівняння */
 (function(){var q=location.search,c=q.match(/[?&]c=(lime|red|mint)/),f=q.match(/[?&]f=(2)/),r=document.documentElement;
 if(c)r.setAttribute("data-c",c[1]);if(f){r.setAttribute("data-f",f[1]);var l=document.createElement("link");l.rel="stylesheet";l.href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@800&display=swap";document.head.appendChild(l);}})();</script>
@@ -34,7 +34,7 @@ if(c)r.setAttribute("data-c",c[1]);if(f){r.setAttribute("data-f",f[1]);var l=doc
       <a href="#menu">Послуги</a>
       <a href="#team">Барбери</a>
       <a href="#reviews">Відгуки</a>
-      <a href="#contacts">Адреси</a>
+      <a href="#locations">Адреси</a>
     </nav>
     <a href="#booking" class="btn btn--acc nav__cta">Записатися</a>
     <button class="nav__burger" aria-label="Меню" aria-expanded="false" id="burger"><span></span><span></span></button>
@@ -214,6 +214,16 @@ if(c)r.setAttribute("data-c",c[1]);if(f){r.setAttribute("data-f",f[1]);var l=doc
   <div class="marquee marquee--rev" id="rev2"></div>
 </section>
 
+<!-- LOCATIONS: супутникова карта наближається до кожного барбершопу -->
+<section class="locsec" id="locations">
+  <div class="wrap">
+    <p class="eyebrow reveal">Адреси</p>
+    <h2 class="title reveal">Два барбершопи.<span class="acc"> Один стандарт.</span></h2>
+    <p class="lead lead--w reveal">Оболонь для тих, хто живе на півночі, центр для тих, хто працює біля Золотих воріт. Однакові ціни і меню, щодня з 10:00 до 21:00.</p>
+    <div class="lcards" id="lcards"></div>
+  </div>
+</section>
+
 <!-- FAQ -->
 <section class="faq" id="faq">
   <div class="wrap faq__in">
@@ -265,8 +275,8 @@ if(c)r.setAttribute("data-c",c[1]);if(f){r.setAttribute("data-f",f[1]);var l=doc
 </a>
 <a href="#booking" class="mbar" id="mbar">Записатися</a>
 
-<script src="config.js?v=2"></script>
+<script src="config.js?v=4"></script>
 <script src="data.js?v=2"></script>
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 </body>
 </html>
