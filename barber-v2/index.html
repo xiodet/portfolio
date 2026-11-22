@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ferrum — барбершоп на Оболоні, Київ. Стрижки, борода, гоління</title>
+<meta name="description" content="Барбершоп на Оболоні, 5 хвилин від метро. Фейди, борода, королівське гоління і комплекс «Ferrum». Онлайн-запис до свого барбера.">
+<meta name="theme-color" content="#08080A">
+<meta property="og:title" content="Ferrum — барбершоп на Оболоні">
+<meta property="og:image" content="img/hero.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2308080A'/%3E%3Cpath d='M22 14h22v8H31v7h11v8H31v13h-9z' fill='%234F6BFF'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans+Extra+Condensed:wght@800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="img/hero.jpg">
+<link rel="stylesheet" href="styles.css?v=1">
+</head>
+<body>
+<a class="skip" href="#booking">Перейти до запису</a>
+
+<header class="nav" id="nav">
+  <div class="wrap nav__in">
+    <a href="#top" class="logo" aria-label="Ferrum, на початок">
+      <svg class="logo__mark" viewBox="0 0 40 40" aria-hidden="true"><rect x="1" y="1" width="38" height="38" rx="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M14 9h14v5h-8.5v5h7.5v5h-7.5v8H14z" fill="currentColor"/></svg>
+      <span>FERRUM</span>
+    </a>
+    <nav class="nav__links" id="navLinks" aria-label="Розділи">
+      <a href="#why">Про нас</a>
+      <a href="#menu">Послуги</a>
+      <a href="#team">Барбери</a>
+      <a href="#reviews">Відгуки</a>
+      <a href="#faq">Питання</a>
+      <a href="#contacts">Контакти</a>
+    </nav>
+    <a href="#booking" class="btn btn--blue nav__cta">Записатися</a>
+    <button class="nav__burger" aria-label="Меню" aria-expanded="false" id="burger"><span></span><span></span></button>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero__bg" aria-hidden="true"><img src="img/hero.jpg" alt="" width="960" height="1440" fetchpriority="high"></div>
+  <div class="wrap hero__in">
+    <p class="eyebrow load" style="--d:.1s">Київ, Оболонь · з 2019</p>
+    <h1 class="hero__title">
+      <span class="line"><span style="--d:.2s">Стрижка, що</span></span>
+      <span class="line"><span class="blue" style="--d:.32s">говорить за тебе</span></span>
+    </h1>
+    <p class="hero__tag load" style="--d:.55s">Барбершоп на Оболоні</p>
+    <p class="hero__sub load" style="--d:.65s">Фейди, борода і королівське гоління за 5 хвилин від метро «Оболонь». Обираєш свого барбера і вільний час онлайн, приходиш, і крісло вже чекає.</p>
+    <div class="hero__cta load" style="--d:.75s">
+      <a href="#booking" class="btn btn--blue btn--lg">Записатися <svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5"/></svg></a>
+      <a href="#why" class="btn btn--ghost btn--lg">Атмосфера</a>
+      <span class="rating"><span class="stars" aria-hidden="true">★★★★★</span> <b>4.9</b> · 418 відгуків у Google</span>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker" aria-hidden="true"><div class="ticker__track" id="ticker"></div></div>
+
+<!-- WHY -->
+<section class="why" id="why">
+  <div class="wrap why__in">
+    <div class="why__text">
+      <p class="eyebrow reveal">Навіщо ми це робимо</p>
+      <h2 class="title reveal">Більше, ніж стрижка.<br><span class="blue">Це твоя година.</span></h2>
+      <p class="lead reveal">Хороша стрижка змінює не тільки зачіску. Вона змінює те, як ти тримаєш плечі. Тому ми не женемо потік: одна година, один гість, повна увага. Кожне крісло налаштоване під тебе, а виходиш ти з формою, яку відчуваєш одразу.</p>
+      <p class="reveal">Ferrum відкрив у 2019 році Максим Гордієнко, коли на Оболоні не було жодного місця, куди хотілося б повертатися. Зараз у нас чотири барбери, шкіряні крісла 60-х і постійні гості з усього Києва.</p>
+      <div class="counters reveal" id="counters"></div>
+    </div>
+    <figure class="why__photo reveal">
+      <img src="img/g5.jpg" alt="Вінтажне крісло і робоче місце барбера в Ferrum" loading="lazy" width="960" height="637">
+      <figcaption class="float-card"><b>Ми стрижемо. Ти посміхаєшся.</b><span>Точні фейди, класика і борода в спокійній атмосфері, куди не соромно привести і тата, і сина.</span></figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- BIG SCROLL TEXT -->
+<div class="bigtext" aria-hidden="true"><div class="bigtext__row" id="bigRow">Стрижка <i>·</i> Борода <i>·</i> Гоління <i>·</i> Оболонь <i>·</i> Стрижка <i>·</i> Борода <i>·</i> Гоління</div></div>
+
+<!-- SIGNATURE -->
+<section class="sig" id="signature">
+  <div class="wrap sig__in">
+    <div class="sig__text">
+      <p class="eyebrow eyebrow--gold reveal">Фірмовий ритуал</p>
+      <h2 class="title reveal">Комплекс<br><span class="gold">«Ferrum»</span></h2>
+      <p class="lead reveal">Повний ритуал від голови до шиї, заради якого гості повертаються. Дві години, кожна деталь, жодних компромісів.</p>
+      <p class="sig__price reveal"><b id="sigPrice">1 350 ₴</b><span>2 години, все включено</span></p>
+      <a href="#booking" class="btn btn--blue btn--lg reveal" data-svc="full">Записатися на комплекс <svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5"/></svg></a>
+    </div>
+    <div class="sig__cards">
+      <div class="card sig__list reveal">
+        <p class="card__label">Що входить</p>
+        <ul id="sigList"></ul>
+      </div>
+      <div class="card card--gold reveal">
+        <div class="vip__head">
+          <p class="card__label card__label--gold"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/></svg> Ще більше: <span id="vipName"></span></p>
+          <b class="vip__price" id="vipPrice"></b>
+        </div>
+        <p id="vipText"></p>
+        <small id="vipDur"></small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section class="menu" id="menu">
+  <div class="wrap">
+    <p class="eyebrow reveal">Меню</p>
+    <h2 class="title reveal">Ремесло.<span class="blue"> Чесні ціни.</span></h2>
+    <p class="lead lead--w reveal">Кожен візит починається з консультації. Без запису теж приймаємо, але запис гарантує тобі крісло. Ціни вказані у барбера, у старшого і топ-барбера трохи вищі.</p>
+    <div class="tabs reveal" id="menuTabs" role="group" aria-label="Категорія послуг"></div>
+    <div class="menu__grid" id="menuGrid"></div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="team" id="team">
+  <div class="wrap">
+    <p class="eyebrow reveal">Команда</p>
+    <h2 class="title reveal">Хто за<span class="blue"> кріслом.</span></h2>
+    <div class="team__grid" id="teamGrid"></div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section class="booking" id="booking">
+  <div class="wrap">
+    <p class="eyebrow reveal">Онлайн-запис</p>
+    <h2 class="title reveal">Обери барбера<span class="blue"> і час.</span></h2>
+    <p class="lead lead--w reveal">Тут видно вільний час кожного барбера. Після запису напишемо в Telegram або зателефонуємо.</p>
+
+    <form class="book" id="bookForm" novalidate>
+      <div class="book__steps">
+        <fieldset class="step card">
+          <legend><b>01</b> Послуга</legend>
+          <div class="tabs tabs--sm" id="bTabs" role="group" aria-label="Категорія послуг"></div>
+          <div class="svc" id="bServices"></div>
+          <p class="step__lbl">Додати до візиту</p>
+          <div class="addons" id="bAddons"></div>
+        </fieldset>
+        <fieldset class="step card">
+          <legend><b>02</b> Барбер</legend>
+          <div class="barbers" id="bBarbers"></div>
+        </fieldset>
+        <fieldset class="step card">
+          <legend><b>03</b> Дата і час</legend>
+          <div class="days" id="bDays"></div>
+          <div class="times" id="bTimes"></div>
+          <p class="times__note" id="bTimesNote"></p>
+        </fieldset>
+      </div>
+
+      <aside class="summary card" id="ticket">
+        <p class="card__label">Твій візит</p>
+        <dl class="summary__rows" id="summary"></dl>
+        <div class="summary__total" aria-live="polite"><span>Разом</span><b id="sumTotal">—</b></div>
+        <label class="field"><span>Ім'я</span><input id="fName" type="text" autocomplete="given-name" placeholder="Як до тебе звертатися"></label>
+        <label class="field"><span>Телефон</span><input id="fPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+380"></label>
+        <label class="field"><span>Коментар <i>необов'язково</i></span><input id="fNote" type="text" placeholder="Наприклад, хочу як на фото"></label>
+        <p class="form-err" id="formErr" role="alert"></p>
+        <button class="btn btn--blue btn--lg btn--full" id="submitBtn" type="submit">Записатися</button>
+        <p class="summary__fine">Скасувати чи перенести запис можна не пізніше ніж за 2 години.</p>
+      </aside>
+    </form>
+
+    <div class="done card" id="done" hidden>
+      <div class="done__mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+      <h3 class="title title--sm">Записали!</h3>
+      <p id="doneText"></p>
+      <div class="done__btns">
+        <button class="btn btn--blue" type="button" id="icsBtn">Додати в календар</button>
+        <button class="btn btn--ghost" type="button" id="again">Новий запис</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews" id="reviews">
+  <div class="wrap reviews__head">
+    <p class="stars stars--big reveal" aria-hidden="true">★★★★★</p>
+    <h2 class="title reveal">Нас люблять<span class="blue"> на Оболоні.</span></h2>
+    <p class="lead reveal">Понад чотириста відгуків у Google, і майже всі з п'ятьма зірками.</p>
+    <div class="bigstats reveal">
+      <div><b>4.9★</b><span>рейтинг у Google</span></div>
+      <div><b data-count="418">0</b><span>відгуків</span></div>
+      <div><b>4</b><span>барбери</span></div>
+      <div><b>2019</b><span>рік відкриття</span></div>
+    </div>
+  </div>
+  <div class="marquee" id="rev1"></div>
+  <div class="marquee marquee--rev" id="rev2"></div>
+</section>
+
+<!-- WORKS -->
+<section class="works" id="works">
+  <div class="wrap">
+    <p class="eyebrow reveal">Простір і роботи</p>
+    <h2 class="title reveal">Шкіра, дерево,<span class="blue"> сталь.</span></h2>
+    <div class="gallery" id="gallery"></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="wrap faq__in">
+    <p class="eyebrow reveal">Корисно знати</p>
+    <h2 class="title reveal">Питання,<span class="blue"> відповіді.</span></h2>
+    <div class="faq__list" id="faqList"></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="wrap cta__in">
+    <p class="eyebrow reveal">Крісло вже чекає</p>
+    <h2 class="title title--xl reveal">Вийди<span class="blue"> гострішим.</span></h2>
+    <p class="lead reveal">Запис за хвилину. Оболонь, п'ять хвилин від метро.</p>
+    <div class="cta__btns reveal">
+      <a href="#booking" class="btn btn--blue btn--lg">Записатися <svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5"/></svg></a>
+      <a href="#" class="btn btn--ghost btn--lg" id="giftBtn"><svg viewBox="0 0 24 24" class="ico" aria-hidden="true"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M12 8c-2-4-6-4-6-1.5S10 8 12 8zm0 0c2-4 6-4 6-1.5S14 8 12 8z"/></svg>Сертифікат</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot" id="contacts">
+  <div class="wrap foot__in">
+    <div class="foot__brand">
+      <a href="#top" class="logo"><svg class="logo__mark" viewBox="0 0 40 40" aria-hidden="true"><rect x="1" y="1" width="38" height="38" rx="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M14 9h14v5h-8.5v5h7.5v5h-7.5v8H14z" fill="currentColor"/></svg><span>FERRUM Barbershop</span></a>
+      <p>Барбершоп на Оболоні з 2019 року. Стрижки, борода і гоління для тих, хто цінує свій час.</p>
+      <div class="socials" id="socials"></div>
+    </div>
+    <div class="foot__col">
+      <h3>Адреса</h3>
+      <p id="cAddr"></p>
+      <p class="muted" id="cAddrNote"></p>
+      <a class="link" href="#" id="cMap" target="_blank" rel="noopener">Відкрити в Google Maps ↗</a>
+    </div>
+    <div class="foot__col">
+      <h3>Графік і контакти</h3>
+      <p id="cHours"></p>
+      <p><a class="link" id="cPhone" href="#"></a></p>
+      <p class="muted">Парковка у дворі безкоштовна</p>
+    </div>
+  </div>
+  <div class="wrap foot__bottom">
+    <p>Концепт-сайт для портфоліо. Бренд вигаданий, фото: StockSnap (CC0).</p>
+  </div>
+</footer>
+
+<a class="chat" id="chatBtn" href="#" target="_blank" rel="noopener" aria-label="Написати в Telegram">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.6-5.2A8.5 8.5 0 1 1 21 11.5z"/></svg>
+</a>
+<a href="#booking" class="mbar" id="mbar">Записатися</a>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Перегляд фото" hidden>
+  <button class="lb__x" type="button" id="lbX" aria-label="Закрити">×</button>
+  <button class="lb__nav lb__prev" type="button" id="lbPrev" aria-label="Попереднє">‹</button>
+  <figure><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure>
+  <button class="lb__nav lb__next" type="button" id="lbNext" aria-label="Наступне">›</button>
+</div>
+
+<script src="config.js?v=1"></script>
+<script src="data.js?v=1"></script>
+<script src="app.js?v=1"></script>
+</body>
+</html>
