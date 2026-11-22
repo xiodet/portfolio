@@ -9,6 +9,9 @@
   function priceAt(s, lvl) { return Array.isArray(s.price) ? s.price[lvl] : s.price; }
   function minPrice(s) { return Array.isArray(s.price) ? s.price[0] : s.price; }
   function svcById(id) { for (var i = 0; i < D.services.length; i++) if (D.services[i].id === id) return D.services[i]; }
+  function locById(id) { for (var i = 0; i < C.locations.length; i++) if (C.locations[i].id === id) return C.locations[i]; }
+  function telOf(p) { return "tel:" + p.replace(/[^\d+]/g, ""); }
+  function mapOf(l) { return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(l.mapQuery); }
   function barberById(id) { for (var i = 0; i < D.barbers.length; i++) if (D.barbers[i].id === id) return D.barbers[i]; }
   var tel = "tel:" + C.phone.replace(/[^\d+]/g, "");
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -38,8 +41,12 @@
   $$("a", links).forEach(function (a) { a.addEventListener("click", function () { links.classList.remove("is-open"); burger.setAttribute("aria-expanded", false); }); });
   chat.href = C.telegram;
 
+  /* ---------- «Шукаємо барберів» з пульсуючою точкою ---------- */
+  if (C.hiring && C.hiring.on) { $("#hireText").textContent = C.hiring.text; $("#hireBtn").href = C.telegram; }
+  else { $("#hireLink").hidden = true; $("#hiring").hidden = true; }
+
   /* ---------- Бігучий рядок ---------- */
-  var tk = ["Точні фейди", "Моделювання бороди", "Гарячі рушники", "Комплекс «Ferrum»", "Без запису теж можна", "Кава або віскі", "Оболонь"];
+  var tk = ["Точні фейди", "Моделювання бороди", "Гарячі рушники", "Комплекс «Ferrum»", "Без запису теж можна", "Кава або віскі", "Оболонь", "Золоті ворота"];
   var tkHtml = tk.map(function (t) { return "<span>" + t + "</span>"; }).join("");
   $("#ticker").innerHTML = tkHtml + tkHtml;
 
@@ -89,12 +96,23 @@
   $("#menuTabs").addEventListener("click", function (e) { var t = e.target.closest(".tab"); if (!t) return; menuCat = t.dataset.cat; renderMenu(); });
   renderMenu();
 
-  /* ---------- Команда ---------- */
+  /* ---------- Команда: фільтр за барбершопом ---------- */
   $("#teamGrid").innerHTML = D.barbers.map(function (b, i) {
-    return '<article class="tm reveal" style="--rd:' + i * 0.08 + 's"><img src="' + b.photo + '" alt="' + esc(b.name) + '" loading="lazy">' +
+    return '<article class="tm reveal" data-loc="' + b.loc + '" style="--rd:' + i * 0.08 + 's"><img src="' + b.photo + '" alt="' + esc(b.name) + '" loading="lazy">' +
+      '<span class="tm__loc">' + esc(locById(b.loc).name) + "</span>" +
       '<div class="tm__info"><span class="tm__lvl">' + D.levels[b.level] + "</span><h3>" + esc(b.name) + "</h3><p>" + esc(b.exp) + " · " + esc(b.tags.join(", ")) + "</p>" +
-      '<a class="btn btn--ghost" href="#booking" data-barber="' + b.id + '">Записатися до ' + esc(gen(b.name.split(" ")[0])) + "</a></div></article>";
+      '<a class="btn btn--ghost" href="#booking" data-barber="' + b.id + '">Записатися<span class="hide-m"> до ' + esc(gen(b.name.split(" ")[0])) + "</span></a></div></article>";
   }).join("");
+  var teamLoc = "all";
+  function renderTeamTabs() {
+    var opts = [{ id: "all", name: "Усі барбери" }].concat(C.locations);
+    $("#teamTabs").innerHTML = opts.map(function (o) {
+      return '<button type="button" class="tab' + (o.id === teamLoc ? " is-on" : "") + '" aria-pressed="' + (o.id === teamLoc) + '" data-loc="' + o.id + '">' + esc(o.name) + "</button>";
+    }).join("");
+    $$("#teamGrid .tm").forEach(function (el) { el.hidden = teamLoc !== "all" && el.dataset.loc !== teamLoc; });
+  }
+  $("#teamTabs").addEventListener("click", function (e) { var t = e.target.closest(".tab"); if (!t) return; teamLoc = t.dataset.loc; renderTeamTabs(); });
+  renderTeamTabs();
 
   /* ---------- Відгуки: два ряди назустріч ---------- */
   var gIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.6a4.8 4.8 0 0 1-2.1 3.1v2.6h3.4c2-1.8 3.1-4.5 3.1-7.5z"/><path fill="#34A853" d="M12 22c2.8 0 5.2-.9 6.9-2.5l-3.4-2.6c-.9.6-2.1 1-3.5 1-2.7 0-5-1.8-5.8-4.3H2.7v2.7A10 10 0 0 0 12 22z"/><path fill="#FBBC05" d="M6.2 13.6a6 6 0 0 1 0-3.8V7.1H2.7a10 10 0 0 0 0 9z"/><path fill="#EA4335" d="M12 5.9c1.5 0 2.9.5 4 1.6l3-3A10 10 0 0 0 2.7 7.1l3.5 2.7C7 7.7 9.3 5.9 12 5.9z"/></svg>';
@@ -106,20 +124,6 @@
     var h = p[1].map(rvCard).join("");
     $(p[0]).innerHTML = h + h.replace(/<article class="rv">/g, '<article class="rv" aria-hidden="true">');
   });
-
-  /* ---------- Галерея + перегляд ---------- */
-  var gal = $("#gallery"), lb = $("#lb"), lbI = 0, lbFrom = null;
-  gal.innerHTML = D.gallery.map(function (g, i) {
-    return '<button type="button" class="reveal" style="--rd:' + (i % 4) * 0.06 + 's" data-i="' + i + '"><img src="' + g.src + '" alt="' + esc(g.cap) + '" loading="lazy"><span>' + esc(g.cap) + "</span></button>";
-  }).join("");
-  function lbShow(i) { lbI = (i + D.gallery.length) % D.gallery.length; $("#lbImg").src = D.gallery[lbI].src; $("#lbImg").alt = D.gallery[lbI].cap; $("#lbCap").textContent = D.gallery[lbI].cap; }
-  gal.addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; lbFrom = b; lbShow(+b.dataset.i); lb.hidden = false; document.body.style.overflow = "hidden"; $("#lbX").focus(); });
-  function lbClose() { lb.hidden = true; document.body.style.overflow = ""; if (lbFrom) lbFrom.focus(); }
-  $("#lbX").addEventListener("click", lbClose);
-  lb.addEventListener("click", function (e) { if (e.target === lb) lbClose(); });
-  $("#lbPrev").addEventListener("click", function () { lbShow(lbI - 1); });
-  $("#lbNext").addEventListener("click", function () { lbShow(lbI + 1); });
-  document.addEventListener("keydown", function (e) { if (lb.hidden) return; if (e.key === "Escape") lbClose(); if (e.key === "ArrowLeft") lbShow(lbI - 1); if (e.key === "ArrowRight") lbShow(lbI + 1); });
 
   /* ---------- FAQ-акордеон ---------- */
   $("#faqList").innerHTML = D.faq.map(function (f, i) {
@@ -133,9 +137,13 @@
   });
 
   /* ---------- Контакти ---------- */
-  $("#cAddr").textContent = C.address; $("#cAddrNote").textContent = C.addressNote; $("#cHours").textContent = C.hoursText;
-  $("#cPhone").textContent = C.phone; $("#cPhone").href = tel;
-  $("#cMap").href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(C.mapQuery);
+  var pin = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
+  $("#footLocs").innerHTML = C.locations.map(function (l) {
+    return '<div class="foot__col"><p class="foot__since">' + esc(l.since) + "</p><h3>" + esc(l.name) + "</h3>" +
+      '<p class="foot__addr">' + pin + esc(l.address) + '</p><p class="muted">' + esc(l.note) + "</p>" +
+      "<p>" + esc(C.hoursText) + '</p><p><a class="link" href="' + telOf(l.phone) + '">' + esc(l.phone) + "</a></p>" +
+      '<p class="muted">' + esc(l.extra) + '</p><a class="link" href="' + mapOf(l) + '" target="_blank" rel="noopener">Відкрити в Google Maps ↗</a></div>';
+  }).join("");
   $("#giftBtn").href = C.telegram;
   var icons = {
     instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>',
@@ -154,7 +162,8 @@
      Зайнятість у концепті генерується псевдовипадково (стабільно для дня й барбера).
      Для реального клієнта тут підключається його CRM (Altegio, Booksy тощо).
      ========================================================= */
-  var st = { cat: "hair", svc: "cut", addons: [], barber: "any", day: 0, time: null, assigned: null };
+  var st = { loc: C.locations[0].id, cat: "hair", svc: "cut", addons: [], barber: "any", day: 0, time: null };
+  function locBarbers() { return D.barbers.filter(function (b) { return b.loc === st.loc; }); }
   var STEP = C.stepMin, CELLS = (C.close - C.open) * 60 / STEP;
   var DAYS = ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
   var MONTHS = ["січня", "лютого", "березня", "квітня", "травня", "червня", "липня", "серпня", "вересня", "жовтня", "листопада", "грудня"];
@@ -190,7 +199,7 @@
     return true;
   }
   function whoFree(di, cell) {
-    var ids = st.barber === "any" ? D.barbers.map(function (b) { return b.id; }) : [st.barber];
+    var ids = st.barber === "any" ? locBarbers().map(function (b) { return b.id; }) : [st.barber];
     for (var i = 0; i < ids.length; i++) if (freeAt(ids[i], di, cell)) return ids[i];
     return null;
   }
@@ -201,7 +210,22 @@
     return "немає вікон";
   }
 
-  // 1. Послуги
+  // 1. Барбершоп
+  function renderLocs() {
+    $("#bLocs").innerHTML = C.locations.map(function (l) {
+      var on = l.id === st.loc, n = D.barbers.filter(function (b) { return b.loc === l.id; }).length;
+      return '<button type="button" class="opt loc' + (on ? " is-on" : "") + '" aria-pressed="' + on + '" data-loc="' + l.id + '"><span><b class="loc__name">' + esc(l.name) + "</b><small>" + esc(l.address) + '</small><small class="loc__metro">' + esc(l.metro) + " · " + n + " барбери</small></span>" + '<span class="loc__dot" aria-hidden="true"></span></button>';
+    }).join("");
+  }
+  function setLoc(id) {
+    st.loc = id;
+    var b = st.barber !== "any" && barberById(st.barber);
+    if (b && b.loc !== id) st.barber = "any";
+    renderLocs(); refresh();
+  }
+  $("#bLocs").addEventListener("click", function (e) { var o = e.target.closest(".loc"); if (!o) return; setLoc(o.dataset.loc); });
+
+  // 2. Послуги
   function renderTabs() {
     $("#bTabs").innerHTML = mainCats.map(function (c) { return '<button type="button" class="tab' + (c.id === st.cat ? " is-on" : "") + '" aria-pressed="' + (c.id === st.cat) + '" data-cat="' + c.id + '">' + esc(c.name) + "</button>"; }).join("");
   }
@@ -224,16 +248,16 @@
     renderAddons(); refresh();
   });
 
-  // 2. Барбери
+  // 3. Барбери
   function renderBarbers() {
     var any = '<button type="button" class="opt bopt' + (st.barber === "any" ? " is-on" : "") + '" aria-pressed="' + (st.barber === "any") + '" data-b="any"><span class="bopt__ph"><span class="bopt__any">F</span></span><span class="bopt__b"><b>Будь-хто вільний</b><small>найшвидше вікно</small><span class="bopt__p"><small class="from">від</small>' + money(totalPrice(0)) + "</span></span></button>";
-    $("#bBarbers").innerHTML = any + D.barbers.map(function (b) {
+    $("#bBarbers").innerHTML = any + locBarbers().map(function (b) {
       return '<button type="button" class="opt bopt' + (st.barber === b.id ? " is-on" : "") + '" aria-pressed="' + (st.barber === b.id) + '" data-b="' + b.id + '"><span class="bopt__ph"><img src="' + b.photo + '" alt=""></span><span class="bopt__b"><b>' + esc(b.name.split(" ")[0]) + "</b><small>" + D.levels[b.level] + '</small><span class="bopt__p">' + money(totalPrice(b.level)) + '</span><span class="bopt__next">Найближче: ' + nextFree(b.id) + "</span></span></button>";
     }).join("");
   }
   $("#bBarbers").addEventListener("click", function (e) { var o = e.target.closest(".bopt"); if (!o) return; st.barber = o.dataset.b; renderBarbers(); keepTime(); renderTimes(); renderSummary(); });
 
-  // 3. Дата і час
+  // 4. Дата і час
   function renderDays() {
     var h = "";
     for (var i = 0; i < C.daysAhead; i++) {
@@ -275,7 +299,9 @@
     var row = function (k, v, empty) { return "<div><dt>" + k + '</dt><dd class="' + (empty ? "is-empty" : "") + '">' + v + "</dd></div>"; };
     var when = st.time != null ? dayLabel(st.day) + ", " + cellTime(st.time) : "";
     var bTxt = b ? esc(b.name) + (st.barber === "any" ? " (вільний)" : "") : st.barber === "any" ? "будь-хто вільний" : "";
+    var L = locById(st.loc);
     $("#summary").innerHTML =
+      row("Де", esc(L.name) + "<small>" + esc(L.address) + "</small>") +
       row("Послуга", esc(s.name) + (adds.length ? " + " + esc(adds.join(", ")).toLowerCase() : "")) +
       row("Барбер", bTxt || "не обрано", !bTxt) +
       row("Коли", when || "оберіть час", !when) +
@@ -284,7 +310,7 @@
   }
   function refresh() { renderBarbers(); keepTime(); renderTimes(); renderSummary(); }
 
-  renderTabs(); renderServices(); renderAddons(); renderDays(); refresh();
+  renderLocs(); renderTabs(); renderServices(); renderAddons(); renderDays(); refresh();
   // якщо сьогодні вже нічого немає — завтра
   if (!$("#bTimes .time:not([disabled])")) { st.day = 1; renderDays(); renderTimes(); }
 
@@ -297,7 +323,7 @@
   }
   document.addEventListener("click", function (e) {
     var p = e.target.closest("a[data-svc]"); if (p) pickService(p.dataset.svc);
-    var b = e.target.closest("a[data-barber]"); if (b) { st.barber = b.dataset.barber; refresh(); }
+    var b = e.target.closest("a[data-barber]"); if (b) { st.barber = b.dataset.barber; setLoc(barberById(st.barber).loc); }
   });
 
   // Телефон
@@ -335,14 +361,16 @@
     if (!phoneOk) { problems.push("телефон"); fPhone.classList.add("is-bad"); fPhone.setAttribute("aria-invalid", "true"); }
     if (problems.length) { err.textContent = "Вкажи, будь ласка, " + problems.join(", ") + "."; return; }
 
-    var s = svcById(st.svc), b = chosenBarber(), d = dayDate(st.day);
+    var s = svcById(st.svc), b = chosenBarber(), d = dayDate(st.day), L = locById(st.loc);
     var adds = st.addons.map(function (a) { return svcById(a).name; });
     var payload = {
+      location: L.name + ", " + L.address,
       service: s.name + (adds.length ? " + " + adds.join(", ") : ""), barber: b.name, price: money(totalPrice(b.level)),
       date: d.getDate() + " " + MONTHS[d.getMonth()] + " (" + DAYS[d.getDay()] + ")", time: cellTime(st.time), duration: totalDur(),
       name: fName.value.trim(), phone: fPhone.value, note: fNote.value.trim()
     };
     var text = "💈 <b>Новий запис з сайту</b>\n\n" +
+      "Барбершоп: " + esc(payload.location) + "\n" +
       "Послуга: " + esc(payload.service) + "\nБарбер: " + esc(payload.barber) + "\n" +
       "Коли: " + payload.date + ", " + payload.time + " (" + payload.duration + " хв)\nЦіна: " + payload.price + "\n\n" +
       "Клієнт: " + esc(payload.name) + "\nТелефон: " + esc(payload.phone) + (payload.note ? "\nКоментар: " + esc(payload.note) : "");
@@ -350,12 +378,12 @@
     var btn = $("#submitBtn"); btn.disabled = true; btn.textContent = "Надсилаємо…"; err.textContent = "";
     send(text, payload).then(function () {
       var start = new Date(d); var m = C.open * 60 + st.time * STEP; start.setHours(Math.floor(m / 60), m % 60);
-      last = { start: start, dur: payload.duration, title: "Ferrum: " + payload.service, desc: "Барбер " + payload.barber + ". " + C.address };
-      $("#doneText").textContent = payload.name + ", чекаємо тебе " + dayLabel(st.day) + " о " + payload.time + ". Барбер: " + payload.barber + ". Найближчим часом напишемо в Telegram або зателефонуємо, щоб підтвердити.";
+      last = { start: start, dur: payload.duration, title: "Ferrum: " + payload.service, desc: "Барбер " + payload.barber + ". " + payload.location, where: payload.location + ", Київ" };
+      $("#doneText").textContent = payload.name + ", чекаємо тебе " + dayLabel(st.day) + " о " + payload.time + " у Ferrum " + L.name + " (" + L.address + "). Барбер: " + payload.barber + ". Найближчим часом напишемо в Telegram або зателефонуємо, щоб підтвердити.";
       $("#bookForm").hidden = true; $("#done").hidden = false;
       $("#done").scrollIntoView({ behavior: "smooth", block: "center" }); $("#icsBtn").focus({ preventScroll: true });
     }).catch(function () {
-      err.innerHTML = 'Не вдалося надіслати заявку. Зателефонуй нам: <a href="' + tel + '">' + esc(C.phone) + "</a>";
+      var L2 = locById(st.loc); err.innerHTML = 'Не вдалося надіслати заявку. Зателефонуй нам: <a href="' + telOf(L2.phone) + '">' + esc(L2.phone) + "</a>";
     }).finally(function () { btn.disabled = false; btn.textContent = "Записатися"; });
   });
   $("#again").addEventListener("click", function () {
@@ -366,7 +394,7 @@
     var f = function (dt) { return dt.getFullYear() + ("0" + (dt.getMonth() + 1)).slice(-2) + ("0" + dt.getDate()).slice(-2) + "T" + ("0" + dt.getHours()).slice(-2) + ("0" + dt.getMinutes()).slice(-2) + "00"; };
     var end = new Date(last.start.getTime() + last.dur * 60000);
     var ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Ferrum//UA", "BEGIN:VEVENT", "UID:" + Date.now() + "@ferrum", "DTSTART:" + f(last.start), "DTEND:" + f(end),
-      "SUMMARY:" + last.title, "DESCRIPTION:" + last.desc, "LOCATION:" + C.address, "BEGIN:VALARM", "TRIGGER:-PT2H", "ACTION:DISPLAY", "DESCRIPTION:Візит у барбершоп", "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+      "SUMMARY:" + last.title, "DESCRIPTION:" + last.desc, "LOCATION:" + last.where.replace(/,/g, "\\,"), "BEGIN:VALARM", "TRIGGER:-PT2H", "ACTION:DISPLAY", "DESCRIPTION:Візит у барбершоп", "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n");
     var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar" })); a.download = "ferrum.ics"; a.click();
   });
 
