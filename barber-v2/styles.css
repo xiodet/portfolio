@@ -115,6 +115,7 @@ button, input { font: inherit; color: inherit; }
 .counters b { display: block; font: var(--hw) 52px/1 var(--head); color: var(--acc-paper); text-transform: uppercase; }
 .counters span { font-size: 15px; color: #5A5A62; }
 .why__photo { margin: 0; position: relative; }
+.why__photo picture { display: contents; }
 .why__photo img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--r); }
 .float-card { position: absolute; left: -32px; bottom: -28px; max-width: 320px; background: #F6F4EF; border-radius: 18px; padding: 22px 24px; box-shadow: 0 30px 60px -20px rgba(0,0,0,.35); animation: bob 6s ease-in-out infinite; }
 .float-card b { display: block; font: var(--hw) 26px/1 var(--head); text-transform: uppercase; margin-bottom: 8px; color: var(--ink); }
@@ -359,7 +360,7 @@ button, input { font: inherit; color: inherit; }
   .lead { font-size: 17px; }
 
   .hero { min-height: 92svh; padding: 110px 0 56px; align-items: flex-end; }
-  .hero__bg img { object-position: 45% 35%; }
+  .hero__bg img { object-position: 62% 30%; }
   .hero__bg::after { background: linear-gradient(0deg, var(--bg) 4%, rgba(8,8,10,.55) 50%, rgba(8,8,10,.35) 100%), radial-gradient(ellipse at 10% 95%, rgba(var(--acc-rgb),.25), transparent 60%); }
   .hero__title { font-size: 58px; }
   .hero__tag { font-size: 14px; letter-spacing: .18em; margin-top: 20px; }
@@ -419,10 +420,10 @@ button, input { font: inherit; color: inherit; }
   .foot { padding: 56px 0 110px; }
   .foot__in { grid-template-columns: 1fr; gap: 34px; }
 
-  .chat { right: 16px; bottom: 82px; width: 52px; height: 52px; }
+  .chat { right: 16px; bottom: calc(84px + env(safe-area-inset-bottom)); width: 52px; height: 52px; transition: bottom .35s var(--ease), transform .3s var(--ease); }
   .mbar { display: flex; position: fixed; left: 16px; right: 16px; bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 60; height: 54px; align-items: center; justify-content: center; border-radius: 99px; background: var(--acc-btn); color: var(--acc-ink); font-weight: 600; font-size: 16px; text-decoration: none; box-shadow: 0 14px 34px -10px rgba(0,0,0,.9); transition: transform .35s var(--ease), opacity .35s; }
   .mbar.is-hidden { transform: translateY(150%); opacity: 0; pointer-events: none; }
-  .mbar.is-hidden ~ .chat, .chat.is-low { bottom: 20px; }
+  .mbar.is-hidden ~ .chat, .chat.is-low { bottom: calc(16px + env(safe-area-inset-bottom)); }
 }
 @media (max-width: 380px) {
   .hero__title { font-size: 50px; }
