@@ -1,6 +1,8 @@
 /* ===== Налаштування ===== */
 // Ваш нік у Telegram без @, наприклад 'mark_sites'. Порожньо = кнопки показують підказку.
 const TELEGRAM = '';
+// Номер для дзвінків; поки нік порожній, Telegram відкривається за цим номером.
+const PHONE = '+380953778669';
 const TG_TEXT = 'Привіт! Хочу пробну версію сайту для свого закладу.';
 
 (() => {
@@ -16,17 +18,11 @@ const TG_TEXT = 'Привіт! Хочу пробну версію сайту д�
     toastEl.textContent = msg; toastEl.classList.add('show');
     clearTimeout(toast.t); toast.t = setTimeout(() => toastEl.classList.remove('show'), 2600);
   };
-  $$('.tg-link').forEach(a => {
-    if (TELEGRAM) {
-      a.href = `https://t.me/${TELEGRAM}?text=${encodeURIComponent(TG_TEXT)}`;
-      a.target = '_blank'; a.rel = 'noopener';
-    } else {
-      a.addEventListener('click', e => {
-        if (a.closest('.nav') || a.closest('.hero-cta') || a.classList.contains('float-cta')) return; // ведуть до контактів
-        e.preventDefault(); toast('Демо: тут відкриється чат у Telegram');
-      });
-    }
-  });
+  const tgUrl = TELEGRAM
+    ? `https://t.me/${TELEGRAM}?text=${encodeURIComponent(TG_TEXT)}`
+    : `https://t.me/${PHONE}`;
+  $$('.tg-link').forEach(a => { a.href = tgUrl; a.target = '_blank'; a.rel = 'noopener'; });
+  const tgVal = $('.tg-value'); if (tgVal) tgVal.textContent = TELEGRAM ? '@' + TELEGRAM : 'Написати в чат';
 
   /* Intro */
   const start = () => requestAnimationFrame(() => document.documentElement.classList.add('loaded'));
