@@ -120,7 +120,7 @@ button, input { font: inherit; color: inherit; }
 .counters b { display: block; font: var(--hw) 52px/1 var(--head); color: var(--acc-paper); text-transform: uppercase; }
 .counters span { font-size: 15px; color: #5A5A62; }
 .why__photo { margin: 0; position: relative; }
-.why__photo img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--r); }
+.why__photo img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--r); }
 .float-card { position: absolute; left: -32px; bottom: -28px; max-width: 320px; background: #F6F4EF; border-radius: 18px; padding: 22px 24px; box-shadow: 0 30px 60px -20px rgba(0,0,0,.35); animation: bob 6s ease-in-out infinite; }
 .float-card b { display: block; font: var(--hw) 26px/1 var(--head); text-transform: uppercase; margin-bottom: 8px; color: var(--ink); }
 .float-card span { font-size: 14.5px; color: #55555D; line-height: 1.55; display: block; }
