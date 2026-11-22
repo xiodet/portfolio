@@ -2,10 +2,239 @@
 <html lang="uk">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Портфоліо сайтів</title>
-<meta http-equiv="refresh" content="0; url=salon/">
-<style>body{margin:0;background:#FAF7F2;font:16px/1.6 system-ui,sans-serif;color:#2B2622;display:grid;place-items:center;min-height:100vh}</style>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Марк · сайти для місцевого бізнесу</title>
+<meta name="description" content="Сайт для салону, барбершопу чи квіткової за 3 дні. Спочатку безкоштовна пробна версія під ваш заклад. Від 3 000 до 6 000 грн.">
+<meta name="theme-color" content="#F3F1EC">
+<meta property="og:title" content="Сайт для вашого закладу за 3 дні">
+<meta property="og:description" content="Спочатку безкоштовна пробна версія. Від 3 000 до 6 000 грн.">
+<meta property="og:image" content="home/img/salon.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="home/styles.css?v=1">
 </head>
-<body><p><a href="salon/">Відкрити приклад: сайт салону краси →</a></p></body>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <a class="brand" href="#top" aria-label="На початок">
+    <span class="brand-mark">М</span>
+    <span class="brand-text">Марк <i>·</i> сайти для бізнесу</span>
+  </a>
+  <nav class="nav-links" aria-label="Розділи">
+    <a href="#works">Роботи</a>
+    <a href="#price">Ціна</a>
+    <a href="#steps">Як працюю</a>
+  </nav>
+  <a class="btn btn-sm btn-dark tg-link magnetic" href="#contact">Написати</a>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-text">
+      <p class="eyebrow reveal"><span class="dot"></span>Беру нові проєкти в Києві</p>
+      <h1 class="hero-title">
+        <span class="line"><span>Сайт для</span></span>
+        <span class="line"><span class="rotator" aria-live="polite"><span class="rot-word">салону краси</span></span></span>
+        <span class="line"><span><em>за 3 дні</em></span></span>
+      </h1>
+      <p class="hero-sub reveal">Спочатку безкоштовно зроблю пробну версію саме для вас: з вашими послугами, цінами й фото. Сподобається, тоді запускаємо.</p>
+      <div class="hero-cta reveal">
+        <a class="btn btn-dark tg-link magnetic" href="#contact">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 4.2 2.9 11.4c-1 .4-1 1.6 0 1.9l4.6 1.5 1.8 5.6c.3.8 1.3 1 1.9.4l2.6-2.5 4.7 3.5c.7.5 1.7.1 1.9-.7l3.2-15.4c.2-1-.8-1.9-1.8-1.5Zm-3.6 4-8.4 7.6-.3 3.3-1.4-4.5 9.6-6.1c.4-.3.8.2.5.5Z"/></svg>
+          Хочу пробну версію
+        </a>
+        <a class="btn btn-ghost" href="#works">Подивитися роботи</a>
+      </div>
+      <ul class="hero-facts reveal">
+        <li>Пробна версія безкоштовно</li>
+        <li>Під телефон</li>
+        <li>Заявки одразу в Telegram</li>
+      </ul>
+    </div>
+
+    <div class="hero-phones" aria-hidden="true">
+      <div class="phone ph-left"><div class="screen auto"><img src="home/img/flowers.jpg" alt="" loading="eager"></div></div>
+      <div class="phone ph-right"><div class="screen auto"><img src="home/img/barber.jpg" alt="" loading="eager"></div></div>
+      <div class="phone ph-center"><div class="screen auto"><img src="home/img/salon.jpg" alt="" loading="eager"></div></div>
+      <div class="hero-badge"><b>3</b><span>дні<br>до запуску</span></div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Салони краси</span><i>✶</i><span>Барбершопи</span><i>✶</i><span>Квіткові</span><i>✶</i><span>Студії манікюру</span><i>✶</i><span>Кавʼярні</span><i>✶</i><span>Масажні кабінети</span><i>✶</i><span>Автосервіси</span><i>✶</i>
+      <span>Салони краси</span><i>✶</i><span>Барбершопи</span><i>✶</i><span>Квіткові</span><i>✶</i><span>Студії манікюру</span><i>✶</i><span>Кавʼярні</span><i>✶</i><span>Масажні кабінети</span><i>✶</i><span>Автосервіси</span><i>✶</i>
+    </div>
+  </div>
+
+  <!-- WORKS -->
+  <section class="works" id="works">
+    <div class="sec-head">
+      <p class="kicker reveal">01 · Роботи</p>
+      <h2 class="reveal">Три сайти, які можна <em>погортати</em> прямо тут</h2>
+      <p class="sec-note reveal">Це концепти з вигаданими назвами: так виглядав би сайт вашого закладу. Проведіть пальцем по екрану телефона або відкрийте сайт повністю.</p>
+    </div>
+
+    <article class="work reveal-work">
+      <div class="work-phone">
+        <div class="phone big"><div class="screen live"><img src="home/img/salon.jpg" alt="Сайт салону краси Mila Beauty Studio на телефоні" loading="lazy"></div></div>
+        <span class="swipe-hint">гортайте ↕</span>
+      </div>
+      <div class="work-info">
+        <span class="work-num">01</span>
+        <h3>Mila Beauty Studio</h3>
+        <p class="work-type">Салон краси · Позняки</p>
+        <p class="work-feature">Прайс картками з позначкою «Хіт» і онлайн-запис: послуга, майстер, день і час. Заявка приходить власнику в Telegram.</p>
+        <ul class="tags"><li>Онлайн-запис</li><li>Прайс</li><li>Майстри</li><li>Відгуки</li></ul>
+        <a class="btn btn-dark magnetic" href="salon/" target="_blank" rel="noopener">Відкрити сайт <span class="arr">↗</span></a>
+      </div>
+    </article>
+
+    <article class="work reveal-work alt">
+      <div class="work-phone">
+        <div class="phone big"><div class="screen live"><img src="home/img/flowers.jpg" alt="Сайт квіткової майстерні Bloom Lab на телефоні" loading="lazy"></div></div>
+        <span class="swipe-hint">гортайте ↕</span>
+      </div>
+      <div class="work-info">
+        <span class="work-num">02</span>
+        <h3>Bloom Lab</h3>
+        <p class="work-type">Квіткова майстерня · Печерськ</p>
+        <p class="work-feature">Каталог букетів з фільтрами за приводом, ціною й кольором, кошик і оформлення доставки на потрібну дату й годину.</p>
+        <ul class="tags"><li>Каталог</li><li>Кошик</li><li>Доставка</li><li>Фільтри</li></ul>
+        <a class="btn btn-dark magnetic" href="flowers/" target="_blank" rel="noopener">Відкрити сайт <span class="arr">↗</span></a>
+      </div>
+    </article>
+
+    <article class="work reveal-work">
+      <div class="work-phone">
+        <div class="phone big"><div class="screen live"><img src="home/img/barber.jpg" alt="Сайт барбершопу Ferrum на телефоні" loading="lazy"></div></div>
+        <span class="swipe-hint">гортайте ↕</span>
+      </div>
+      <div class="work-info">
+        <span class="work-num">03</span>
+        <h3>Ferrum Barbershop</h3>
+        <p class="work-type">Барбершоп · Оболонь і Золоті ворота</p>
+        <p class="work-feature">Запис з вибором барбера і вільного часу, дві адреси з супутниковою картою, яка наближається до потрібного будинку.</p>
+        <ul class="tags"><li>Вибір барбера</li><li>Дві адреси</li><li>Карта</li><li>Анімації</li></ul>
+        <a class="btn btn-dark magnetic" href="barber-v2/" target="_blank" rel="noopener">Відкрити сайт <span class="arr">↗</span></a>
+      </div>
+    </article>
+  </section>
+
+  <!-- PRICE -->
+  <section class="price" id="price">
+    <div class="price-card">
+      <div class="price-top">
+        <p class="kicker light reveal">02 · Ціна</p>
+        <h2 class="price-num reveal"><span class="count" data-to="3000">3 000</span><span class="dash">–</span><span class="count" data-to="6000">6 000</span><small>грн</small></h2>
+        <p class="price-why reveal">Ціна залежить від обсягу: скільки послуг і блоків, чи потрібні онлайн-запис або кошик, кілька адрес, і чи є у вас готові фото й тексти.</p>
+      </div>
+
+      <div class="scale reveal" aria-hidden="true">
+        <div class="scale-bar"><span class="scale-fill"></span></div>
+        <div class="scale-ends">
+          <div><b>3 000</b><span>Послуги, ціни, фото, контакти й карта</span></div>
+          <div><b>6 000</b><span>Плюс онлайн-запис або кошик, кілька адрес</span></div>
+        </div>
+      </div>
+
+      <div class="price-bottom">
+        <ul class="included">
+          <li class="reveal">Адаптація під телефон і компʼютер</li>
+          <li class="reveal">Кнопки дзвінка, Telegram та Instagram</li>
+          <li class="reveal">Правки, поки не сподобається</li>
+          <li class="reveal">Допомога з адресою сайту й розміщенням</li>
+        </ul>
+        <div class="trial reveal">
+          <span class="trial-label">Пробна версія</span>
+          <span class="trial-num">0 грн</span>
+          <span class="trial-note">Платите, тільки якщо запускаємо</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEPS -->
+  <section class="steps" id="steps">
+    <div class="sec-head">
+      <p class="kicker reveal">03 · Як працюю</p>
+      <h2 class="reveal">Три кроки <em>від ідеї до сайту</em></h2>
+    </div>
+    <div class="steps-wrap">
+    <span class="step-line" aria-hidden="true"><span></span></span>
+    <ol class="step-list">
+      <li class="step reveal">
+        <span class="step-n">1</span>
+        <div><h3>Пробна версія <span class="pill">безкоштовно</span></h3>
+        <p>Беру дані з вашої сторінки в Google: послуги, фото, відгуки, адресу. За 1–2 дні показую готовий сайт.</p></div>
+      </li>
+      <li class="step reveal">
+        <span class="step-n">2</span>
+        <div><h3>Правки</h3>
+        <p>Кажете, що змінити: кольори, тексти, фото, блоки. Доробляю, поки вам не сподобається.</p></div>
+      </li>
+      <li class="step reveal">
+        <span class="step-n">3</span>
+        <div><h3>Запуск</h3>
+        <p>Оплата, підключення адреси сайту й заявок у Telegram. Сайт працює, клієнти записуються.</p></div>
+      </li>
+    </ol>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about">
+    <div class="about-card reveal">
+      <div class="avatar" aria-hidden="true"><span>М</span></div>
+      <div>
+        <p class="kicker">04 · Про мене</p>
+        <p class="about-text">Привіт, я Марк із Києва. Роблю сайти для місцевого бізнесу і пишу код сам, без конструкторів, тому сайти швидкі й не схожі на шаблон. Нові проєкти, тому й ціна стартова.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq">
+    <div class="sec-head">
+      <p class="kicker reveal">05 · Питання</p>
+      <h2 class="reveal">Коротко про <em>головне</em></h2>
+    </div>
+    <div class="faq-list">
+      <details class="reveal"><summary>А якщо пробна версія не сподобається?</summary><p>Тоді ви нічого не платите. Можу переробити в іншому стилі, або просто залишимось на звʼязку.</p></details>
+      <details class="reveal"><summary>Що потрібно від мене?</summary><p>Для старту нічого, дані беру з Google. Далі можна надіслати свої фото й актуальні ціни, щоб усе було точно.</p></details>
+      <details class="reveal"><summary>Ці заклади справжні?</summary><p>Ні, це концепти з вигаданими назвами, щоб показати стиль і можливості. Ваш сайт буде з вашою назвою, цінами й фото.</p></details>
+      <details class="reveal"><summary>Скільки коштує утримання сайту?</summary><p>Розміщення може бути безкоштовним. Окремо платите лише за власну адресу сайту (домен), якщо вона потрібна.</p></details>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="contact-inner">
+      <h2 class="contact-title reveal">Хочете побачити <em>свій</em> сайт?</h2>
+      <p class="contact-sub reveal">Напишіть назву закладу, і за 1–2 дні я покажу пробну версію. Безкоштовно.</p>
+      <a class="btn btn-light btn-xl tg-link magnetic reveal" href="#contact">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 4.2 2.9 11.4c-1 .4-1 1.6 0 1.9l4.6 1.5 1.8 5.6c.3.8 1.3 1 1.9.4l2.6-2.5 4.7 3.5c.7.5 1.7.1 1.9-.7l3.2-15.4c.2-1-.8-1.9-1.8-1.5Zm-3.6 4-8.4 7.6-.3 3.3-1.4-4.5 9.6-6.1c.4-.3.8.2.5.5Z"/></svg>
+        Написати в Telegram
+      </a>
+      <p class="contact-small reveal">Відповідаю протягом дня</p>
+    </div>
+    <footer class="foot">
+      <span>© 2026 Марк · Київ</span>
+      <a href="#top">Нагору ↑</a>
+    </footer>
+  </section>
+</main>
+
+<a class="float-cta tg-link" href="#contact" aria-label="Написати в Telegram">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 4.2 2.9 11.4c-1 .4-1 1.6 0 1.9l4.6 1.5 1.8 5.6c.3.8 1.3 1 1.9.4l2.6-2.5 4.7 3.5c.7.5 1.7.1 1.9-.7l3.2-15.4c.2-1-.8-1.9-1.8-1.5Zm-3.6 4-8.4 7.6-.3 3.3-1.4-4.5 9.6-6.1c.4-.3.8.2.5.5Z"/></svg>
+  <span>Написати</span>
+</a>
+
+<script src="home/app.js?v=1"></script>
+</body>
 </html>
