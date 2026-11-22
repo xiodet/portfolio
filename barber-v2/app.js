@@ -20,25 +20,12 @@
 
   /* ---------- Навігація, мобільна кнопка, чат ---------- */
   var nav = $("#nav"), burger = $("#burger"), links = $("#navLinks"), mbar = $("#mbar"), chat = $("#chatBtn");
-  var strip = $("#strip"), rows = $$(".strip__row");
   function onScroll() {
     var y = window.scrollY;
     nav.classList.toggle("is-solid", y > 40);
     var b = $("#booking").getBoundingClientRect();
     var hide = y < 400 || (b.top < window.innerHeight && b.bottom > 0);
     mbar.classList.toggle("is-hidden", hide); chat.classList.toggle("is-low", hide);
-    // фото-стрічка: ряди їдуть назустріч, поки блок на екрані
-    if (!reduced) {
-      var r = strip.getBoundingClientRect();
-      if (r.bottom > 0 && r.top < window.innerHeight) {
-        var p = (window.innerHeight - r.top) / (window.innerHeight + r.height); // 0..1
-        rows.forEach(function (row) {
-          var max = row.scrollWidth - strip.clientWidth; // скільки ряд може проїхати без порожнечі
-          var x = row.dataset.dir === "1" ? -max * (1 - p) : -max * p;
-          row.style.transform = "translate3d(" + x.toFixed(1) + "px,0,0)";
-        });
-      }
-    }
   }
   window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
   burger.addEventListener("click", function () {

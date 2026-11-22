@@ -9,7 +9,7 @@
   --text: #F3F1EC;
   --muted: #A3A3AD;
   --dim: #8A8A95;
-  /* Акцент: «іржа» (Ferrum = залізо). Інші палітри нижче, вмикаються ?c=lime|red|mint */
+  /* Акцент: «іржа» (Ferrum = залізо) */
   --acc: #FF5A1F;
   --acc-hi: #FF7B47;
   --acc-btn: #D4400A;
@@ -28,12 +28,6 @@
   --ease: cubic-bezier(.2,.7,.1,1);
   --r: 22px;
 }
-:root[data-c="lime"] { --acc: #C8F031; --acc-hi: #D8F76A; --acc-btn: #C8F031; --acc-hover: #D8F76A; --acc-ink: #0B0B0D; --acc-paper: #4C6600; --acc-rgb: 200,240,49; --acc-btn-rgb: 200,240,49; }
-:root[data-c="red"] { --acc: #FF3B3B; --acc-hi: #FF6A6A; --acc-btn: #D61F1F; --acc-hover: #E62B2B; --acc-ink: #FFFFFF; --acc-paper: #B81616; --acc-rgb: 255,59,59; --acc-btn-rgb: 214,31,31; }
-:root[data-c="mint"] { --acc: #2EE59D; --acc-hi: #66F0BA; --acc-btn: #2EE59D; --acc-hover: #66F0BA; --acc-ink: #0B0B0D; --acc-paper: #0B7550; --acc-rgb: 46,229,157; --acc-btn-rgb: 46,229,157; }
-/* Альтернативний шрифт заголовків: ?f=2 */
-:root[data-f="2"] { --head: "Inter Tight", "Inter", sans-serif; --hw: 800; }
-:root[data-f="2"] .title, :root[data-f="2"] h1 { letter-spacing: -.02em; }
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { margin: 0; background: var(--bg); color: var(--text); font: 400 16px/1.65 var(--body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
@@ -131,13 +125,6 @@ button, input { font: inherit; color: inherit; }
 .float-card b { display: block; font: var(--hw) 26px/1 var(--head); text-transform: uppercase; margin-bottom: 8px; color: var(--ink); }
 .float-card span { font-size: 14.5px; color: #55555D; line-height: 1.55; display: block; }
 @keyframes bob { 50% { transform: translateY(-8px); } }
-
-/* Фото-стрічка, що їде при скролі */
-.strip { overflow: hidden; padding: 80px 0 0; display: grid; gap: 14px; }
-.strip__row { display: flex; gap: 14px; width: max-content; will-change: transform; }
-.strip__row[data-dir="1"] { transform: translateX(-30%); }
-.strip__row img { height: 300px; width: auto; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 18px; filter: grayscale(.25) contrast(1.05); flex: none; }
-.strip__row img:nth-child(3n+2) { aspect-ratio: 4 / 5; }
 
 /* SIGNATURE */
 .sig { padding: 90px 0 120px; }
@@ -392,9 +379,6 @@ button, input { font: inherit; color: inherit; }
   .counters { gap: 26px; }
   .counters b { font-size: 42px; }
   .float-card { left: 12px; right: 12px; bottom: -40px; max-width: none; padding: 18px 20px; }
-  .strip { padding: 70px 0 0; gap: 8px; }
-  .strip__row { gap: 8px; }
-  .strip__row img { height: 170px; border-radius: 12px; }
 
   .sig { padding: 60px 0 80px; }
   .sig__price b { font-size: 72px; }
@@ -517,11 +501,7 @@ button, input { font: inherit; color: inherit; }
   .hero__title { font-size: 54px; }
 }
 @media (max-width: 380px) { .hero__title { font-size: 48px; } }
-:root[data-f="2"] .hero__title { font-size: clamp(50px, 7.2vw, 108px); }
-:root[data-f="2"] .title { font-size: clamp(38px, 5vw, 68px); }
-:root[data-f="2"] .title--xl { font-size: clamp(46px, 7vw, 100px); }
-@media (max-width: 680px) { :root[data-f="2"] .hero__title { font-size: 46px; } :root[data-f="2"] .title { font-size: 38px; } }
-
+@media (max-width: 680px) { 
 /* Адреси: картки з супутниковою картою */
 .locsec { padding: 110px 0; border-top: 1px solid var(--line); }
 .lcards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px; }

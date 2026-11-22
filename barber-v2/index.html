@@ -14,10 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="img/g4.jpg" media="(min-width: 681px)">
 <link rel="preload" as="image" href="img/g6.jpg" media="(max-width: 680px)">
-<link rel="stylesheet" href="styles.css?v=4">
-<script>/* палітра ?c=lime|red|mint і шрифт ?f=2 для порівняння */
-(function(){var q=location.search,c=q.match(/[?&]c=(lime|red|mint)/),f=q.match(/[?&]f=(2)/),r=document.documentElement;
-if(c)r.setAttribute("data-c",c[1]);if(f){r.setAttribute("data-f",f[1]);var l=document.createElement("link");l.rel="stylesheet";l.href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@800&display=swap";document.head.appendChild(l);}})();</script>
+<link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body>
 <a class="skip" href="#booking">Перейти до запису</a>
@@ -56,7 +53,6 @@ if(c)r.setAttribute("data-c",c[1]);if(f){r.setAttribute("data-f",f[1]);var l=doc
     <p class="hero__sub load" style="--d:.65s">Фейди, борода і королівське гоління на Оболоні і біля Золотих воріт, обидва поруч з метро. Обираєш барбершоп, барбера і вільний час онлайн, приходиш, і крісло вже чекає.</p>
     <div class="hero__cta load" style="--d:.75s">
       <a href="#booking" class="btn btn--acc btn--lg">Записатися <svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5"/></svg></a>
-      <a href="#why" class="btn btn--ghost btn--lg">Атмосфера</a>
       <span class="rating"><span class="stars" aria-hidden="true">★★★★★</span> <b>4.9</b> · 418 відгуків у Google</span>
     </div>
   </div>
@@ -82,15 +78,6 @@ if(c)r.setAttribute("data-c",c[1]);if(f){r.setAttribute("data-f",f[1]);var l=doc
   </div>
 </section>
 
-<!-- PHOTO STRIP: два ряди фото їдуть назустріч при скролі -->
-<div class="strip" id="strip" aria-hidden="true">
-  <div class="strip__row" data-dir="-1">
-    <img src="img/g6.jpg" alt="" loading="lazy"><img src="img/g2.jpg" alt="" loading="lazy"><img src="img/hero.jpg" alt="" loading="lazy"><img src="img/g8.jpg" alt="" loading="lazy"><img src="img/g1.jpg" alt="" loading="lazy"><img src="img/g7.jpg" alt="" loading="lazy"><img src="img/g3.jpg" alt="" loading="lazy"><img src="img/g5.jpg" alt="" loading="lazy">
-  </div>
-  <div class="strip__row" data-dir="1">
-    <img src="img/g3.jpg" alt="" loading="lazy"><img src="img/g7.jpg" alt="" loading="lazy"><img src="img/b1.jpg" alt="" loading="lazy"><img src="img/g2.jpg" alt="" loading="lazy"><img src="img/g8.jpg" alt="" loading="lazy"><img src="img/hero.jpg" alt="" loading="lazy"><img src="img/g5.jpg" alt="" loading="lazy"><img src="img/g1.jpg" alt="" loading="lazy">
-  </div>
-</div>
 
 <!-- SIGNATURE -->
 <section class="sig" id="signature">
@@ -277,6 +264,6 @@ if(c)r.setAttribute("data-c",c[1]);if(f){r.setAttribute("data-f",f[1]);var l=doc
 
 <script src="config.js?v=4"></script>
 <script src="data.js?v=2"></script>
-<script src="app.js?v=4"></script>
+<script src="app.js?v=5"></script>
 </body>
 </html>
