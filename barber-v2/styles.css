@@ -521,3 +521,37 @@ button, input { font: inherit; color: inherit; }
 :root[data-f="2"] .title { font-size: clamp(38px, 5vw, 68px); }
 :root[data-f="2"] .title--xl { font-size: clamp(46px, 7vw, 100px); }
 @media (max-width: 680px) { :root[data-f="2"] .hero__title { font-size: 46px; } :root[data-f="2"] .title { font-size: 38px; } }
+
+/* Адреси: картки з супутниковою картою */
+.locsec { padding: 110px 0; border-top: 1px solid var(--line); }
+.lcards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px; }
+.lcard { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 16px 16px 26px; }
+.lmap { position: relative; height: 300px; border-radius: 14px; overflow: hidden; background: #0d1a22; isolation: isolate; }
+.lmap__layers, .lmap__layer { position: absolute; inset: 0; }
+.lmap__layer { transform-origin: 50% 50%; will-change: transform, opacity; }
+.lmap__layer img { position: absolute; width: 256px; height: 256px; max-width: none; }
+.lmap::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(ellipse at center, transparent 45%, rgba(8,8,10,.45)); }
+.lmap__pin { position: absolute; left: 50%; top: 50%; z-index: 2; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: var(--acc); border: 3px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.25), 0 4px 14px rgba(0,0,0,.5); }
+.lmap__pin::before { content: ""; position: absolute; inset: -3px; border-radius: 50%; border: 2px solid var(--acc); animation: hirePulse 2s cubic-bezier(.2,.6,.3,1) infinite; }
+.lmap__tag { position: absolute; left: 12px; bottom: 12px; z-index: 2; font: 600 12px/1 var(--body); padding: 7px 11px; border-radius: 99px; background: rgba(8,8,10,.72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.lmap__src { position: absolute; right: 10px; bottom: 8px; z-index: 2; font-size: 10px; color: rgba(255,255,255,.65); }
+.lcard h3 { font: var(--hw) 44px/1 var(--head); text-transform: uppercase; margin: 26px 10px 16px; }
+.lcard__info { list-style: none; margin: 0 10px 24px; padding: 0; display: grid; gap: 12px; }
+.lcard__info li { display: flex; gap: 12px; align-items: flex-start; color: #D2D2D9; font-size: 15.5px; }
+.lcard__info svg { flex: none; width: 18px; height: 18px; margin-top: 3px; fill: none; stroke: var(--acc); stroke-width: 1.8; stroke-linejoin: round; stroke-linecap: round; }
+.lcard__info small { display: block; color: var(--muted); font-size: 14px; margin-top: 2px; }
+.lcard__info a { text-decoration: none; }
+.lcard__btns { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 10px; }
+.lcard__btns .btn { height: 46px; font-size: 15px; }
+.lcard__btns .btn svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; }
+@media (max-width: 900px) { .lcards { grid-template-columns: 1fr; } }
+@media (max-width: 680px) {
+  .locsec { padding: 76px 0; }
+  .lcards { margin-top: 32px; gap: 16px; }
+  .lcard { padding: 10px 10px 20px; border-radius: 18px; }
+  .lmap { height: 230px; border-radius: 12px; }
+  .lcard h3 { font-size: 36px; margin: 20px 8px 14px; }
+  .lcard__info { margin: 0 8px 20px; }
+  .lcard__btns { margin: 0 8px; }
+  .lcard__btns .btn { flex: 1 1 auto; }
+}

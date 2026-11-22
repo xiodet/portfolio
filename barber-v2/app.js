@@ -331,6 +331,7 @@
   document.addEventListener("click", function (e) {
     var p = e.target.closest("a[data-svc]"); if (p) pickService(p.dataset.svc);
     var b = e.target.closest("a[data-barber]"); if (b) { st.barber = b.dataset.barber; setLoc(barberById(st.barber).loc); }
+    var lb = e.target.closest("a[data-book-loc]"); if (lb) setLoc(lb.dataset.bookLoc);
   });
 
   // Телефон
@@ -405,6 +406,75 @@
     var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar" })); a.download = "ferrum.ics"; a.click();
   });
 
+
+  /* ---------- Адреси: супутникова карта, що наближається з висоти до точки ----------
+     Тайли Esri World Imagery вантажаться прямо в браузері. Шари на зумах 5, 8, 11, 14, 17;
+     поточний зум плавно росте, кожен шар масштабується як 2^(z - рівень), наступний проявляється поверх. */
+  var LEVELS = [5, 8, 11, 14, 17], Z0 = 5, Z1 = 17.6, ZOOM_MS = 4200;
+  function tileUrl(z, x, y) { return "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/" + z + "/" + y + "/" + x; }
+  function worldPx(lat, lon, z) {
+    var n = 256 * Math.pow(2, z), s = Math.sin(lat * Math.PI / 180);
+    return [(lon + 180) / 360 * n, (0.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI)) * n];
+  }
+  function buildMap(box, l) {
+    var W = box.clientWidth, H = box.clientHeight, html = "";
+    LEVELS.forEach(function (z) {
+      var p = worldPx(l.lat, l.lon, z), x0 = Math.floor((p[0] - W / 2) / 256), x1 = Math.floor((p[0] + W / 2) / 256),
+        y0 = Math.floor((p[1] - H / 2) / 256), y1 = Math.floor((p[1] + H / 2) / 256), t = "";
+      for (var tx = x0; tx <= x1; tx++) for (var ty = y0; ty <= y1; ty++)
+        t += '<img alt="" decoding="async" src="' + tileUrl(z, tx, ty) + '" style="left:' + (tx * 256 - p[0] + W / 2).toFixed(1) + "px;top:" + (ty * 256 - p[1] + H / 2).toFixed(1) + 'px">';
+      html += '<div class="lmap__layer" data-z="' + z + '">' + t + "</div>";
+    });
+    box.querySelector(".lmap__layers").innerHTML = html;
+  }
+  function paintZoom(box, z) {
+    $$(".lmap__layer", box).forEach(function (el, i) {
+      var L = +el.dataset.z, next = LEVELS[i + 1];
+      var op = i === 0 ? 1 : Math.max(0, Math.min(1, (z - L) / 0.5)); // проявляється поверх, коли попередній шар уже розмитий
+      el.style.opacity = op;
+      el.style.visibility = op > 0 && (next == null || z < next + 0.2) ? "visible" : "hidden";
+      el.style.transform = "scale(" + Math.pow(2, z - L).toFixed(4) + ")";
+    });
+    box.style.setProperty("--zl", ((z - Z0) / (Z1 - Z0)).toFixed(3));
+  }
+  function playZoom(box) {
+    if (reduced) { paintZoom(box, Z1); return; }
+    var t0 = null;
+    function step(t) {
+      if (!t0) t0 = t;
+      var p = Math.min(1, (t - t0) / ZOOM_MS), e = p < 1 ? 1 - Math.pow(1 - p, 3) : 1; // різко з висоти, м'яко в кінці
+      paintZoom(box, Z0 + (Z1 - Z0) * e);
+      if (p < 1) requestAnimationFrame(step); else box.classList.add("is-landed");
+    }
+    requestAnimationFrame(step);
+  }
+  var pinSvg = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
+  var clockSvg = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+  var phoneSvg = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2"/></svg>';
+  $("#lcards").innerHTML = C.locations.map(function (l, i) {
+    return '<article class="lcard reveal" style="--rd:' + i * 0.1 + 's">' +
+      '<div class="lmap" data-i="' + i + '"><div class="lmap__layers"></div><span class="lmap__pin" aria-hidden="true"></span>' +
+      '<span class="lmap__tag">' + esc(l.name) + '</span><span class="lmap__src">© Esri, Maxar</span></div>' +
+      '<h3>' + esc(l.name) + '</h3><ul class="lcard__info">' +
+      "<li>" + pinSvg + "<span>" + esc(l.address) + "<small>" + esc(l.note) + "</small></span></li>" +
+      "<li>" + clockSvg + "<span>" + esc(C.hoursText) + "</span></li>" +
+      "<li>" + phoneSvg + '<a href="' + telOf(l.phone) + '">' + esc(l.phone) + "</a></li></ul>" +
+      '<div class="lcard__btns"><a class="btn btn--acc" href="#booking" data-book-loc="' + l.id + '">Записатися сюди</a>' +
+      '<a class="btn btn--ghost" href="' + mapOf(l) + '" target="_blank" rel="noopener">Маршрут ' + arrowNE + "</a></div></article>";
+  }).join("");
+  var maps = $$(".lmap");
+  maps.forEach(function (box) { buildMap(box, C.locations[+box.dataset.i]); paintZoom(box, Z0); });
+  var mapW = window.innerWidth;
+  window.addEventListener("resize", function () {
+    if (Math.abs(window.innerWidth - mapW) < 40) return; mapW = window.innerWidth;
+    maps.forEach(function (box) { buildMap(box, C.locations[+box.dataset.i]); paintZoom(box, box.classList.contains("is-landed") ? Z1 : Z0); });
+  });
+  if ("IntersectionObserver" in window) {
+    var mio = new IntersectionObserver(function (en) {
+      en.forEach(function (x) { if (x.isIntersecting) { playZoom(x.target); mio.unobserve(x.target); } });
+    }, { threshold: .55 });
+    maps.forEach(function (m) { mio.observe(m); });
+  } else maps.forEach(function (m) { paintZoom(m, Z1); m.classList.add("is-landed"); });
 
   /* ---------- Поява при скролі + запуск лічильників ---------- */
   var els = $$(".reveal"), counters = $$("[data-count]");
