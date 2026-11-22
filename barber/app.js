@@ -38,7 +38,8 @@
       var prices = Array.isArray(s.price)
         ? s.price.map(function (p) { return '<span class="pr__p">' + p + "<small>₴</small></span>"; }).join("")
         : '<span class="pr__p pr__p--one">' + s.price + "<small>₴</small></span>";
-      return '<a class="pr" href="#booking" data-svc="' + s.id + '"><span class="pr__name">' + esc(s.name) +
+      var label = s.name + ", " + s.dur + " хв: " + (Array.isArray(s.price) ? D.levels.map(function (l, i) { return l.toLowerCase() + " " + s.price[i]; }).join(", ") : s.price) + " гривень. Записатися";
+      return '<a class="pr" href="#booking" data-svc="' + s.id + '" aria-label="' + esc(label) + '"><span class="pr__name">' + esc(s.name) +
         (s.hit ? ' <span class="hit">Хіт</span>' : "") +
         "<small>" + s.dur + " хв" + (s.note ? " · " + esc(s.note) : "") + "</small></span>" + prices + "</a>";
     }).join("");
@@ -58,8 +59,9 @@
     return '<button type="button" class="reveal" data-i="' + i + '"><img src="' + g.src + '" alt="' + esc(g.cap) + '" loading="lazy"><span>' + esc(g.cap) + "</span></button>";
   }).join("");
   function lbShow(i) { lbI = (i + D.gallery.length) % D.gallery.length; $("#lbImg").src = D.gallery[lbI].src; $("#lbImg").alt = D.gallery[lbI].cap; $("#lbCap").textContent = D.gallery[lbI].cap; }
-  gal.addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; lbShow(+b.dataset.i); lb.hidden = false; document.body.style.overflow = "hidden"; });
-  function lbClose() { lb.hidden = true; document.body.style.overflow = ""; }
+  var lbFrom = null;
+  gal.addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; lbFrom = b; lbShow(+b.dataset.i); lb.hidden = false; document.body.style.overflow = "hidden"; $("#lbX").focus(); });
+  function lbClose() { lb.hidden = true; document.body.style.overflow = ""; if (lbFrom) lbFrom.focus(); }
   $("#lbX").addEventListener("click", lbClose);
   lb.addEventListener("click", function (e) { if (e.target === lb) lbClose(); });
   $("#lbPrev").addEventListener("click", function () { lbShow(lbI - 1); });
@@ -109,7 +111,7 @@
 
   function dayDate(i) { var d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + i); return d; }
   function seedRand(seed) { var x = 0; for (var i = 0; i < seed.length; i++) x = (x * 31 + seed.charCodeAt(i)) | 0; return function () { x = (x * 1103515245 + 12345) & 0x7fffffff; return x / 0x7fffffff; }; }
-  var busyCache = {};
+  var busyCache = {}; // зайнятість не змінюється, рахуємо один раз
   function busy(bid, di) {
     var d = dayDate(di), key = bid + d.toDateString();
     if (busyCache[key]) return busyCache[key];
@@ -152,16 +154,17 @@
   // 1. Послуги
   var mainCats = D.categories.filter(function (c) { return c.id !== "extra"; });
   function renderTabs() {
-    $("#bTabs").innerHTML = mainCats.map(function (c) { return '<button type="button" class="tab' + (c.id === st.cat ? " is-on" : "") + '" data-cat="' + c.id + '">' + esc(c.name) + "</button>"; }).join("");
+    $("#bTabs").innerHTML = mainCats.map(function (c) { return '<button type="button" class="tab' + (c.id === st.cat ? " is-on" : "") + '" aria-pressed="' + (c.id === st.cat) + '" data-cat="' + c.id + '">' + esc(c.name) + "</button>"; }).join("");
   }
   function renderServices() {
     $("#bServices").innerHTML = D.services.filter(function (s) { return s.cat === st.cat; }).map(function (s) {
-      return '<button type="button" class="opt' + (s.id === st.svc ? " is-on" : "") + '" data-svc="' + s.id + '"><span><b>' + esc(s.name) + "</b><small>" + s.dur + " хв" + (s.note ? " · " + esc(s.note) : "") + '</small></span><span class="opt__p">від ' + minPrice(s) + " ₴</span></button>";
+      return '<button type="button" class="opt' + (s.id === st.svc ? " is-on" : "") + '" aria-pressed="' + (s.id === st.svc) + '" data-svc="' + s.id + '"><span><b>' + esc(s.name) + "</b><small>" + s.dur + " хв" + (s.note ? " · " + esc(s.note) : "") + '</small></span><span class="opt__p">від ' + minPrice(s) + " ₴</span></button>";
     }).join("");
   }
   function renderAddons() {
     $("#bAddons").innerHTML = D.services.filter(function (s) { return s.addon; }).map(function (s) {
-      return '<button type="button" class="chip' + (st.addons.indexOf(s.id) > -1 ? " is-on" : "") + '" data-add="' + s.id + '">' + esc(s.name) + " <i>+" + s.dur + " хв</i></button>";
+      var on = st.addons.indexOf(s.id) > -1;
+      return '<button type="button" class="chip' + (on ? " is-on" : "") + '" aria-pressed="' + on + '" data-add="' + s.id + '">' + esc(s.name) + " <i>+" + s.dur + " хв</i></button>";
     }).join("");
   }
   $("#bTabs").addEventListener("click", function (e) { var t = e.target.closest(".tab"); if (!t) return; st.cat = t.dataset.cat; renderTabs(); renderServices(); });
@@ -174,9 +177,9 @@
 
   // 2. Барбери
   function renderBarbers() {
-    var any = '<button type="button" class="opt bopt' + (st.barber === "any" ? " is-on" : "") + '" data-b="any"><span class="bopt__ph"><span class="bopt__any">F</span></span><span class="bopt__b"><b>Будь-хто вільний</b><small>найшвидше вікно</small><span class="bopt__p">від ' + money(totalPrice(0)) + "</span></span></button>";
+    var any = '<button type="button" class="opt bopt' + (st.barber === "any" ? " is-on" : "") + '" aria-pressed="' + (st.barber === "any") + '" data-b="any"><span class="bopt__ph"><span class="bopt__any">F</span></span><span class="bopt__b"><b>Будь-хто вільний</b><small>найшвидше вікно</small><span class="bopt__p">від ' + money(totalPrice(0)) + "</span></span></button>";
     $("#bBarbers").innerHTML = any + D.barbers.map(function (b) {
-      return '<button type="button" class="opt bopt' + (st.barber === b.id ? " is-on" : "") + '" data-b="' + b.id + '"><span class="bopt__ph"><img src="' + b.photo + '" alt=""></span><span class="bopt__b"><b>' + esc(b.name.split(" ")[0]) + "</b><small>" + D.levels[b.level] + '</small><span class="bopt__p">' + money(totalPrice(b.level)) + '</span><span class="bopt__next">Найближче: ' + nextFree(b.id) + "</span></span></button>";
+      return '<button type="button" class="opt bopt' + (st.barber === b.id ? " is-on" : "") + '" aria-pressed="' + (st.barber === b.id) + '" data-b="' + b.id + '"><span class="bopt__ph"><img src="' + b.photo + '" alt=""></span><span class="bopt__b"><b>' + esc(b.name.split(" ")[0]) + "</b><small>" + D.levels[b.level] + '</small><span class="bopt__p">' + money(totalPrice(b.level)) + '</span><span class="bopt__next">Найближче: ' + nextFree(b.id) + "</span></span></button>";
     }).join("");
   }
   $("#bBarbers").addEventListener("click", function (e) { var o = e.target.closest(".bopt"); if (!o) return; st.barber = o.dataset.b; renderBarbers(); keepTime(); renderTimes(); renderSummary(); });
@@ -186,7 +189,7 @@
     var h = "";
     for (var i = 0; i < C.daysAhead; i++) {
       var d = dayDate(i);
-      h += '<button type="button" class="day' + (i === st.day ? " is-on" : "") + '" data-d="' + i + '"><small>' + (i === 0 ? "Сьогодні" : DAYS[d.getDay()]) + "</small><b>" + d.getDate() + "</b></button>";
+      h += '<button type="button" class="day' + (i === st.day ? " is-on" : "") + '" aria-pressed="' + (i === st.day) + '" aria-label="' + dayLabel(i) + '" data-d="' + i + '"><small>' + (i === 0 ? "Сьогодні" : DAYS[d.getDay()]) + "</small><b>" + d.getDate() + "</b></button>";
     }
     $("#bDays").innerHTML = h;
   }
@@ -194,18 +197,23 @@
     var h = "", free = 0;
     for (var c = 0; c < CELLS; c++) {
       var ok = !!whoFree(st.day, c); if (ok) free++;
-      h += '<button type="button" class="time' + (st.time === c ? " is-on" : "") + '" data-c="' + c + '"' + (ok ? "" : " disabled") + ">" + cellTime(c) + "</button>";
+      h += '<button type="button" class="time' + (st.time === c ? " is-on" : "") + '" aria-pressed="' + (st.time === c) + '" data-c="' + c + '"' + (ok ? "" : ' disabled aria-label="' + cellTime(c) + ', зайнято"') + ">" + cellTime(c) + "</button>";
     }
     $("#bTimes").innerHTML = h;
     var note = $("#bTimesNote");
     if (!free) {
       var b = st.barber !== "any" && barberById(st.barber);
-      note.textContent = b && b.off === dayDate(st.day).getDay() ? b.name.split(" ")[0] + " у цей день не працює. Оберіть інший день або іншого барбера." : "На цей день вільних вікон немає. Спробуйте інший день.";
+      note.textContent = b && b.off === dayDate(st.day).getDay() ? b.name.split(" ")[0] + " у цей день не працює. Обери інший день або іншого барбера." : "На цей день вільних вікон немає, обери інший.";
     } else note.textContent = "Тривалість візиту: " + totalDur() + " хв. Закреслений час уже зайнятий.";
   }
   function keepTime() { if (st.time != null && !whoFree(st.day, st.time)) st.time = null; }
   $("#bDays").addEventListener("click", function (e) { var d = e.target.closest(".day"); if (!d) return; st.day = +d.dataset.d; st.time = null; renderDays(); renderTimes(); renderSummary(); });
-  $("#bTimes").addEventListener("click", function (e) { var t = e.target.closest(".time"); if (!t || t.disabled) return; st.time = +t.dataset.c; renderTimes(); renderSummary(); });
+  $("#bTimes").addEventListener("click", function (e) {
+    var t = e.target.closest(".time"); if (!t || t.disabled) return;
+    st.time = +t.dataset.c; renderTimes(); renderSummary();
+    // на телефоні квиток нижче екрана: показуємо його, щоб було видно, що далі
+    if (window.matchMedia("(max-width: 860px)").matches) setTimeout(function () { $("#ticket").scrollIntoView({ behavior: "smooth", block: "start" }); }, 250);
+  });
 
   // Підсумок
   function chosenBarber() {
@@ -250,9 +258,9 @@
     var d = fPhone.value.replace(/\D/g, ""); if (d.indexOf("380") !== 0) d = "380" + d.replace(/^0/, "");
     d = d.slice(0, 12);
     var f = "+" + d.slice(0, 3); if (d.length > 3) f += " " + d.slice(3, 5); if (d.length > 5) f += " " + d.slice(5, 8); if (d.length > 8) f += " " + d.slice(8, 10); if (d.length > 10) f += " " + d.slice(10, 12);
-    fPhone.value = f; fPhone.classList.remove("is-bad");
+    fPhone.value = f; fPhone.classList.remove("is-bad"); fPhone.removeAttribute("aria-invalid");
   });
-  fName.addEventListener("input", function () { fName.classList.remove("is-bad"); });
+  fName.addEventListener("input", function () { fName.classList.remove("is-bad"); fName.removeAttribute("aria-invalid"); });
 
   function send(text, payload) {
     if (C.bookingEndpoint) {
@@ -274,9 +282,9 @@
     var problems = [];
     if (st.time == null) problems.push("час візиту");
     var nameOk = fName.value.trim().length > 1, phoneOk = fPhone.value.replace(/\D/g, "").length === 12;
-    if (!nameOk) { problems.push("ім'я"); fName.classList.add("is-bad"); }
-    if (!phoneOk) { problems.push("телефон"); fPhone.classList.add("is-bad"); }
-    if (problems.length) { err.textContent = "Будь ласка, вкажіть " + problems.join(", ") + "."; return; }
+    if (!nameOk) { problems.push("ім'я"); fName.classList.add("is-bad"); fName.setAttribute("aria-invalid", "true"); }
+    if (!phoneOk) { problems.push("телефон"); fPhone.classList.add("is-bad"); fPhone.setAttribute("aria-invalid", "true"); }
+    if (problems.length) { err.textContent = "Вкажи, будь ласка, " + problems.join(", ") + "."; return; }
 
     var s = svcById(st.svc), b = chosenBarber(), d = dayDate(st.day);
     var adds = st.addons.map(function (a) { return svcById(a).name; });
@@ -294,15 +302,15 @@
     send(text, payload).then(function () {
       var start = new Date(d); var m = C.open * 60 + st.time * STEP; start.setHours(Math.floor(m / 60), m % 60);
       last = { start: start, dur: payload.duration, title: "Ferrum: " + payload.service, desc: "Барбер " + payload.barber + ". " + C.address };
-      $("#doneText").textContent = payload.name + ", чекаємо вас " + dayLabel(st.day) + " о " + payload.time + ". Барбер: " + payload.barber + ". Ми напишемо в Telegram або зателефонуємо, щоб підтвердити.";
+      $("#doneText").textContent = payload.name + ", чекаємо тебе " + dayLabel(st.day) + " о " + payload.time + ". Барбер: " + payload.barber + ". Найближчим часом напишемо в Telegram або зателефонуємо, щоб підтвердити.";
       $("#bookForm").hidden = true; $("#done").hidden = false;
-      $("#done").scrollIntoView({ behavior: "smooth", block: "center" });
+      $("#done").scrollIntoView({ behavior: "smooth", block: "center" }); $("#icsBtn").focus({ preventScroll: true });
     }).catch(function () {
-      err.innerHTML = 'Не вдалося надіслати заявку. Зателефонуйте нам: <a href="' + tel + '">' + esc(C.phone) + "</a>";
+      err.innerHTML = 'Не вдалося надіслати заявку. Зателефонуй нам: <a href="' + tel + '">' + esc(C.phone) + "</a>";
     }).finally(function () { btn.disabled = false; btn.textContent = "Записатися"; });
   });
   $("#again").addEventListener("click", function () {
-    $("#done").hidden = true; $("#bookForm").hidden = false; st.time = null; busyCache = {}; refresh();
+    $("#done").hidden = true; $("#bookForm").hidden = false; st.time = null; refresh();
   });
   $("#icsBtn").addEventListener("click", function () {
     if (!last) return;
