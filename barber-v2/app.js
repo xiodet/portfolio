@@ -39,11 +39,6 @@
   if (C.hiring && C.hiring.on) { $("#hireText").textContent = C.hiring.text; $("#hireBtn").href = C.telegram; }
   else { $("#hireLink").hidden = true; $("#hiring").hidden = true; }
 
-  /* ---------- Бігучий рядок ---------- */
-  var tk = ["Точні фейди", "Моделювання бороди", "Гарячі рушники", "Комплекс «Ferrum»", "Без запису теж можна", "Кава або віскі", "Оболонь", "Золоті ворота"];
-  var tkHtml = tk.map(function (t) { return "<span>" + t + "</span>"; }).join("");
-  $("#ticker").innerHTML = tkHtml + tkHtml;
-
   /* ---------- Лічильники ---------- */
   $("#counters").innerHTML = D.stats.map(function (s) {
     return '<div><b data-count="' + s.n + '" data-suf="' + esc(s.suf) + '">0' + esc(s.suf) + "</b><span>" + esc(s.t) + "</span></div>";

@@ -101,11 +101,6 @@ button, input { font: inherit; color: inherit; }
 .rating { font-size: 15px; color: #BEBEC7; margin-left: 10px; }
 .rating b { color: #fff; }
 
-/* TICKER */
-.ticker { border-block: 1px solid var(--line); background: var(--bg2); overflow: hidden; padding: 20px 0; }
-.ticker__track { display: flex; width: max-content; animation: marquee 38s linear infinite; }
-.ticker__track span { font: var(--hw) 30px/1 var(--head); text-transform: uppercase; letter-spacing: .02em; padding: 0 28px; white-space: nowrap; display: flex; align-items: center; gap: 56px; }
-.ticker__track span::after { content: "✦"; color: var(--acc); font-size: 18px; }
 @keyframes marquee { to { transform: translateX(-50%); } }
 
 /* WHY — світла секція */
@@ -217,9 +212,9 @@ button, input { font: inherit; color: inherit; }
 .bopt__p { font: var(--hw) 20px/1 var(--head); color: var(--acc-hi); margin-top: 6px; display: block; }
 .bopt__next { font-size: 12px; color: var(--muted); display: block; margin-top: 4px; line-height: 1.35; }
 .days { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 14px; scrollbar-width: thin; scrollbar-color: var(--line2) transparent; }
-.day { flex: none; width: 64px; padding: 10px 0; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); cursor: pointer; text-align: center; transition: all .2s; }
-.day small { display: block; font-size: 12px; color: var(--muted); text-transform: uppercase; }
-.day b { display: block; font: var(--hw) 30px/1 var(--head); margin-top: 3px; }
+.day { flex: none; min-width: 80px; padding: 11px 8px 10px; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); cursor: pointer; text-align: center; transition: all .2s; }
+.day small { display: block; font-size: 11px; letter-spacing: .04em; color: var(--muted); text-transform: uppercase; white-space: nowrap; }
+.day b { display: block; font: var(--hw) 32px/1 var(--head); margin-top: 5px; }
 .day:hover { border-color: var(--line2); }
 .day.is-on { background: var(--acc-btn); border-color: var(--acc-btn); color: var(--acc-ink); }
 .day.is-on small { color: currentColor; opacity: .8; }
@@ -372,8 +367,6 @@ button, input { font: inherit; color: inherit; }
   .hero__cta { gap: 10px; }
   .hero__cta .btn { flex: 1 1 auto; height: 52px; padding: 0 20px; font-size: 16px; }
   .rating { margin: 6px 0 0; font-size: 14px; }
-  .ticker { padding: 14px 0; }
-  .ticker__track span { font-size: 24px; padding: 0 16px; gap: 32px; }
 
   .why { padding: 80px 0 100px; }
   .counters { gap: 26px; }
@@ -501,7 +494,6 @@ button, input { font: inherit; color: inherit; }
   .hero__title { font-size: 54px; }
 }
 @media (max-width: 380px) { .hero__title { font-size: 48px; } }
-@media (max-width: 680px) { 
 /* Адреси: картки з супутниковою картою */
 .locsec { padding: 110px 0; border-top: 1px solid var(--line); }
 .lcards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px; }
