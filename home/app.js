@@ -32,21 +32,27 @@ const TG_TEXT = 'Привіт! Хочу пробну версію сайту д�
   const start = () => requestAnimationFrame(() => document.documentElement.classList.add('loaded'));
   (document.fonts && document.fonts.ready ? Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 900))]) : Promise.resolve()).then(start);
 
-  /* Rotating word */
-  const words = ['салону краси', 'барбершопу', 'флориста', 'нейл-студії', 'кавʼярні'];
-  const rw = $('.rot-word');
-  if (rw && !reduce) {
-    let i = 0;
-    setInterval(() => {
-      i = (i + 1) % words.length;
-      rw.classList.add('out');
-      setTimeout(() => {
-        rw.classList.remove('out'); rw.classList.add('in');
-        rw.textContent = words[i];
-        void rw.offsetWidth;
-        rw.classList.remove('in');
-      }, 420);
-    }, 2600);
+  /* Rotating word: all words stacked in one grid cell, so the line never changes size */
+  const rot = $('.rotator');
+  if (rot) {
+    const ws = $$('.rot-word', rot);
+    const fit = () => {
+      rot.style.fontSize = '';
+      const avail = rot.closest('.hero-text').clientWidth;
+      const w = rot.scrollWidth;
+      if (w > avail) rot.style.fontSize = (avail / w * 0.98) + 'em';
+    };
+    fit(); addEventListener('resize', fit);
+    if (document.fonts) document.fonts.ready.then(fit);
+    if (!reduce) {
+      let i = 0;
+      setInterval(() => {
+        const cur = ws[i]; i = (i + 1) % ws.length; const nxt = ws[i];
+        cur.classList.remove('on'); cur.classList.add('out'); cur.setAttribute('aria-hidden', 'true');
+        nxt.classList.add('on'); nxt.removeAttribute('aria-hidden');
+        setTimeout(() => cur.classList.remove('out'), 750);
+      }, 2600);
+    }
   }
 
   /* Reveal on scroll */
