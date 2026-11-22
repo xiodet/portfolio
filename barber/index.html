@@ -13,12 +13,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alumni+Sans:wght@600;700;800&family=Oswald:wght@500;600&family=Old+Standard+TT:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="img/hero-m.jpg" media="(max-width: 767px)">
-<link rel="preload" as="image" href="img/hero.jpg" media="(min-width: 768px)">
+<link rel="preload" as="image" href="img/hero.jpg">
 <script>try{if(/[?&]font=2/.test(location.search))document.documentElement.classList.add("font-alt")}catch(e){}</script>
-<link rel="stylesheet" href="styles.css?v=1">
+<link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
+<a class="skip" href="#booking">Перейти до запису</a>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <linearGradient id="brass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E7C985"/><stop offset=".5" stop-color="#C29452"/><stop offset="1" stop-color="#8E6632"/></linearGradient>
@@ -47,7 +47,7 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero__bg" aria-hidden="true"><picture><source media="(max-width: 767px)" srcset="img/hero-m.jpg"><img src="img/hero.jpg" alt=""></picture></div>
+  <div class="hero__bg" aria-hidden="true"><img src="img/hero.jpg" alt="" width="960" height="1440" fetchpriority="high"></div>
   <div class="wrap hero__in">
     <p class="kicker"><span>Est. 2019</span> Оболонь, Київ</p>
     <h1 class="hero__title">Стрижка, борода<br>і гоління <em>як слід</em></h1>
@@ -89,7 +89,7 @@
       </div>
       <div class="incl__item reveal">
         <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 20h32v6a12 12 0 0 1-12 12h-8A12 12 0 0 1 8 26z"/><path d="M17 14c0-3 3-3 3-6M24 14c0-3 3-3 3-6M31 14c0-3 3-3 3-6"/></svg>
-        <h3>Гарячий рушник</h3><p>Мийка голови, розпарювання шкіри перед бородою і голінням. Без подразнення після бритви.</p>
+        <h3>Гарячий рушник</h3><p>Миємо голову і розпарюємо шкіру перед бородою та голінням, щоб після бритви не було подразнення.</p>
       </div>
       <div class="incl__item reveal">
         <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 34l22-22 6 6-22 22H8z"/><path d="M26 16l6 6"/><path d="M36 6l6 6-4 4-6-6z"/></svg>
@@ -97,7 +97,7 @@
       </div>
       <div class="incl__item reveal">
         <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M13 10h22l-3 26a4 4 0 0 1-4 3h-8a4 4 0 0 1-4-3z"/><path d="M14 20h20"/><path d="M20 26h8"/></svg>
-        <h3>Кава, чай або віскі</h3><p>Напій на вибір, поки чекаєш друга чи сина. Wi-Fi, PlayStation і спокійна музика.</p>
+        <h3>Кава, чай або віскі</h3><p>Напій на вибір. Поки чекаєш друга чи сина, є PlayStation і Wi-Fi.</p>
       </div>
     </div>
   </div>
@@ -124,7 +124,7 @@
     <div class="head reveal">
       <p class="kicker kicker--c">Команда</p>
       <h2>Барбери</h2>
-      <p class="head__sub">У кожного свій почерк. Обери того, хто тобі ближчий, або запишись до будь-кого вільного.</p>
+      <p class="head__sub">У кожного свій почерк. Обери свого або запишись до того, хто вільний раніше.</p>
     </div>
     <div class="team__grid" id="teamGrid"></div>
   </div>
@@ -150,14 +150,14 @@
     <div class="head reveal">
       <p class="kicker kicker--c">Онлайн-запис</p>
       <h2>Обери барбера і час</h2>
-      <p class="head__sub">Бачиш реальні вільні вікна кожного барбера. Підтвердимо запис дзвінком або в Telegram.</p>
+      <p class="head__sub">Тут видно вільний час кожного барбера. Після запису ми напишемо в Telegram або зателефонуємо.</p>
     </div>
 
     <form class="book" id="bookForm" novalidate>
       <div class="book__steps">
         <fieldset class="step">
           <legend><b>1</b> Послуга</legend>
-          <div class="tabs" id="bTabs" role="tablist"></div>
+          <div class="tabs" id="bTabs" role="group" aria-label="Категорія послуг"></div>
           <div class="svc" id="bServices"></div>
           <p class="step__lbl">Додати до візиту</p>
           <div class="addons" id="bAddons"></div>
@@ -179,17 +179,17 @@
       <aside class="ticket" id="ticket">
         <div class="ticket__head">
           <span class="logo__mark" aria-hidden="true">F</span>
-          <div><b>Ваш візит</b><small>Ferrum Barbershop · Оболонь</small></div>
+          <div><b>Твій візит</b><small>Ferrum Barbershop · Оболонь</small></div>
         </div>
         <dl class="ticket__rows" id="summary"></dl>
-        <div class="ticket__total"><span>Разом</span><b id="sumTotal">—</b></div>
+        <div class="ticket__total" aria-live="polite"><span>Разом</span><b id="sumTotal">—</b></div>
         <div class="ticket__cut" aria-hidden="true"></div>
-        <label class="field"><span>Ім'я</span><input id="fName" type="text" autocomplete="given-name" placeholder="Як до вас звертатися"></label>
+        <label class="field"><span>Ім'я</span><input id="fName" type="text" autocomplete="given-name" placeholder="Як до тебе звертатися"></label>
         <label class="field"><span>Телефон</span><input id="fPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+380"></label>
         <label class="field"><span>Коментар <i>необов'язково</i></span><input id="fNote" type="text" placeholder="Наприклад, хочу як на фото в Instagram"></label>
-        <p class="form-err" id="formErr" role="alert"></p>
+        <p class="form-err" id="formErr" role="alert" aria-live="assertive"></p>
         <button class="btn btn--brass btn--full" id="submitBtn" type="submit">Записатися</button>
-        <p class="ticket__fine">Скасувати або перенести можна за 2 години до візиту.</p>
+        <p class="ticket__fine">Скасувати чи перенести запис можна не пізніше ніж за 2 години.</p>
       </aside>
     </form>
 
@@ -251,7 +251,7 @@
 
 <a href="#booking" class="mbar" id="mbar">Записатися онлайн</a>
 
-<div class="lb" id="lb" hidden>
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Перегляд фото" hidden>
   <button class="lb__x" type="button" id="lbX" aria-label="Закрити">×</button>
   <button class="lb__nav lb__prev" type="button" id="lbPrev" aria-label="Попереднє">‹</button>
   <figure><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure>
@@ -259,7 +259,7 @@
 </div>
 
 <script src="config.js?v=1"></script>
-<script src="data.js?v=1"></script>
-<script src="app.js?v=1"></script>
+<script src="data.js?v=2"></script>
+<script src="app.js?v=2"></script>
 </body>
 </html>
