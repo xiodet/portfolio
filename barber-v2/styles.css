@@ -90,7 +90,8 @@ button, input { font: inherit; color: inherit; }
 /* HERO */
 .hero { position: relative; min-height: 100vh; min-height: 100svh; display: flex; align-items: center; padding: 140px 0 100px; overflow: hidden; }
 .hero__bg { position: absolute; inset: 0; }
-.hero__bg img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; filter: grayscale(.35) brightness(.55) contrast(1.1); animation: kenburns 18s ease-out both; }
+.hero__bg picture { display: contents; }
+.hero__bg img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; filter: grayscale(.35) brightness(.55) contrast(1.1); animation: kenburns 18s ease-out both; }
 .hero__bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(8,8,10,.92) 0%, rgba(8,8,10,.55) 55%, rgba(8,8,10,.35) 100%), linear-gradient(0deg, var(--bg) 0%, transparent 30%), radial-gradient(ellipse at 15% 90%, rgba(var(--acc-rgb),.22), transparent 55%); }
 @keyframes kenburns { from { transform: scale(1.15); } to { transform: scale(1); } }
 .hero__in { position: relative; z-index: 1; width: 100%; }
@@ -131,10 +132,12 @@ button, input { font: inherit; color: inherit; }
 .float-card span { font-size: 14.5px; color: #55555D; line-height: 1.55; display: block; }
 @keyframes bob { 50% { transform: translateY(-8px); } }
 
-/* Великий текст, що їде при скролі */
-.bigtext { overflow: hidden; padding: 70px 0 10px; }
-.bigtext__row { font: var(--hw) clamp(80px, 12vw, 180px)/1 var(--head); text-transform: uppercase; white-space: nowrap; color: transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,.22); will-change: transform; }
-.bigtext__row i { font-style: normal; color: var(--acc); -webkit-text-stroke: 0; }
+/* Фото-стрічка, що їде при скролі */
+.strip { overflow: hidden; padding: 80px 0 0; display: grid; gap: 14px; }
+.strip__row { display: flex; gap: 14px; width: max-content; will-change: transform; }
+.strip__row[data-dir="1"] { transform: translateX(-30%); }
+.strip__row img { height: 300px; width: auto; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 18px; filter: grayscale(.25) contrast(1.05); flex: none; }
+.strip__row img:nth-child(3n+2) { aspect-ratio: 4 / 5; }
 
 /* SIGNATURE */
 .sig { padding: 90px 0 120px; }
@@ -389,7 +392,9 @@ button, input { font: inherit; color: inherit; }
   .counters { gap: 26px; }
   .counters b { font-size: 42px; }
   .float-card { left: 12px; right: 12px; bottom: -40px; max-width: none; padding: 18px 20px; }
-  .bigtext { padding: 70px 0 0; }
+  .strip { padding: 70px 0 0; gap: 8px; }
+  .strip__row { gap: 8px; }
+  .strip__row img { height: 170px; border-radius: 12px; }
 
   .sig { padding: 60px 0 80px; }
   .sig__price b { font-size: 72px; }
