@@ -13,8 +13,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="img/g4.jpg" media="(min-width: 681px)">
-<link rel="preload" as="image" href="img/g6.jpg" media="(max-width: 680px)">
-<link rel="stylesheet" href="styles.css?v=7">
+<link rel="preload" as="image" href="img/shop.jpg" media="(max-width: 680px)">
+<link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
 <a class="skip" href="#booking">Перейти до запису</a>
@@ -42,7 +42,7 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero__bg" aria-hidden="true"><picture><source media="(max-width: 680px)" srcset="img/g6.jpg"><img src="img/g4.jpg" alt="" width="960" height="640" fetchpriority="high"></picture></div>
+  <div class="hero__bg" aria-hidden="true"><picture><source media="(max-width: 680px)" srcset="img/shop.jpg"><img src="img/g4.jpg" alt="" width="960" height="640" fetchpriority="high"></picture></div>
   <div class="wrap hero__in">
     <p class="eyebrow load" style="--d:.1s">Київ · Оболонь і Золоті ворота<span class="hide-m"> · з 2019</span></p>
     <h1 class="hero__title">
@@ -70,7 +70,7 @@
       <div class="counters reveal" id="counters"></div>
     </div>
     <figure class="why__photo reveal">
-      <img src="img/shop.jpg" alt="Барбер стриже гостя в залі Ferrum з арковим вікном" loading="lazy" width="768" height="1024">
+      <picture><source media="(max-width: 680px)" srcset="img/g4.jpg"><img src="img/shop.jpg" alt="Барбер стриже гостя в залі Ferrum " loading="lazy" width="768" height="1024"></picture>
       <figcaption class="float-card"><b>Ми стрижемо. Ти посміхаєшся.</b><span>Точні фейди, класика і борода в спокійній атмосфері, куди не соромно привести і тата, і сина.</span></figcaption>
     </figure>
   </div>
@@ -262,6 +262,6 @@
 
 <script src="config.js?v=4"></script>
 <script src="data.js?v=2"></script>
-<script src="app.js?v=7"></script>
+<script src="app.js?v=8"></script>
 </body>
 </html>

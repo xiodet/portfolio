@@ -24,7 +24,9 @@
     var y = window.scrollY;
     nav.classList.toggle("is-solid", y > 40);
     var b = $("#booking").getBoundingClientRect();
-    var hide = y < 400 || (b.top < window.innerHeight && b.bottom > 0);
+    var c = $(".cta").getBoundingClientRect();
+    // ховаємо нижню кнопку там, де на екрані вже є своя «Записатися»: герой, запис, фінальний заклик і футер
+    var hide = y < 400 || (b.top < window.innerHeight && b.bottom > 0) || c.top < window.innerHeight;
     mbar.classList.toggle("is-hidden", hide); chat.classList.toggle("is-low", hide);
   }
   window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
