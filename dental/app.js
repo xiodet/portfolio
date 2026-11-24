@@ -20,6 +20,42 @@
   function checkImgs(root) { $$("img", root).forEach(function (i) { if (i.complete && !i.naturalWidth) markNoImg(i); }); }
   function probe(src, ok, fail) { var i = new Image(); i.onload = ok; i.onerror = fail; i.src = src; }
 
+  /* ---------- Плавний «повітряний» скрол на десктопі (Lenis) ---------- */
+  var lenis = null;
+  if (window.Lenis && !reduced && window.matchMedia("(pointer: fine)").matches) {
+    lenis = new window.Lenis({ duration: 1.25, easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); }, smoothWheel: true });
+    requestAnimationFrame(function raf(t) { lenis.raf(t); requestAnimationFrame(raf); });
+    document.documentElement.classList.add("lenis");
+  }
+  function go(target, offset) {
+    var navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--nav")) || 72;
+    var top = typeof target === "number" ? target : target.getBoundingClientRect().top + window.scrollY - navH - (offset || 0);
+    if (lenis) lenis.scrollTo(top, { duration: 1.4 }); else window.scrollTo({ top: top, behavior: reduced ? "auto" : "smooth" });
+  }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest('a[href^="#"]'); if (!a || a.getAttribute("href").length < 2) return;
+    var t = document.getElementById(a.getAttribute("href").slice(1)); if (!t) return;
+    e.preventDefault(); go(t.id === "top" ? 0 : t);
+  });
+
+  /* Заголовки розділів з'являються по словах */
+  $$(".h2").forEach(function (h) {
+    var i = 0;
+    (function walk(node) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+        if (n.nodeType === 3) {
+          var frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(function (part) {
+            if (!part) return;
+            if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+            var s = document.createElement("span"); s.className = "hw"; s.style.setProperty("--wi", i++); s.textContent = part; frag.appendChild(s);
+          });
+          n.parentNode.replaceChild(frag, n);
+        } else if (n.nodeType === 1) walk(n);
+      });
+    })(h);
+  });
+
   /* ---------- Навігація, прогрес скролу ---------- */
   var nav = $("#nav"), bar = $("#progress"), mbar = $("#mbar");
   var burger = $("#burger"), links = $("#navLinks");
@@ -51,42 +87,102 @@
   ];
   var NS = "http://www.w3.org/2000/svg";
 
+  /* Сцена 1: анатомічна 3D-модель верхньої щелепи (вид з боку жувальних поверхонь).
+     Зуби будуються процедурно: моляри з чотирма горбами і фісурами, премоляри з двома, ікла з вершиною, різці лопатоподібні.
+     Площина сканування проходить по моделі: до неї — «хмара точок», після — емаль з об'ємом; модель повертається в перспективі. */
   function sceneScan() {
     var el = document.createElement("div"); el.className = "scene scene--scan";
-    var cx = 240, cy = 300, rx = 172, ry = 222, W = [40, 37, 30, 28, 24, 22, 26, 26, 22, 24, 28, 30, 37, 40], teeth = "", pts = [];
-    for (var i = 0; i < 14; i++) {
-      var th = (16 + i * (148 / 13)) * Math.PI / 180, x = cx + rx * Math.cos(th), y = cy - ry * Math.sin(th);
-      var nx = Math.cos(th) * ry, ny = -Math.sin(th) * rx, phi = Math.atan2(nx, -ny) * 180 / Math.PI;
-      var w = W[i], hgt = i > 4 && i < 9 ? w * 0.62 : w * 0.86;
-      pts.push(y);
-      teeth += '<g class="tooth" transform="translate(' + x.toFixed(1) + " " + y.toFixed(1) + ") rotate(" + phi.toFixed(1) + ')"><rect x="' + (-w / 2) + '" y="' + (-hgt / 2) + '" width="' + w + '" height="' + hgt + '" rx="' + (w * 0.42).toFixed(1) + '"/></g>';
+    var cx = 240, cy = 300, rx = 178, ry = 226;
+    // [тип, ширина, глибина] від правого другого моляра до лівого
+    var T = [["m", 39, 37], ["m", 41, 39], ["p", 27, 31], ["p", 27, 31], ["c", 26, 27], ["l", 22, 17], ["i", 28, 19], ["i", 28, 19], ["l", 22, 17], ["c", 26, 27], ["p", 27, 31], ["p", 27, 31], ["m", 41, 39], ["m", 39, 37]].map(function (t) { return [t[0], t[1] * 1.3, t[2] * 1.3]; });
+    var FDI = ["17", "16", "15", "14", "13", "12", "11", "21", "22", "23", "24", "25", "26", "27"];
+    function sg(v) { return v < 0 ? -1 : 1; }
+    function shape(t, w, h) {
+      var pts = [], N = 56;
+      for (var k = 0; k < N; k++) {
+        var a = k / N * Math.PI * 2, c = Math.cos(a), s = Math.sin(a), n = t === "m" ? 3 : t === "p" ? 2.5 : t === "c" ? 2.2 : 2.6;
+        var x = w / 2 * sg(c) * Math.pow(Math.abs(c), 2 / n), y = h / 2 * sg(s) * Math.pow(Math.abs(s), 2 / n), r = 1;
+        if (t === "m") { r = 1 - .05 * Math.cos(4 * a); x *= 1 - .07 * y / (h / 2); }
+        if (t === "p") { r = 1 - .045 * Math.cos(2 * a); }
+        if (t === "c") { if (y < 0) { y *= 1.22; x *= 1 + .28 * y / h; } }
+        if (t === "i" || t === "l") { x *= 1 - .42 * Math.max(0, y / (h / 2)); y -= (1 - Math.pow(x / (w / 2), 2)) * h * .22; }
+        pts.push((x * r).toFixed(1) + " " + (y * r).toFixed(1));
+      }
+      return "M" + pts.join(" L") + "Z";
     }
+    function detail(t, w, h) {
+      var q = w / 4, v = h / 4, d = "", c = "";
+      if (t === "m") {
+        d = "M" + (-q) + " " + (-v * .2) + " Q0 " + (v * .35) + " " + q + " " + (-v * .2) + " M" + (-q) + " " + (-v * .2) + " l" + (-q * .7) + " " + (-v * .9) + " M" + (-q) + " " + (-v * .2) + " l" + (-q * .6) + " " + (v * 1.1) + " M" + q + " " + (-v * .2) + " l" + (q * .7) + " " + (-v * .9) + " M" + q + " " + (-v * .2) + " l" + (q * .6) + " " + (v * 1.1) + " M0 " + (v * .1) + " L" + (q * .2) + " " + (v * 1.6);
+        [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(function (o) { c += '<ellipse class="cusp" cx="' + (o[0] * q * 1.05) + '" cy="' + (o[1] * v * 1.05) + '" rx="' + (q * .78) + '" ry="' + (v * .78) + '"/>'; });
+      } else if (t === "p") {
+        d = "M" + (-q * 1.1) + " 0 Q0 " + (v * .3) + " " + (q * 1.1) + " 0";
+        c = '<ellipse class="cusp" cx="0" cy="' + (-v * 1.05) + '" rx="' + (q * 1.25) + '" ry="' + (v * .8) + '"/><ellipse class="cusp" cx="0" cy="' + (v * 1.05) + '" rx="' + (q * 1.05) + '" ry="' + (v * .7) + '"/>';
+      } else if (t === "c") {
+        d = "M0 " + (-h * .52) + " L0 " + (h * .25) + " M" + (-q * 1.2) + " " + (-v * .2) + " L0 " + (-h * .5) + " L" + (q * 1.2) + " " + (-v * .2);
+        c = '<ellipse class="cusp" cx="0" cy="' + (-v * .6) + '" rx="' + (q * 1.3) + '" ry="' + (v * 1.4) + '"/>';
+      } else {
+        d = "M" + (-w * .4) + " " + (-h * .18) + " Q0 " + (-h * .42) + " " + (w * .4) + " " + (-h * .18) + " M0 " + (h * .05) + " L0 " + (h * .36);
+        c = '<ellipse class="cusp" cx="0" cy="' + (-h * .05) + '" rx="' + (w * .3) + '" ry="' + (h * .22) + '"/>';
+      }
+      return { fis: d, cusps: c };
+    }
+    // розставляємо зуби по довжині дуги, щоб проміжки були рівні
+    var A0 = 4 * Math.PI / 180, A1 = 176 * Math.PI / 180, S = 400, len = [0];
+    function at(a) { return [cx + rx * Math.cos(a), cy - ry * Math.sin(a)]; }
+    for (var k = 1; k <= S; k++) { var p0 = at(A0 + (A1 - A0) * (k - 1) / S), p1 = at(A0 + (A1 - A0) * k / S); len.push(len[k - 1] + Math.hypot(p1[0] - p0[0], p1[1] - p0[1])); }
+    var total = T.reduce(function (s, t) { return s + t[1]; }, 0), gap = 1.6, used = total + gap * 13, off = (len[S] - used) / 2, pos = off;
+    function angAt(L) { for (var k = 1; k <= S; k++) if (len[k] >= L) return A0 + (A1 - A0) * k / S; return A1; }
+    var teeth = "", defs = "", ys = [], meta = [];
+    T.forEach(function (t, i) {
+      var a = angAt(pos + t[1] / 2); pos += t[1] + gap;
+      var P = at(a), nx = Math.cos(a) * ry, ny = -Math.sin(a) * rx, phi = Math.atan2(nx, -ny) * 180 / Math.PI;
+      var d = shape(t[0], t[1], t[2]), dt = detail(t[0], t[1], t[2]), mesh = "", w = t[1], h = t[2];
+      for (var m = -2; m <= 2; m++) mesh += "M" + (-w) + " " + (m * h / 5) + " L" + w + " " + (m * h / 5) + " M" + (m * w / 5) + " " + (-h) + " L" + (m * w / 5) + " " + h + " ";
+      mesh += "M" + (-w) + " " + (-h) + " L" + w + " " + h + " M" + w + " " + (-h) + " L" + (-w) + " " + h;
+      defs += '<clipPath id="tc' + i + '"><path d="' + d + '"/></clipPath>';
+      ys.push(P[1]); meta.push(P);
+      teeth += '<g class="tooth" transform="translate(' + P[0].toFixed(1) + " " + P[1].toFixed(1) + ") rotate(" + phi.toFixed(1) + ')">' +
+        '<path class="t__cloud" d="' + d + '"/>' +
+        '<g class="t__solid"><path class="t__shadow" d="' + d + '" transform="translate(1.5 3)"/><path class="t__enamel" d="' + d + '"/>' +
+        '<g clip-path="url(#tc' + i + ')">' + dt.cusps + '<path class="t__fis" d="' + dt.fis + '"/>' + (i === 1 ? '<ellipse class="t__caries" cx="4" cy="5" rx="4.5" ry="3.6"/>' : "") + "</g>" +
+        '<path class="t__rim" d="' + d + '"/></g>' +
+        '<path class="t__mesh" clip-path="url(#tc' + i + ')" d="' + mesh + '"/></g>';
+    });
+    var gA = angAt(off) - .05, gB = angAt(off + used) + .05;
+    var gum = "M" + at(gA).map(function (v) { return v.toFixed(1); }).join(" ") + " A" + rx + " " + ry + " 0 0 0 " + at(gB).map(function (v) { return v.toFixed(1); }).join(" ");
     el.innerHTML =
-      '<svg viewBox="40 34 400 290" class="scan__svg">' +
-      '<defs><pattern id="dots" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" class="scan__dot"/></pattern>' +
-      '<linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A62E8" stop-opacity="0"/><stop offset="1" stop-color="#2A62E8" stop-opacity=".16"/></linearGradient></defs>' +
-      '<rect x="-600" y="-300" width="1680" height="960" fill="url(#dots)" class="scan__dots"/>' +
-      '<path class="scan__arch" d="M' + (cx - rx - 28) + " " + (cy - 20) + " A " + (rx + 28) + " " + (ry + 28) + " 0 0 1 " + (cx + rx + 28) + " " + (cy - 20) + '"/>' +
+      '<div class="scan__model"><svg viewBox="20 40 440 300" class="scan__svg">' +
+      '<defs>' + defs +
+      '<radialGradient id="enamel" cx=".42" cy=".36" r=".75"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#F3F6FB"/><stop offset="1" stop-color="#C9D5E6"/></radialGradient>' +
+      '<radialGradient id="cusp" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".95"/><stop offset=".7" stop-color="#FFFFFF" stop-opacity=".2"/><stop offset="1" stop-color="#B8C6DA" stop-opacity=".35"/></radialGradient>' +
+      '<linearGradient id="gum" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F1D3DA"/><stop offset="1" stop-color="#E7BEC8"/></linearGradient>' +
+      '<linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A62E8" stop-opacity="0"/><stop offset="1" stop-color="#2A62E8" stop-opacity=".22"/></linearGradient>' +
+      '<pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="#D3DEF0" stroke-width=".6"/></pattern></defs>' +
+      '<rect x="-400" y="-300" width="1280" height="960" fill="url(#grid)" class="scan__grid"/>' +
+      '<path class="scan__palate" d="' + gum + '"/>' +
+      '<path class="scan__gum" d="' + gum + '"/>' +
       '<g class="scan__teeth">' + teeth + "</g>" +
-      '<rect class="scan__band" x="-600" y="0" width="1680" height="60" fill="url(#beam)"/>' +
-      '<line class="scan__line" x1="-600" x2="1080" y1="0" y2="0"/>' +
-      '<g class="scan__flag"><circle r="22" class="ring"/><circle r="5"/></g>' +
-      "</svg>" +
-      '<div class="scan__call"><b>Зуб 16</b><span>прихований карієс під пломбою</span></div>' +
+      '<rect class="scan__band" x="-400" y="0" width="1280" height="70" fill="url(#beam)"/>' +
+      '<line class="scan__line" x1="-400" x2="880" y1="0" y2="0"/>' +
+      "</svg></div>" +
+      '<div class="scan__hud"><span>CBCT · верхня щелепа</span><span class="scan__axis"><i></i><i></i></span></div>' +
+      '<div class="scan__call"><b>Зуб 16</b><span>прихований карієс під старою пломбою</span></div>' +
       '<div class="readout readout--l"><span>Сканування</span><b class="scan__pct">0%</b></div>' +
       '<div class="readout readout--r"><span>Доза</span><b>0,03 мЗв</b></div>';
-    var line = $(".scan__line", el), band = $(".scan__band", el), pct = $(".scan__pct", el), tg = $$(".tooth", el), flag = $(".scan__flag", el), call = $(".scan__call", el);
-    var fi = 2, ft = tg[fi].getAttribute("transform").match(/translate\(([\d.]+) ([\d.]+)/);
-    flag.setAttribute("transform", "translate(" + ft[1] + " " + ft[2] + ")");
-    // підказка над зубом: координати viewBox → відсотки (svg тягнеться як meet, тому рахуємо при кожному set)
-    function placeCall() { var W = el.clientWidth, H = el.clientHeight; if (!W) return; var k = Math.min(W / 400, H / 290), ox = (W - 400 * k) / 2 - 40 * k, oy = (H - 290 * k) / 2 - 34 * k;
-      call.style.left = (ox + (+ft[1] - 14) * k) + "px"; call.style.top = (oy + (+ft[2]) * k) + "px"; }
+    var model = $(".scan__model", el), line = $(".scan__line", el), band = $(".scan__band", el), pct = $(".scan__pct", el), tg = $$(".tooth", el), call = $(".scan__call", el), fl = tg[1];
+    function placeCall() {
+      var r = el.getBoundingClientRect(), t = fl.getBoundingClientRect(); if (!r.width) return;
+      call.style.left = (t.left - r.left + t.width * .1) + "px"; call.style.top = (t.top - r.top + t.height * .4) + "px";
+    }
     return { el: el, set: function (p) {
-      var y = 60 + p * 230;
-      line.setAttribute("y1", y); line.setAttribute("y2", y); band.setAttribute("y", y - 60);
-      tg.forEach(function (g, i) { g.classList.toggle("on", pts[i] < y); });
+      var e = ease(clamp(p, 0, 1)), y = 50 + p * 270;
+      model.style.transform = "perspective(1100px) translateY(" + (4 - 4 * e) + "%) rotateX(" + (50 - 30 * e).toFixed(2) + "deg) rotateZ(" + (-9 + 9 * e).toFixed(2) + "deg) scale(" + (.9 + .12 * e).toFixed(3) + ")";
+      line.setAttribute("y1", y); line.setAttribute("y2", y); band.setAttribute("y", y - 70);
+      tg.forEach(function (g, i) { var dy = ys[i] - y; g.classList.toggle("on", dy < 0); g.classList.toggle("meshing", dy < 0 && dy > -46); });
       pct.textContent = Math.round(p * 100) + "%";
-      placeCall(); var f = p > .82; flag.classList.toggle("on", f); call.classList.toggle("on", f); tg[fi].classList.toggle("flagged", f);
+      var f = p > .86; fl.classList.toggle("flagged", f); call.classList.toggle("on", f);
+      if (f) placeCall();
     } };
   }
 
@@ -209,7 +305,7 @@
   list.addEventListener("click", function (e) {
     var b = e.target.closest(".ch__h"); if (!b || mode !== "desk") return;
     var i = +b.parentNode.dataset.i, len = track.offsetHeight - window.innerHeight;
-    window.scrollTo({ top: track.getBoundingClientRect().top + window.scrollY + (i + .5) / CH.length * len, behavior: "smooth" });
+    go(track.getBoundingClientRect().top + window.scrollY + (i + .5) / CH.length * len);
   });
   // телефон: сцена програється сама, коли з'являється на екрані
   function play(s) {
@@ -242,11 +338,34 @@
   if (!reduced) requestAnimationFrame(loop);
 
   /* ---------- Цифри ---------- */
-  $("#stats").innerHTML = D.stats.map(function (s) {
-    return '<div class="stat reveal"><b data-count="' + s.n + '" data-dec="' + (s.dec || 0) + '" data-plain="' + (s.plain ? 1 : 0) + '" data-suf="' + esc((s.plus ? "+" : "") + (s.suf || "")) + '">0</b><span>' + esc(s.label) + "</span></div>";
-  }).join("");
+  /* Маніфест: слова «проявляються» під час скролу, цифри рахуються, коли до них доходить черга */
+  var mani = $("#mani"), mWords = [];
+  (function split(node) {
+    Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+      if (n.nodeType === 3) {
+        var frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(function (part) {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+          var s = document.createElement("span"); s.className = "w"; s.textContent = part; frag.appendChild(s); mWords.push(s);
+        });
+        n.parentNode.replaceChild(frag, n);
+      } else if (n.nodeType === 1) { n.classList.add("w"); mWords.push(n); }
+    });
+  })(mani);
+  var maniLit = -1;
+  function maniScroll() {
+    var r = mani.getBoundingClientRect(), vh = window.innerHeight;
+    var p = reduced ? 1 : clamp((vh * .88 - r.top) / (r.height + vh * .3), 0, 1), lit = Math.round(p * mWords.length * 1.15);
+    if (lit === maniLit) return; maniLit = lit;
+    mWords.forEach(function (w, i) {
+      var on = i < lit;
+      if (on && !w.classList.contains("on") && w.classList.contains("num")) countUp(w);
+      w.classList.toggle("on", on);
+    });
+  }
   function countUp(el) {
-    var n = +el.dataset.count, dec = +el.dataset.dec, plain = el.dataset.plain === "1", suf = el.dataset.suf, t0 = null, from = plain ? n - 10 : 0;
+    var n = +el.dataset.count, dec = +(el.dataset.dec || 0), plain = el.dataset.plain === "1", suf = el.dataset.suf || "", t0 = null, from = plain ? n - 10 : 0;
     function out(v) { return (dec ? v.toFixed(dec).replace(".", ",") : plain ? String(Math.round(v)) : fmt(Math.round(v))) + suf; }
     if (reduced) { el.textContent = out(n); return; }
     requestAnimationFrame(function step(t) { if (!t0) t0 = t; var k = clamp((t - t0) / 1600, 0, 1); el.textContent = out(from + (n - from) * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); });
@@ -369,8 +488,8 @@
   var soc = { Telegram: C.telegram, Instagram: C.instagram, Viber: C.viber };
   $("#socials").innerHTML = Object.keys(soc).map(function (k) { return '<a href="' + soc[k] + '" target="_blank" rel="noopener">' + k + "</a>"; }).join("");
 
-  // Карта: світлі тайли CARTO, плавне наближення з висоти до будинку
-  var LEVELS = [11, 13, 15, 17], Z0 = 11, Z1 = 16.7, cmap = $("#cmap");
+  // Карта: світло-сірі тайли Esri (без ключа) + підписи вулиць, плавне наближення з висоти до будинку
+  var LEVELS = [11, 13, 15, 16], Z0 = 11, Z1 = 16.4, cmap = $("#cmap");
   function worldPx(lat, lon, z) { var n = 256 * Math.pow(2, z), s = Math.sin(lat * Math.PI / 180); return [(lon + 180) / 360 * n, (.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI)) * n]; }
   function buildMap() {
     var W = cmap.clientWidth, H = cmap.clientHeight, html = "";
@@ -378,7 +497,8 @@
       var p = worldPx(C.lat, C.lon, z), t = "";
       for (var tx = Math.floor((p[0] - W / 2) / 256); tx <= Math.floor((p[0] + W / 2) / 256); tx++)
         for (var ty = Math.floor((p[1] - H / 2) / 256); ty <= Math.floor((p[1] + H / 2) / 256); ty++)
-          t += '<img alt="" decoding="async" src="https://' + "abcd"[(tx + ty) & 3] + ".basemaps.cartocdn.com/light_all/" + z + "/" + tx + "/" + ty + '@2x.png" style="left:' + (tx * 256 - p[0] + W / 2).toFixed(1) + "px;top:" + (ty * 256 - p[1] + H / 2).toFixed(1) + 'px">';
+          { var pos = 'style="left:' + (tx * 256 - p[0] + W / 2).toFixed(1) + "px;top:" + (ty * 256 - p[1] + H / 2).toFixed(1) + 'px"', E = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_";
+            t += '<img alt="" decoding="async" src="' + E + "Base/MapServer/tile/" + z + "/" + ty + "/" + tx + '" ' + pos + ">" + '<img alt="" class="lbl" decoding="async" src="' + E + "Reference/MapServer/tile/" + z + "/" + ty + "/" + tx + '" ' + pos + ">"; }
       html += '<div class="cmap__layer" data-z="' + z + '">' + t + "</div>";
     });
     $(".cmap__layers", cmap).innerHTML = html;
@@ -483,7 +603,7 @@
   $("#bDays").addEventListener("click", function (e) { var c = e.target.closest(".day"); if (!c) return; st.day = +c.dataset.d; st.time = null; renderDays(); renderTimes(); renderSum(); });
   $("#bTimes").addEventListener("click", function (e) {
     var c = e.target.closest(".time"); if (!c || c.disabled) return; st.time = +c.dataset.m; renderTimes(); renderSum();
-    if (window.matchMedia("(max-width: 959px)").matches) setTimeout(function () { $("#ticket").scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" }); }, 200);
+    if (window.matchMedia("(max-width: 959px)").matches) setTimeout(function () { go($("#ticket"), 4); }, 200);
   });
   // кнопки «записатися» з послуг і лікарів
   document.addEventListener("click", function (e) {
@@ -491,7 +611,7 @@
     if (a.dataset.bookSvc) { st.svc = a.dataset.bookSvc; st.doc = "any"; }
     if (a.dataset.bookDoc) { var d = docById(a.dataset.bookDoc); st.doc = d.id; if (d.spec.indexOf(svcById(st.svc).spec) < 0) st.svc = D.services.filter(function (s) { return d.spec.indexOf(s.spec) >= 0; })[0].id; }
     st.time = null; refresh(true);
-    $("#booking").scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+    go($("#booking"));
   });
 
   var form = $("#bForm"), err = $("#bErr"), last = null;
@@ -533,7 +653,6 @@
       en.forEach(function (x) {
         if (!x.isIntersecting) return;
         x.target.classList.add("is-in"); io.unobserve(x.target);
-        $$("[data-count]", x.target).forEach(countUp);
       });
     }, { rootMargin: "0px 0px -8% 0px", threshold: .08 });
     $$(".reveal").forEach(function (x) { io.observe(x); });
@@ -545,7 +664,7 @@
     bkio.observe($("#booking"));
   } else {
     $$(".reveal").forEach(function (x) { x.classList.add("is-in"); });
-    reduced = true; $$("[data-count]").forEach(countUp);
+    reduced = true;
     paintZoom(Z1);
   }
 
@@ -558,7 +677,7 @@
     bar.style.transform = "scaleX(" + (h > 0 ? y / h : 0).toFixed(4) + ")";
     mbar.classList.toggle("is-shown", y > window.innerHeight * .7);
     if (!reduced && y < window.innerHeight * 1.2) arch.style.transform = "translateY(" + (y * .08).toFixed(1) + "px) scale(1.08)";
-    storyScroll(); stepsScroll();
+    storyScroll(); stepsScroll(); maniScroll();
   }
   window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
   window.addEventListener("resize", function () { layout(); scenes.forEach(function (s) { var p = s.p; s.p = -1; setScene(s, p < 0 ? 0 : p); }); onScroll(); });
