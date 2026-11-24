@@ -68,54 +68,73 @@
   })();
 
   /* =====================================================================
-     «Чому ми»: атлас. Кожен розділ — справжнє зображення як ілюстрація з підручника:
-     виноски з підписами прорисовуються по черзі, «камера» наїжджає на деталь,
-     кадри змінюються шторкою. Десктоп: усе прив'язано до скролу. Телефон: програється при появі.
-     Координати виносок — у відсотках від зображення: x,y — точка на зображенні, lx,ly — де підпис.
+     «Чому ми»: повноекранний атлас. Кожен розділ — справжнє зображення на весь екран:
+     кадри змінюються круглою шторкою з точки фокуса, виноски з підписами прорисовуються
+     по черзі, «камера» наїжджає на деталь, текст лежить поверх зображення.
+     Десктоп: усе прив'язано до скролу. Телефон: програється при появі.
+     Координати виносок — у відсотках від зображення: x,y — точка, lx,ly — підпис, side — бік підпису.
+     fit: "cover" (на весь екран, ax — вирівнювання по горизонталі 0..1) або "contain" (праворуч, фон bg).
      ===================================================================== */
   var CH = D.why;
-  var track = $("#storyTrack"), figs = $("#whyFigs"), copy = $("#whyCopy"), mob = $("#whyMob");
+  var track = $("#storyTrack"), stage = $("#whyStage"), figs = $("#whyFigs"), copy = $("#whyCopy"), mob = $("#whyMob");
   function figHTML(c, i) {
     var notes = (c.notes || []).map(function (n, k) {
-      var right = n.side ? n.side === "r" : n.lx >= n.x;
-      return '<g class="wn__g k' + k + '"><line x1="' + (n.x * c.ar).toFixed(2) + '" y1="' + n.y + '" x2="' + (n.lx * c.ar).toFixed(2) + '" y2="' + n.ly + '" pathLength="1"/><circle cx="' + n.x + '" cy="' + n.y + '" r=".9"/></g>';
+      return '<g class="k' + k + '"><line x1="' + (n.x * c.ar).toFixed(2) + '" y1="' + n.y + '" x2="' + (n.lx * c.ar).toFixed(2) + '" y2="' + n.ly + '" pathLength="1"/></g>';
     }).join("");
     var labels = (c.notes || []).map(function (n, k) {
       var right = n.side ? n.side === "r" : n.lx >= n.x;
       return '<span class="wn__l k' + k + (right ? "" : " wn__l--r") + '" style="left:' + n.lx + "%;top:" + n.ly + '%"><i>' + (k + 1) + "</i><span><b>" + esc(n.t) + "</b>" + (n.s ? "<small>" + esc(n.s) + "</small>" : "") + "</span></span>" +
         '<span class="wn__dot k' + k + '" style="left:' + n.x + "%;top:" + n.y + '%"></span>';
     }).join("");
-    var fx = c.focus || [50, 50, 1.12];
-    return '<figure class="wf' + (c.scan ? " wf--scan" : "") + (c.dark ? " wf--dark" : "") + '" data-i="' + i + '" style="--ar:' + c.ar + ";--fx:" + fx[0] + "%;--fy:" + fx[1] + "%;--fs:" + fx[2] + '">' +
-      '<div class="wf__frame ph"><div class="wf__cam">' +
+    var fx = c.focus || [50, 50, 1.1], fit = c.fit || "cover";
+    return '<figure class="wf wf--' + fit + (c.scan ? " wf--scan" : "") + (c.dark ? " wf--dark" : "") + '" data-i="' + i + '" style="--ar:' + c.ar + ";--fx:" + fx[0] + "%;--fy:" + fx[1] + "%;--fs:" + fx[2] + ";--bg:" + (c.bg || (c.dark ? "#060D19" : "#fff")) + '">' +
+      '<div class="wf__cam">' +
       '<img src="' + c.img + '" alt="' + esc(c.alt || c.t) + '" loading="lazy">' +
       (c.scan ? '<img class="wf__scanimg" src="' + c.img + '" alt=""><span class="wf__beam"></span>' : "") +
       '<svg class="wn" viewBox="0 0 ' + (100 * c.ar).toFixed(2) + ' 100" preserveAspectRatio="none" aria-hidden="true">' + notes + "</svg>" + labels +
-      "</div></div>" +
+      "</div>" +
       '<figcaption><span>Рис. ' + (i + 1) + "</span>" + esc(c.cap) + "</figcaption></figure>";
   }
   function copyHTML(c, i) {
-    return '<div class="wc" data-i="' + i + '"><p class="wc__tag"><span>0' + (i + 1) + "</span>" + esc(c.tag) + '</p><h3 class="wc__t"><span>' + esc(c.t) + '</span></h3><p class="wc__d">' + esc(c.d) + "</p>" +
+    var t = esc(c.t).split(" ").map(function (w, k) { return '<span class="ww" style="--wi:' + k + '"><span>' + w + "</span></span>"; }).join(" ");
+    return '<div class="wc" data-i="' + i + '"><p class="wc__tag"><span>0' + (i + 1) + "</span>" + esc(c.tag) + '</p><h3 class="wc__t">' + t + '</h3><p class="wc__d">' + esc(c.d) + "</p>" +
       (c.facts ? '<ul class="wc__facts">' + c.facts.map(function (f) { return "<li><b>" + esc(f[0]) + "</b>" + esc(f[1]) + "</li>"; }).join("") + "</ul>" : "") + "</div>";
   }
   figs.innerHTML = CH.map(figHTML).join("");
-  copy.innerHTML = CH.map(copyHTML).join("") + '<div class="wprog" id="wprog">' + CH.map(function () { return "<i><b></b></i>"; }).join("") + "</div>";
+  copy.innerHTML = CH.map(copyHTML).join("") +
+    '<div class="why__foot"><div class="why__count"><span class="why__cn"><span>' + CH.map(function (c, i) { return "<i>0" + (i + 1) + "</i>"; }).join("") + "</span></span><em>/ 0" + CH.length + "</em></div>" +
+    '<div class="wprog" id="wprog">' + CH.map(function () { return "<i><b></b></i>"; }).join("") + "</div></div>";
   mob.innerHTML = CH.map(function (c, i) { return '<article class="wm">' + figHTML(c, i) + copyHTML(c, i) + "</article>"; }).join("");
   checkImgs(figs); checkImgs(mob);
-  var dFigs = $$(".wf", figs), dCopy = $$(".wc", copy), dProg = $$("#wprog b");
+  var dFigs = $$(".wf", figs), dCopy = $$(".wc", copy), dProg = $$("#wprog b"), cn = $(".why__cn > span", copy);
   var desk = window.matchMedia("(min-width: 960px)"), mode = "", active = -1;
   // стан кадру: p — прогрес усередині розділу (0..1)
   function paint(f, p) {
     var c = CH[+f.dataset.i], n = (c.notes || []).length, e = ease(clamp(p / .85, 0, 1));
     f.style.setProperty("--z", e.toFixed(3));
-    if (c.scan) f.style.setProperty("--scan", (clamp((p - .02) / .55, 0, 1) * 100).toFixed(1) + "%");
-    for (var k = 0; k < n; k++) f.classList.toggle("n" + k, p > (c.scan ? .3 : .12) + k * (.6 / Math.max(n, 1)));
+    if (c.scan) f.style.setProperty("--scan", (clamp((p - .02) / .5, 0, 1) * 100).toFixed(1) + "%");
+    for (var k = 0; k < n; k++) f.classList.toggle("n" + k, p > (c.scan ? .28 : .1) + k * (.55 / Math.max(n, 1)));
+  }
+  // розмір і місце «камери» на повноекранній сцені
+  function place() {
+    var W = stage.clientWidth, H = stage.clientHeight;
+    dFigs.forEach(function (f) {
+      var c = CH[+f.dataset.i], cam = f.firstChild, w, h, x, y;
+      if (c.fit === "contain") {
+        var L = W * (c.ar > 1 ? .4 : .44), R = c.ar > 1 ? W : W - Math.max(32, (W - 1240) / 2 + 28), T = c.ar > 1 ? 88 : 104, B = H - (c.ar > 1 ? 40 : 84), aw = R - L, ah = B - T;
+        w = Math.min(aw, ah * c.ar); h = w / c.ar; x = L + (aw - w) / 2; y = T + (ah - h) / 2;
+      } else {
+        w = Math.max(W, H * c.ar); h = w / c.ar; x = (W - w) * (c.ax == null ? .5 : c.ax); y = (H - h) * (c.ay == null ? .5 : c.ay);
+      }
+      cam.style.cssText = "width:" + w.toFixed(1) + "px;height:" + h.toFixed(1) + "px;left:" + x.toFixed(1) + "px;top:" + y.toFixed(1) + "px";
+    });
   }
   function layout() {
     var m = desk.matches && !reduced ? "desk" : "mob";
+    if (m === "desk") place();
     if (m === mode) return; mode = m;
     document.documentElement.classList.toggle("story-desk", m === "desk");
-    if (m === "desk") { track.style.height = (CH.length * 90 + 60) + "vh"; active = -1; storyScroll(); }
+    if (m === "desk") { track.style.height = (CH.length * 100 + 40) + "vh"; active = -1; storyScroll(); }
     else { track.style.height = ""; }
     if (reduced) $$(".wf", mob).forEach(function (f) { f.classList.add("is-on"); paint(f, 1); });
   }
@@ -125,10 +144,16 @@
     var prog = clamp(-r.top / len, 0, .9999), fl = prog * CH.length, idx = Math.floor(fl), lp = fl - idx;
     if (idx !== active) {
       active = idx;
+      var c = CH[idx];
+      stage.dataset.tone = c.fit === "contain" ? "plain" : c.dark ? "dark" : "light";
       dFigs.forEach(function (f, i) { f.classList.toggle("is-on", i <= idx); f.classList.toggle("is-cur", i === idx); });
       dCopy.forEach(function (c, i) { c.classList.toggle("is-on", i === idx); c.classList.toggle("is-past", i < idx); });
+      cn.style.transform = "translateY(" + (-idx) + "em)";
     }
-    dFigs.forEach(function (f, i) { paint(f, i < idx ? 1 : i > idx ? 0 : lp); });
+    dFigs.forEach(function (f, i) {
+      paint(f, i < idx ? 1 : i > idx ? 0 : lp);
+      if (i === idx) f.style.setProperty("--py", ((.5 - lp) * 36).toFixed(1) + "px");
+    });
     dProg.forEach(function (b, i) { b.style.transform = "scaleX(" + (i < idx ? 1 : i > idx ? 0 : lp).toFixed(3) + ")"; });
   }
   $("#wprog").addEventListener("click", function (e) {
@@ -137,19 +162,18 @@
     go(track.getBoundingClientRect().top + window.scrollY + (i + .3) / CH.length * len);
   });
   // телефон: кадр розкривається і виноски малюються самі, коли кадр на екрані
+  // (спостерігаємо за .wm: clip-path ховає сам кадр від IntersectionObserver)
   if ("IntersectionObserver" in window && !reduced) {
     var wio = new IntersectionObserver(function (en) {
       en.forEach(function (x) {
         if (!x.isIntersecting || mode !== "mob") return;
-        wio.unobserve(x.target); var f = $(".wf", x.target); f.classList.add("is-on");
+        wio.unobserve(x.target); var f = $(".wf", x.target); f.classList.add("is-on"); x.target.classList.add("is-on");
         var t0 = null;
-        requestAnimationFrame(function step(t) { if (!t0) t0 = t; var k = clamp((t - t0) / 3200, 0, 1); paint(f, k); if (k < 1) requestAnimationFrame(step); });
+        requestAnimationFrame(function step(t) { if (!t0) t0 = t; var k = clamp((t - t0) / 3400, 0, 1); paint(f, k); if (k < 1) requestAnimationFrame(step); });
       });
     }, { threshold: .25 });
     $$(".wm", mob).forEach(function (f) { wio.observe(f); });
   }
-  var scenes = [];
-  function setScene() {}
 
   /* ---------- Цифри ---------- */
   /* Цифри: кожна цифра — барабан, що прокручується до свого значення (як табло) */
@@ -185,17 +209,57 @@
     kid: '<circle cx="12" cy="13" r="7.5"/><path d="M9 15c1.6 1.6 4.4 1.6 6 0M9.5 11.5v.3M14.5 11.5v.3M12 5.5c0-2 1.5-3 3-3"/>'
   };
   function icon(k) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + (IC[k] || "") + "</svg>"; }
-  var svcCat = "all";
-  function renderSvc() {
-    $("#svcTabs").innerHTML = D.cats.map(function (c) { return '<button type="button" class="tab' + (c.id === svcCat ? " is-on" : "") + '" aria-pressed="' + (c.id === svcCat) + '" data-cat="' + c.id + '">' + esc(c.name) + "</button>"; }).join("");
-    $("#svcGrid").innerHTML = D.services.filter(function (s) { return svcCat === "all" || s.cat === svcCat; }).map(function (s, i) {
-      return '<article class="sc" style="--i:' + i + '"><span class="sc__ic">' + icon(s.icon) + "</span><h3>" + esc(s.name) + "</h3><p>" + esc(s.desc) + "</p>" +
-        '<div class="sc__foot"><span class="sc__price"><small>від</small> ' + money(s.price) + (s.unit ? " <small>" + s.unit + "</small>" : "") + '</span><span class="sc__dur">' + s.dur + ' хв</span></div>' +
-        '<button type="button" class="sc__go" data-book-svc="' + s.id + '" aria-label="Записатися: ' + esc(s.name) + '">' + arrow + "</button></article>";
-    }).join("");
+  /* ---------- Послуги і ціни: прайс-лист рядками + велике превью ---------- */
+  var SIMG = { consult: "w1", hyg: "smile1", caries: "micro", endo: "w3", impl: "w5", extr: "hero", crown: "smile3", ven: "ven-after", white: "smile2", align: "al-after", kids: "calm" };
+  var svcCat = "all", pvId = null, tabsEl = $("#svcTabs"), plPv = $("#plPv"), svcList = $("#svcGrid");
+  var check = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg>';
+  function priceHTML(s) { return "<small>від</small> " + money(s.price) + (s.unit ? " <small>" + s.unit + "</small>" : ""); }
+  tabsEl.innerHTML = D.cats.map(function (c) { return '<button type="button" class="tab' + (c.id === svcCat ? " is-on" : "") + '" aria-pressed="' + (c.id === svcCat) + '" data-cat="' + c.id + '">' + esc(c.name) + "</button>"; }).join("") + '<span class="tabs__ind" aria-hidden="true"></span>';
+  plPv.innerHTML = D.services.map(function (s) {
+    return '<div class="pv" data-id="' + s.id + '"><img src="img/' + (SIMG[s.id] || "hero") + '.jpg" alt="" loading="lazy">' +
+      '<div class="pv__body"><p class="pv__dur">' + s.dur + " хв · " + esc(D.cats.filter(function (c) { return c.id === s.cat; })[0].name) + '</p><h3>' + esc(s.name) + '</h3><p class="pv__price">' + priceHTML(s) + "</p>" +
+      (s.inc ? '<ul class="pv__inc">' + s.inc.map(function (x) { return "<li>" + check + esc(x) + "</li>"; }).join("") + "</ul>" : "") +
+      '<button type="button" class="pv__book" data-book-svc="' + s.id + '">Записатися ' + arrow + "</button></div></div>";
+  }).join("");
+  checkImgs(plPv);
+  function moveInd() {
+    var t = $(".tab.is-on", tabsEl), ind = $(".tabs__ind", tabsEl); if (!t) return;
+    ind.style.width = t.offsetWidth + "px"; ind.style.transform = "translateX(" + t.offsetLeft + "px)";
   }
-  renderSvc();
-  $("#svcTabs").addEventListener("click", function (e) { var t = e.target.closest(".tab"); if (!t) return; svcCat = t.dataset.cat; renderSvc(); });
+  function setPv(id) {
+    if (id === pvId) return;
+    var prev = pvId; pvId = id;
+    $$(".pv", plPv).forEach(function (p) { p.classList.toggle("was", p.dataset.id === prev); p.classList.toggle("is-on", p.dataset.id === id); });
+    $$(".pr", svcList).forEach(function (r) { r.classList.toggle("is-on", r.dataset.id === id); });
+  }
+  function renderSvc() {
+    var list = D.services.filter(function (s) { return svcCat === "all" || s.cat === svcCat; });
+    svcList.innerHTML = list.map(function (s, i) {
+      return '<article class="pr" data-id="' + s.id + '" style="--i:' + i + '">' +
+        '<button type="button" class="pr__main" aria-expanded="false"><span class="pr__n">' + (i < 9 ? "0" : "") + (i + 1) + '</span>' +
+        '<span class="pr__name"><b>' + esc(s.name) + "</b><small>" + esc(s.desc) + '</small></span><span class="pr__dur">' + s.dur + ' хв</span><span class="pr__price">' + priceHTML(s) + "</span></button>" +
+        '<button type="button" class="pr__go" data-book-svc="' + s.id + '" aria-label="Записатися: ' + esc(s.name) + '">' + arrow + "</button>" +
+        '<div class="pr__more"><p>' + esc(s.desc) + "</p>" + (s.inc ? "<ul>" + s.inc.map(function (x) { return "<li>" + check + esc(x) + "</li>"; }).join("") + "</ul>" : "") + "</div></article>";
+    }).join("");
+    var keep = list.some(function (s) { return s.id === pvId; });
+    var cur = keep ? pvId : list[0].id; pvId = keep ? null : pvId; setPv(cur);
+  }
+  renderSvc(); moveInd();
+  window.addEventListener("load", moveInd);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(moveInd);
+  window.addEventListener("resize", moveInd);
+  tabsEl.addEventListener("click", function (e) {
+    var t = e.target.closest(".tab"); if (!t || t.dataset.cat === svcCat) return; svcCat = t.dataset.cat;
+    $$(".tab", tabsEl).forEach(function (b) { var on = b === t; b.classList.toggle("is-on", on); b.setAttribute("aria-pressed", on); });
+    moveInd(); renderSvc();
+  });
+  var fine = window.matchMedia("(hover: hover) and (min-width: 960px)");
+  svcList.addEventListener("mouseover", function (e) { if (!fine.matches) return; var r = e.target.closest(".pr"); if (r) setPv(r.dataset.id); });
+  svcList.addEventListener("click", function (e) {
+    var m = e.target.closest(".pr__main"); if (!m) return; var r = m.parentNode;
+    setPv(r.dataset.id);
+    if (!fine.matches) { var open = !r.classList.contains("is-open"); r.classList.toggle("is-open", open); m.setAttribute("aria-expanded", open); }
+  });
 
   /* ---------- До / після ---------- */
   var baIdx = 0, frame = $("#baFrame"), handle = $("#baHandle");
