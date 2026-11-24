@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="img/hero.jpg">
-<link rel="stylesheet" href="styles.css?v=5">
+<link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body>
 <a class="skip" href="#booking">Перейти до запису</a>
@@ -86,11 +86,11 @@
     <h2 class="h2 reveal">П'ять причин, чому до нас <span class="soft">повертаються без страху</span></h2>
   </div>
   <div class="story__track" id="storyTrack">
-    <div class="story__sticky">
-      <div class="wrap why">
-        <div class="why__figs" id="whyFigs"></div>
-        <div class="why__copy" id="whyCopy"></div>
-      </div>
+    <div class="why__stage" id="whyStage" data-tone="dark">
+      <div class="why__figs" id="whyFigs"></div>
+      <div class="why__shade why__shade--d"></div>
+      <div class="why__shade why__shade--l"></div>
+      <div class="why__copy" id="whyCopy"></div>
     </div>
   </div>
   <div class="wrap why__mob" id="whyMob"></div>
@@ -111,7 +111,10 @@
       </div>
       <div class="tabs reveal" id="svcTabs" role="group" aria-label="Категорії послуг"></div>
     </div>
-    <div class="svc reveal" id="svcGrid"></div>
+    <div class="pl">
+      <aside class="pl__pv" id="plPv" aria-hidden="true"></aside>
+      <div class="pl__list reveal" id="svcGrid"></div>
+    </div>
     <p class="svc__note reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.5"/></svg>Оплата частинами до 10 платежів без переплат. Для імплантації та елайнерів є розстрочка на весь курс.</p>
   </div>
 </section>
@@ -277,7 +280,7 @@
 <a href="#booking" class="mbar" id="mbar"><span>Записатися на консультацію</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5"/></svg></a>
 
 <script src="config.js?v=2"></script>
-<script src="data.js?v=5"></script>
-<script src="app.js?v=5"></script>
+<script src="data.js?v=6"></script>
+<script src="app.js?v=6"></script>
 </body>
 </html>
