@@ -11,9 +11,9 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%232A62E8'/%3E%3Cpath d='M16 27c5 11 27 11 32 0' fill='none' stroke='%23fff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@1,500&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="img/hero.jpg">
-<link rel="stylesheet" href="styles.css?v=1">
+<link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
 <a class="skip" href="#booking">Перейти до запису</a>
@@ -29,8 +29,8 @@
       <a href="#why">Чому ми</a>
       <a href="#services">Послуги і ціни</a>
       <a href="#results">Результати</a>
-      <a href="#doctors">Лікарі</a>
       <a href="#visit">Перший візит</a>
+      <a href="#doctors">Лікарі</a>
       <a href="#contacts">Контакти</a>
     </nav>
     <a href="tel:+380440003737" class="nav__tel" id="navTel">+380 44 000 37 37</a>
@@ -95,9 +95,12 @@
   </div>
 </section>
 
-<!-- STATS -->
-<section class="stats">
-  <div class="wrap stats__grid" id="stats"></div>
+<!-- MANIFESTO / ЦИФРИ -->
+<section class="mani" id="numbers">
+  <div class="wrap">
+    <p class="kicker reveal">«Ясна» в цифрах</p>
+    <p class="mani__text" id="mani">Ми лікуємо зуби на Подолі <span class="ins ins--photo"><img src="img/calm.jpg" alt=""></span> з <span class="num" data-count="2016" data-plain="1">2016</span> року. За цей час <span class="num" data-count="14800" data-suf="+">14 800+</span> <span class="ins ins--faces"><img src="img/smile1.jpg" alt=""><img src="img/smile2.jpg" alt=""><img src="img/smile3.jpg" alt=""></span> людей довірили нам свої <em>усмішки</em>, у Google у нас <span class="num" data-count="4.9" data-dec="1">4,9</span> <span class="ins ins--icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg></span> з 612 відгуків, а на імпланти й коронки ми даємо <span class="num" data-count="5" data-suf=" років">5 років</span> <span class="ins ins--icon ins--shield"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6z"/><path d="M8.8 12.2l2.2 2.2 4.4-4.6"/></svg></span> <em>гарантії</em>.</p>
+  </div>
 </section>
 
 <!-- SERVICES -->
@@ -110,7 +113,7 @@
       </div>
       <div class="tabs reveal" id="svcTabs" role="group" aria-label="Категорії послуг"></div>
     </div>
-    <div class="svc" id="svcGrid"></div>
+    <div class="svc reveal" id="svcGrid"></div>
     <p class="svc__note reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.5"/></svg>Оплата частинами до 10 платежів без переплат. Для імплантації та елайнерів є розстрочка на весь курс.</p>
   </div>
 </section>
@@ -125,8 +128,8 @@
       <div class="ba__case" id="baCase" aria-live="polite"></div>
     </div>
     <div class="ba__frame reveal" id="baFrame">
-      <div class="ba__img ph"><img id="baAfter" src="img/smile1.jpg" alt="Після лікування"></div>
-      <div class="ba__img ba__img--before ph" id="baBeforeWrap"><img id="baBefore" src="img/smile1.jpg" alt="До лікування"></div>
+      <div class="ba__img ph"><img id="baAfter" src="img/ven-after.jpg" alt="Після лікування"></div>
+      <div class="ba__img ba__img--before ph" id="baBeforeWrap"><img id="baBefore" src="img/ven-before.jpg" alt="До лікування"></div>
       <span class="ba__tag ba__tag--l">До</span><span class="ba__tag ba__tag--r">Після</span>
       <div class="ba__handle" id="baHandle" role="slider" tabindex="0" aria-label="Порівняння до і після" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
         <span class="ba__knob"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l-5 6 5 6M15 6l5 6-5 6"/></svg></span>
@@ -135,26 +138,12 @@
   </div>
 </section>
 
-<!-- DOCTORS -->
-<section class="sec" id="doctors">
-  <div class="wrap">
-    <div class="sec__head">
-      <div>
-        <p class="kicker reveal">04 — Лікарі</p>
-        <h2 class="h2 reveal">Шість лікарів, <span class="soft">кожен у своїй справі</span></h2>
-      </div>
-      <p class="sec__lead reveal">Ми не робимо все підряд одним лікарем. Канали лікує ендодонтист, імпланти ставить хірург, а план узгоджують між собою.</p>
-    </div>
-    <div class="docs" id="docs"></div>
-  </div>
-</section>
-
 <!-- FIRST VISIT -->
 <section class="sec sec--pale visit" id="visit">
   <div class="wrap">
     <div class="sec__head">
       <div>
-        <p class="kicker reveal">05 — Перший візит</p>
+        <p class="kicker reveal">04 — Перший візит</p>
         <h2 class="h2 reveal">Що буде на першому прийомі</h2>
       </div>
       <p class="sec__lead reveal">Близько 45 хвилин. Ви йдете з розумінням, що відбувається з зубами, скільки коштує лікування і скільки часу займе.</p>
@@ -168,7 +157,7 @@
   <div class="wrap">
     <div class="sec__head">
       <div>
-        <p class="kicker reveal">06 — Відгуки</p>
+        <p class="kicker reveal">05 — Відгуки</p>
         <h2 class="h2 reveal">Що кажуть пацієнти</h2>
       </div>
       <div class="gscore reveal"><b>4.9</b><span><i class="stars" aria-hidden="true">★★★★★</i>612 відгуків у Google</span></div>
@@ -182,7 +171,7 @@
   <div class="wrap">
     <div class="sec__head">
       <div>
-        <p class="kicker reveal">07 — Запис</p>
+        <p class="kicker reveal">06 — Запис</p>
         <h2 class="h2 reveal">Запишіться онлайн <span class="soft">за хвилину</span></h2>
       </div>
       <p class="sec__lead reveal">Оберіть послугу, лікаря і зручний час. Адміністраторка підтвердить запис дзвінком або в месенджері.</p>
@@ -227,8 +216,22 @@
   </div>
 </section>
 
+<!-- DOCTORS -->
+<section class="sec" id="doctors">
+  <div class="wrap">
+    <div class="sec__head">
+      <div>
+        <p class="kicker reveal">07 — Лікарі</p>
+        <h2 class="h2 reveal">Шість лікарів, <span class="soft">кожен у своїй справі</span></h2>
+      </div>
+      <p class="sec__lead reveal">Ми не робимо все підряд одним лікарем. Канали лікує ендодонтист, імпланти ставить хірург, а план узгоджують між собою.</p>
+    </div>
+    <div class="docs" id="docs"></div>
+  </div>
+</section>
+
 <!-- FAQ -->
-<section class="sec" id="faq">
+<section class="sec sec--flush" id="faq">
   <div class="wrap faq">
     <div>
       <p class="kicker reveal">08 — Питання</p>
@@ -251,7 +254,7 @@
         <a class="btn btn--ghost" id="routeBtn" target="_blank" rel="noopener" href="#">Прокласти маршрут <svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14L14 6M7 6h7v7"/></svg></a>
       </div>
     </div>
-    <div class="cmap reveal" id="cmap"><div class="cmap__layers"></div><span class="cmap__pin" aria-hidden="true"></span><span class="cmap__tag">Ясна · Ярославська, 37</span><span class="cmap__src">© OpenStreetMap, © CARTO</span></div>
+    <div class="cmap reveal" id="cmap"><div class="cmap__layers"></div><span class="cmap__pin" aria-hidden="true"></span><span class="cmap__tag">Ясна · Ярославська, 37</span><span class="cmap__src">© Esri, HERE, OpenStreetMap</span></div>
   </div>
 </section>
 
@@ -269,14 +272,15 @@
     <div class="foot__soc" id="socials"></div>
   </div>
   <div class="wrap foot__bottom">
-    <p>Концепт-сайт для портфоліо. Назва клініки, лікарі та відгуки вигадані. Фото: StockSnap (CC0).</p>
+    <p>Концепт-сайт для портфоліо. Назва клініки, лікарі та відгуки вигадані. Фото: StockSnap (CC0); до/після: Yvul (Wikimedia, CC BY-SA), rthakrar (Flickr, CC BY-NC-ND).</p>
   </div>
 </footer>
 
 <a href="#booking" class="mbar" id="mbar"><span>Записатися на консультацію</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5"/></svg></a>
 
-<script src="config.js?v=1"></script>
-<script src="data.js?v=1"></script>
-<script src="app.js?v=1"></script>
+<script src="lenis.min.js"></script>
+<script src="config.js?v=2"></script>
+<script src="data.js?v=2"></script>
+<script src="app.js?v=2"></script>
 </body>
 </html>
