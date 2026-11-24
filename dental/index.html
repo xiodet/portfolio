@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="img/hero.jpg">
-<link rel="stylesheet" href="styles.css?v=6">
+<link rel="stylesheet" href="styles.css?v=7">
 </head>
 <body>
 <a class="skip" href="#booking">Перейти до запису</a>
@@ -41,31 +41,46 @@
 
 <main id="top">
 
+<!-- INTRO -->
+<section class="intro" id="intro">
+  <div class="intro__stage">
+    <div class="intro__tooth" id="introTooth" aria-hidden="true">
+      <div class="intro__cam"><img src="img/w2.jpg" alt="" width="1065" height="1400">
+        <div class="it__w"><span class="it it--1"><i></i>Емаль</span><span class="it it--2"><i></i>Дентин</span><span class="it it--3"><i></i>Пульпа</span></div>
+      </div>
+    </div>
+    <div class="wrap intro__in">
+      <p class="kicker load" style="--d:.1s"><i class="dot"></i>Стоматологія на Подолі · з 2016</p>
+      <p class="intro__t" aria-label="Ясна"><span style="--i:0">Я</span><span style="--i:1">с</span><span style="--i:2">н</span><span style="--i:3">а</span></p>
+      <p class="intro__s load" style="--d:1.1s">Стоматологія, яка бачить ваші зуби <em>зсередини</em></p>
+      <div class="intro__hint load" style="--d:1.5s"><span></span>Гортайте, щоб зазирнути всередину</div>
+    </div>
+    <div class="intro__veil"></div>
+  </div>
+</section>
+
 <!-- HERO -->
-<section class="hero">
-  <svg class="hero__rings" viewBox="0 0 800 800" aria-hidden="true">
-    <circle cx="400" cy="400" r="390"/><circle cx="400" cy="400" r="310"/><circle cx="400" cy="400" r="230" class="dash"/>
-  </svg>
+<section class="hero" id="hero">
+  <div class="hero__bg" id="heroBg" aria-hidden="true"><img src="img/clinic.jpg" alt="" width="960" height="640" fetchpriority="high"></div>
   <div class="wrap hero__in">
     <div class="hero__text">
-      <p class="kicker load" style="--d:.05s"><i class="dot"></i>Стоматологія на Подолі · з 2016</p>
+      <p class="kicker hload" style="--d:.05s"><i class="dot"></i>Стоматологія на Подолі · з 2016</p>
       <h1 class="hero__title">
         <span class="line"><span style="--d:.15s">Зуби, про які</span></span>
         <span class="line"><span style="--d:.27s">можна <em class="smile">не думати<svg viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true"><path d="M4 8 C 70 40, 230 40, 296 8"/></svg></em></span></span>
       </h1>
-      <p class="hero__sub load" style="--d:.5s">Плануємо лікування за 3D-знімком, лікуємо під мікроскопом і називаємо ціну до початку. Без болю, без поспіху і без зайвих процедур.</p>
-      <div class="hero__cta load" style="--d:.62s">
+      <p class="hero__sub hload" style="--d:.5s">Плануємо лікування за 3D-знімком, лікуємо під мікроскопом і називаємо ціну до початку. Без болю, без поспіху і без зайвих процедур.</p>
+      <div class="hero__cta hload" style="--d:.62s">
         <a href="#booking" class="btn btn--acc btn--lg">Записатися на консультацію <svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5"/></svg></a>
         <a href="#why" class="btn btn--ghost btn--lg">Чому нам довіряють</a>
       </div>
-      <ul class="hero__facts load" style="--d:.74s">
+      <ul class="hero__facts hload" style="--d:.74s">
         <li><b>4.9</b><span>612 відгуків у Google</span></li>
         <li><b>0 ₴</b><span>консультація, якщо лікуєтесь у нас</span></li>
         <li><b>7 хв</b><span>від метро «Контрактова площа»</span></li>
       </ul>
     </div>
-    <div class="hero__visual load" style="--d:.2s">
-      <div class="arch ph" id="heroArch"><img src="img/hero.jpg" alt="Лікарка розмовляє з пацієнткою в кабінеті" width="900" height="1100" fetchpriority="high"></div>
+    <div class="hero__visual hload" style="--d:.2s">
       <div class="glass glass--slot">
         <span class="glass__lbl"><i class="dot dot--live"></i>Найближчий вільний час</span>
         <b id="heroSlot">сьогодні о 16:30</b>
@@ -86,11 +101,11 @@
     <h2 class="h2 reveal">П'ять причин, чому до нас <span class="soft">повертаються без страху</span></h2>
   </div>
   <div class="story__track" id="storyTrack">
-    <div class="why__stage" id="whyStage" data-tone="dark">
-      <div class="why__figs" id="whyFigs"></div>
-      <div class="why__shade why__shade--d"></div>
-      <div class="why__shade why__shade--l"></div>
-      <div class="why__copy" id="whyCopy"></div>
+    <div class="story__sticky">
+      <div class="wrap why">
+        <div class="why__figs" id="whyFigs"></div>
+        <div class="why__copy" id="whyCopy"></div>
+      </div>
     </div>
   </div>
   <div class="wrap why__mob" id="whyMob"></div>
@@ -112,7 +127,12 @@
       <div class="tabs reveal" id="svcTabs" role="group" aria-label="Категорії послуг"></div>
     </div>
     <div class="pl">
-      <aside class="pl__pv" id="plPv" aria-hidden="true"></aside>
+      <aside class="pl__pv" aria-hidden="true">
+        <div class="pl__fx"><i class="b1"></i><i class="b2"></i><i class="b3"></i>
+          <svg viewBox="0 0 400 400"><circle cx="200" cy="200" r="190"/><circle cx="200" cy="200" r="140" class="d"/><circle cx="200" cy="200" r="90"/></svg>
+        </div>
+        <div class="pl__slides" id="plPv"></div>
+      </aside>
       <div class="pl__list reveal" id="svcGrid"></div>
     </div>
     <p class="svc__note reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.5"/></svg>Оплата частинами до 10 платежів без переплат. Для імплантації та елайнерів є розстрочка на весь курс.</p>
@@ -153,26 +173,12 @@
   </div>
 </section>
 
-<!-- REVIEWS -->
-<section class="sec" id="reviews">
-  <div class="wrap">
-    <div class="sec__head">
-      <div>
-        <p class="kicker reveal">05 — Відгуки</p>
-        <h2 class="h2 reveal">Що кажуть пацієнти</h2>
-      </div>
-      <div class="gscore reveal"><b>4.9</b><span><i class="stars" aria-hidden="true">★★★★★</i>612 відгуків у Google</span></div>
-    </div>
-    <div class="revs" id="revs"></div>
-  </div>
-</section>
-
 <!-- BOOKING -->
 <section class="sec sec--pale booking" id="booking">
   <div class="wrap">
     <div class="sec__head">
       <div>
-        <p class="kicker reveal">06 — Запис</p>
+        <p class="kicker reveal">05 — Запис</p>
         <h2 class="h2 reveal">Запишіться онлайн <span class="soft">за хвилину</span></h2>
       </div>
       <p class="sec__lead reveal">Оберіть послугу, лікаря і зручний час. Адміністраторка підтвердить запис дзвінком або в месенджері.</p>
@@ -222,7 +228,7 @@
   <div class="wrap">
     <div class="sec__head">
       <div>
-        <p class="kicker reveal">07 — Лікарі</p>
+        <p class="kicker reveal">06 — Лікарі</p>
         <h2 class="h2 reveal">Шість лікарів, <span class="soft">кожен у своїй справі</span></h2>
       </div>
       <p class="sec__lead reveal">Ми не робимо все підряд одним лікарем. Канали лікує ендодонтист, імпланти ставить хірург, а план узгоджують між собою.</p>
@@ -235,7 +241,7 @@
 <section class="sec sec--flush" id="faq">
   <div class="wrap faq">
     <div>
-      <p class="kicker reveal">08 — Питання</p>
+      <p class="kicker reveal">07 — Питання</p>
       <h2 class="h2 reveal">Часті питання</h2>
       <p class="sec__lead reveal">Не знайшли відповіді? Напишіть нам у Telegram або зателефонуйте, відповідаємо протягом 15 хвилин у робочий час.</p>
     </div>
@@ -247,7 +253,7 @@
 <section class="sec sec--pale" id="contacts">
   <div class="wrap contact">
     <div class="contact__info">
-      <p class="kicker reveal">09 — Контакти</p>
+      <p class="kicker reveal">08 — Контакти</p>
       <h2 class="h2 reveal">Поділ, <span class="soft">Ярославська, 37</span></h2>
       <ul class="cinfo reveal" id="cinfo"></ul>
       <div class="contact__btns reveal">
@@ -280,7 +286,7 @@
 <a href="#booking" class="mbar" id="mbar"><span>Записатися на консультацію</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5"/></svg></a>
 
 <script src="config.js?v=2"></script>
-<script src="data.js?v=6"></script>
-<script src="app.js?v=6"></script>
+<script src="data.js?v=7"></script>
+<script src="app.js?v=7"></script>
 </body>
 </html>
