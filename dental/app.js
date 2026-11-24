@@ -68,267 +68,88 @@
   })();
 
   /* =====================================================================
-     «Чому ми»: скрол-історія. Ліворуч розділи, праворуч сцена з анімацією,
-     яка рухається разом зі скролом (на десктопі) або програється сама (на телефоні).
+     «Чому ми»: атлас. Кожен розділ — справжнє зображення як ілюстрація з підручника:
+     виноски з підписами прорисовуються по черзі, «камера» наїжджає на деталь,
+     кадри змінюються шторкою. Десктоп: усе прив'язано до скролу. Телефон: програється при появі.
+     Координати виносок — у відсотках від зображення: x,y — точка на зображенні, lx,ly — де підпис.
      ===================================================================== */
-  var CH = [
-    { k: "scan", tag: "3D-діагностика", t: "Бачимо все ще до лікування", d: "Перед лікуванням робимо 3D-знімок і цифрові зліпки. Ви бачите свої зуби на екрані разом з лікарем і розумієте, що і навіщо ми будемо робити." },
-    { k: "calm", tag: "Комп'ютерна анестезія", t: "Без болю, навіть укол", d: "Анестетик подається повільно і рівномірно, тому укол майже не відчувається. Для тих, хто дуже хвилюється, є лікування в стані медикаментозного сну." },
-    { k: "micro", tag: "Мікроскоп Carl Zeiss", t: "Лікуємо під збільшенням", d: "Канали і реставрації робимо під мікроскопом зі збільшенням до 25 разів. Це точніше і зберігає більше живого зуба." },
-    { k: "steril", tag: "Автоклав класу B", t: "Стерильно, і ви це бачите", d: "Інструменти проходять чотири етапи обробки і стерилізуються при 134 °C. Запечатаний пакет відкриваємо при вас." },
-    { k: "plan", tag: "Фіксований план", t: "Ціна відома до першого кроку", d: "Після діагностики ви отримуєте план з етапами і ціною на кожен. Сума не зміниться в процесі, а на роботу діє гарантія до 5 років." }
-  ];
-  var NS = "http://www.w3.org/2000/svg";
-
-  /* Сцена 1: анатомічна 3D-модель верхньої щелепи (вид з боку жувальних поверхонь).
-     Зуби будуються процедурно: моляри з чотирма горбами і фісурами, премоляри з двома, ікла з вершиною, різці лопатоподібні.
-     Площина сканування проходить по моделі: до неї — «хмара точок», після — емаль з об'ємом; модель повертається в перспективі. */
-  function sceneScan() {
-    var el = document.createElement("div"); el.className = "scene scene--scan";
-    var cx = 240, cy = 300, rx = 178, ry = 226;
-    // [тип, ширина, глибина] від правого другого моляра до лівого
-    var T = [["m", 39, 37], ["m", 41, 39], ["p", 27, 31], ["p", 27, 31], ["c", 26, 27], ["l", 22, 17], ["i", 28, 19], ["i", 28, 19], ["l", 22, 17], ["c", 26, 27], ["p", 27, 31], ["p", 27, 31], ["m", 41, 39], ["m", 39, 37]].map(function (t) { return [t[0], t[1] * 1.3, t[2] * 1.3]; });
-    var FDI = ["17", "16", "15", "14", "13", "12", "11", "21", "22", "23", "24", "25", "26", "27"];
-    function sg(v) { return v < 0 ? -1 : 1; }
-    function shape(t, w, h) {
-      var pts = [], N = 56;
-      for (var k = 0; k < N; k++) {
-        var a = k / N * Math.PI * 2, c = Math.cos(a), s = Math.sin(a), n = t === "m" ? 3 : t === "p" ? 2.5 : t === "c" ? 2.2 : 2.6;
-        var x = w / 2 * sg(c) * Math.pow(Math.abs(c), 2 / n), y = h / 2 * sg(s) * Math.pow(Math.abs(s), 2 / n), r = 1;
-        if (t === "m") { r = 1 - .05 * Math.cos(4 * a); x *= 1 - .07 * y / (h / 2); }
-        if (t === "p") { r = 1 - .045 * Math.cos(2 * a); }
-        if (t === "c") { if (y < 0) { y *= 1.22; x *= 1 + .28 * y / h; } }
-        if (t === "i" || t === "l") { x *= 1 - .42 * Math.max(0, y / (h / 2)); y -= (1 - Math.pow(x / (w / 2), 2)) * h * .22; }
-        pts.push((x * r).toFixed(1) + " " + (y * r).toFixed(1));
-      }
-      return "M" + pts.join(" L") + "Z";
-    }
-    function detail(t, w, h) {
-      var q = w / 4, v = h / 4, d = "", c = "";
-      if (t === "m") {
-        d = "M" + (-q) + " " + (-v * .2) + " Q0 " + (v * .35) + " " + q + " " + (-v * .2) + " M" + (-q) + " " + (-v * .2) + " l" + (-q * .7) + " " + (-v * .9) + " M" + (-q) + " " + (-v * .2) + " l" + (-q * .6) + " " + (v * 1.1) + " M" + q + " " + (-v * .2) + " l" + (q * .7) + " " + (-v * .9) + " M" + q + " " + (-v * .2) + " l" + (q * .6) + " " + (v * 1.1) + " M0 " + (v * .1) + " L" + (q * .2) + " " + (v * 1.6);
-        [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(function (o) { c += '<ellipse class="cusp" cx="' + (o[0] * q * 1.05) + '" cy="' + (o[1] * v * 1.05) + '" rx="' + (q * .78) + '" ry="' + (v * .78) + '"/>'; });
-      } else if (t === "p") {
-        d = "M" + (-q * 1.1) + " 0 Q0 " + (v * .3) + " " + (q * 1.1) + " 0";
-        c = '<ellipse class="cusp" cx="0" cy="' + (-v * 1.05) + '" rx="' + (q * 1.25) + '" ry="' + (v * .8) + '"/><ellipse class="cusp" cx="0" cy="' + (v * 1.05) + '" rx="' + (q * 1.05) + '" ry="' + (v * .7) + '"/>';
-      } else if (t === "c") {
-        d = "M0 " + (-h * .52) + " L0 " + (h * .25) + " M" + (-q * 1.2) + " " + (-v * .2) + " L0 " + (-h * .5) + " L" + (q * 1.2) + " " + (-v * .2);
-        c = '<ellipse class="cusp" cx="0" cy="' + (-v * .6) + '" rx="' + (q * 1.3) + '" ry="' + (v * 1.4) + '"/>';
-      } else {
-        d = "M" + (-w * .4) + " " + (-h * .18) + " Q0 " + (-h * .42) + " " + (w * .4) + " " + (-h * .18) + " M0 " + (h * .05) + " L0 " + (h * .36);
-        c = '<ellipse class="cusp" cx="0" cy="' + (-h * .05) + '" rx="' + (w * .3) + '" ry="' + (h * .22) + '"/>';
-      }
-      return { fis: d, cusps: c };
-    }
-    // розставляємо зуби по довжині дуги, щоб проміжки були рівні
-    var A0 = 4 * Math.PI / 180, A1 = 176 * Math.PI / 180, S = 400, len = [0];
-    function at(a) { return [cx + rx * Math.cos(a), cy - ry * Math.sin(a)]; }
-    for (var k = 1; k <= S; k++) { var p0 = at(A0 + (A1 - A0) * (k - 1) / S), p1 = at(A0 + (A1 - A0) * k / S); len.push(len[k - 1] + Math.hypot(p1[0] - p0[0], p1[1] - p0[1])); }
-    var total = T.reduce(function (s, t) { return s + t[1]; }, 0), gap = 1.6, used = total + gap * 13, off = (len[S] - used) / 2, pos = off;
-    function angAt(L) { for (var k = 1; k <= S; k++) if (len[k] >= L) return A0 + (A1 - A0) * k / S; return A1; }
-    var teeth = "", defs = "", ys = [], meta = [];
-    T.forEach(function (t, i) {
-      var a = angAt(pos + t[1] / 2); pos += t[1] + gap;
-      var P = at(a), nx = Math.cos(a) * ry, ny = -Math.sin(a) * rx, phi = Math.atan2(nx, -ny) * 180 / Math.PI;
-      var d = shape(t[0], t[1], t[2]), dt = detail(t[0], t[1], t[2]), mesh = "", w = t[1], h = t[2];
-      for (var m = -2; m <= 2; m++) mesh += "M" + (-w) + " " + (m * h / 5) + " L" + w + " " + (m * h / 5) + " M" + (m * w / 5) + " " + (-h) + " L" + (m * w / 5) + " " + h + " ";
-      mesh += "M" + (-w) + " " + (-h) + " L" + w + " " + h + " M" + w + " " + (-h) + " L" + (-w) + " " + h;
-      defs += '<clipPath id="tc' + i + '"><path d="' + d + '"/></clipPath>';
-      ys.push(P[1]); meta.push(P);
-      teeth += '<g class="tooth" transform="translate(' + P[0].toFixed(1) + " " + P[1].toFixed(1) + ") rotate(" + phi.toFixed(1) + ')">' +
-        '<path class="t__cloud" d="' + d + '"/>' +
-        '<g class="t__solid"><path class="t__shadow" d="' + d + '" transform="translate(1.5 3)"/><path class="t__enamel" d="' + d + '"/>' +
-        '<g clip-path="url(#tc' + i + ')">' + dt.cusps + '<path class="t__fis" d="' + dt.fis + '"/>' + (i === 1 ? '<ellipse class="t__caries" cx="4" cy="5" rx="4.5" ry="3.6"/>' : "") + "</g>" +
-        '<path class="t__rim" d="' + d + '"/></g>' +
-        '<path class="t__mesh" clip-path="url(#tc' + i + ')" d="' + mesh + '"/></g>';
-    });
-    var gA = angAt(off) - .05, gB = angAt(off + used) + .05;
-    var gum = "M" + at(gA).map(function (v) { return v.toFixed(1); }).join(" ") + " A" + rx + " " + ry + " 0 0 0 " + at(gB).map(function (v) { return v.toFixed(1); }).join(" ");
-    el.innerHTML =
-      '<div class="scan__model"><svg viewBox="20 40 440 300" class="scan__svg">' +
-      '<defs>' + defs +
-      '<radialGradient id="enamel" cx=".42" cy=".36" r=".75"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#F3F6FB"/><stop offset="1" stop-color="#C9D5E6"/></radialGradient>' +
-      '<radialGradient id="cusp" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".95"/><stop offset=".7" stop-color="#FFFFFF" stop-opacity=".2"/><stop offset="1" stop-color="#B8C6DA" stop-opacity=".35"/></radialGradient>' +
-      '<linearGradient id="gum" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F1D3DA"/><stop offset="1" stop-color="#E7BEC8"/></linearGradient>' +
-      '<linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A62E8" stop-opacity="0"/><stop offset="1" stop-color="#2A62E8" stop-opacity=".22"/></linearGradient>' +
-      '<pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="#D3DEF0" stroke-width=".6"/></pattern></defs>' +
-      '<rect x="-400" y="-300" width="1280" height="960" fill="url(#grid)" class="scan__grid"/>' +
-      '<path class="scan__palate" d="' + gum + '"/>' +
-      '<path class="scan__gum" d="' + gum + '"/>' +
-      '<g class="scan__teeth">' + teeth + "</g>" +
-      '<rect class="scan__band" x="-400" y="0" width="1280" height="70" fill="url(#beam)"/>' +
-      '<line class="scan__line" x1="-400" x2="880" y1="0" y2="0"/>' +
-      "</svg></div>" +
-      '<div class="scan__hud"><span>CBCT · верхня щелепа</span><span class="scan__axis"><i></i><i></i></span></div>' +
-      '<div class="scan__call"><b>Зуб 16</b><span>прихований карієс під старою пломбою</span></div>' +
-      '<div class="readout readout--l"><span>Сканування</span><b class="scan__pct">0%</b></div>' +
-      '<div class="readout readout--r"><span>Доза</span><b>0,03 мЗв</b></div>';
-    var model = $(".scan__model", el), line = $(".scan__line", el), band = $(".scan__band", el), pct = $(".scan__pct", el), tg = $$(".tooth", el), call = $(".scan__call", el), fl = tg[1];
-    function placeCall() {
-      var r = el.getBoundingClientRect(), t = fl.getBoundingClientRect(); if (!r.width) return;
-      call.style.left = (t.left - r.left + t.width * .1) + "px"; call.style.top = (t.top - r.top + t.height * .4) + "px";
-    }
-    return { el: el, set: function (p) {
-      var e = ease(clamp(p, 0, 1)), y = 50 + p * 270;
-      model.style.transform = "perspective(1100px) translateY(" + (4 - 4 * e) + "%) rotateX(" + (50 - 30 * e).toFixed(2) + "deg) rotateZ(" + (-9 + 9 * e).toFixed(2) + "deg) scale(" + (.9 + .12 * e).toFixed(3) + ")";
-      line.setAttribute("y1", y); line.setAttribute("y2", y); band.setAttribute("y", y - 70);
-      tg.forEach(function (g, i) { var dy = ys[i] - y; g.classList.toggle("on", dy < 0); g.classList.toggle("meshing", dy < 0 && dy > -46); });
-      pct.textContent = Math.round(p * 100) + "%";
-      var f = p > .86; fl.classList.toggle("flagged", f); call.classList.toggle("on", f);
-      if (f) placeCall();
-    } };
+  var CH = D.why;
+  var track = $("#storyTrack"), figs = $("#whyFigs"), copy = $("#whyCopy"), mob = $("#whyMob");
+  function figHTML(c, i) {
+    var notes = (c.notes || []).map(function (n, k) {
+      var right = n.side ? n.side === "r" : n.lx >= n.x;
+      return '<g class="wn__g k' + k + '"><line x1="' + (n.x * c.ar).toFixed(2) + '" y1="' + n.y + '" x2="' + (n.lx * c.ar).toFixed(2) + '" y2="' + n.ly + '" pathLength="1"/><circle cx="' + n.x + '" cy="' + n.y + '" r=".9"/></g>';
+    }).join("");
+    var labels = (c.notes || []).map(function (n, k) {
+      var right = n.side ? n.side === "r" : n.lx >= n.x;
+      return '<span class="wn__l k' + k + (right ? "" : " wn__l--r") + '" style="left:' + n.lx + "%;top:" + n.ly + '%"><i>' + (k + 1) + "</i><span><b>" + esc(n.t) + "</b>" + (n.s ? "<small>" + esc(n.s) + "</small>" : "") + "</span></span>" +
+        '<span class="wn__dot k' + k + '" style="left:' + n.x + "%;top:" + n.y + '%"></span>';
+    }).join("");
+    var fx = c.focus || [50, 50, 1.12];
+    return '<figure class="wf' + (c.scan ? " wf--scan" : "") + (c.dark ? " wf--dark" : "") + '" data-i="' + i + '" style="--ar:' + c.ar + ";--fx:" + fx[0] + "%;--fy:" + fx[1] + "%;--fs:" + fx[2] + '">' +
+      '<div class="wf__frame ph"><div class="wf__cam">' +
+      '<img src="' + c.img + '" alt="' + esc(c.alt || c.t) + '" loading="lazy">' +
+      (c.scan ? '<img class="wf__scanimg" src="' + c.img + '" alt=""><span class="wf__beam"></span>' : "") +
+      '<svg class="wn" viewBox="0 0 ' + (100 * c.ar).toFixed(2) + ' 100" preserveAspectRatio="none" aria-hidden="true">' + notes + "</svg>" + labels +
+      "</div></div>" +
+      '<figcaption><span>Рис. ' + (i + 1) + "</span>" + esc(c.cap) + "</figcaption></figure>";
   }
-
-  function sceneCalm() {
-    var el = document.createElement("div"); el.className = "scene scene--calm ph";
-    el.innerHTML = '<div class="scene__bg" style="background-image:url(img/calm.jpg)"></div>' +
-      '<div class="calm__card"><div class="calm__top"><span>Відчуття під час уколу</span><b class="calm__val">7 / 10</b></div>' +
-      '<svg viewBox="0 0 300 90" preserveAspectRatio="none"><line x1="0" x2="300" y1="45" y2="45" class="calm__axis"/><path class="calm__wave"/></svg>' +
-      '<div class="calm__bot"><span>звичайний шприц</span><span class="calm__to">комп\'ютерна подача 0,3 мл/хв</span></div></div>';
-    probe("img/calm.jpg", function () {}, function () { el.classList.add("noimg"); });
-    var wave = $(".calm__wave", el), val = $(".calm__val", el), P = 0, ph = 0;
-    function draw() {
-      var A = 34 * Math.pow(1 - P, 1.6) + 2.5, d = "";
-      for (var x = 0; x <= 300; x += 4) {
-        var y = 45 + A * (Math.sin(x * .085 + ph) * .55 + Math.sin(x * .27 + ph * 1.9) * .3 + Math.sin(x * .6 + ph * 3.1) * .15 * (1 - P));
-        d += (x ? "L" : "M") + x + " " + y.toFixed(1);
-      }
-      wave.setAttribute("d", d);
-    }
-    return { el: el, set: function (p) {
-      P = p; var v = Math.round(7 - 6 * p); val.textContent = v + " / 10"; el.classList.toggle("is-calm", p > .7); draw();
-    }, tick: function (dt) { ph += dt * (2.4 - P * 1.6); draw(); } };
+  function copyHTML(c, i) {
+    return '<div class="wc" data-i="' + i + '"><p class="wc__tag"><span>0' + (i + 1) + "</span>" + esc(c.tag) + '</p><h3 class="wc__t"><span>' + esc(c.t) + '</span></h3><p class="wc__d">' + esc(c.d) + "</p>" +
+      (c.facts ? '<ul class="wc__facts">' + c.facts.map(function (f) { return "<li><b>" + esc(f[0]) + "</b>" + esc(f[1]) + "</li>"; }).join("") + "</ul>" : "") + "</div>";
   }
-
-  function sceneMicro() {
-    var el = document.createElement("div"); el.className = "scene scene--micro ph";
-    el.innerHTML = '<div class="scene__bg micro__bg" style="background-image:url(img/micro.jpg)"></div>' +
-      '<div class="lens"><div class="lens__in" style="background-image:url(img/micro.jpg)"></div><svg viewBox="0 0 100 100" class="lens__ui"><circle cx="50" cy="50" r="48"/><path d="M50 38v24M38 50h24"/></svg></div>' +
-      '<div class="readout readout--l"><span>Збільшення</span><b class="micro__x">×4</b></div>' +
-      '<div class="readout readout--r"><span>Точність</span><b>0,1 мм</b></div>';
-    probe("img/micro.jpg", function () {}, function () { el.classList.add("noimg"); });
-    var lens = $(".lens", el), inner = $(".lens__in", el), xr = $(".micro__x", el);
-    return { el: el, set: function (p) {
-      var W = el.clientWidth, H = el.clientHeight; if (!W) return;
-      var r = Math.min(W, H) * .24, lx = W * (.28 + .44 * p), ly = H * (.56 - .16 * Math.sin(p * Math.PI)), s = 1.7 + 1.3 * p;
-      lens.style.cssText = "width:" + 2 * r + "px;height:" + 2 * r + "px;left:" + (lx - r) + "px;top:" + (ly - r) + "px";
-      inner.style.cssText = "width:" + W + "px;height:" + H + "px;left:" + (r - lx) + "px;top:" + (r - ly) + "px;transform-origin:" + lx + "px " + ly + "px;transform:scale(" + s.toFixed(3) + ");background-image:url(img/micro.jpg)";
-      xr.textContent = "×" + Math.round(4 + 21 * p);
-    } };
+  figs.innerHTML = CH.map(figHTML).join("");
+  copy.innerHTML = CH.map(copyHTML).join("") + '<div class="wprog" id="wprog">' + CH.map(function () { return "<i><b></b></i>"; }).join("") + "</div>";
+  mob.innerHTML = CH.map(function (c, i) { return '<article class="wm">' + figHTML(c, i) + copyHTML(c, i) + "</article>"; }).join("");
+  checkImgs(figs); checkImgs(mob);
+  var dFigs = $$(".wf", figs), dCopy = $$(".wc", copy), dProg = $$("#wprog b");
+  var desk = window.matchMedia("(min-width: 960px)"), mode = "", active = -1;
+  // стан кадру: p — прогрес усередині розділу (0..1)
+  function paint(f, p) {
+    var c = CH[+f.dataset.i], n = (c.notes || []).length, e = ease(clamp(p / .85, 0, 1));
+    f.style.setProperty("--z", e.toFixed(3));
+    if (c.scan) f.style.setProperty("--scan", (clamp((p - .02) / .55, 0, 1) * 100).toFixed(1) + "%");
+    for (var k = 0; k < n; k++) f.classList.toggle("n" + k, p > (c.scan ? .3 : .12) + k * (.6 / Math.max(n, 1)));
   }
-
-  function sceneSteril() {
-    var el = document.createElement("div"); el.className = "scene scene--steril";
-    var steps = ["Дезінфекція", "Ультразвукове очищення", "Пакування і маркування", "Автоклав 134 °C"];
-    var R = 104, cx = 150, cy = 180, arcs = "", track = "";
-    function arc(a0, a1) {
-      var p0 = [cx + R * Math.cos(a0), cy + R * Math.sin(a0)], p1 = [cx + R * Math.cos(a1), cy + R * Math.sin(a1)];
-      return "M" + p0[0].toFixed(1) + " " + p0[1].toFixed(1) + " A" + R + " " + R + " 0 0 1 " + p1[0].toFixed(1) + " " + p1[1].toFixed(1);
-    }
-    for (var i = 0; i < 4; i++) {
-      var a0 = -Math.PI / 2 + i * Math.PI / 2 + .06, a1 = a0 + Math.PI / 2 - .12;
-      track += '<path d="' + arc(a0, a1) + '"/>'; arcs += '<path pathLength="1" d="' + arc(a0, a1) + '"/>';
-    }
-    el.innerHTML = '<svg viewBox="0 0 480 360"><g class="st__track">' + track + '</g><g class="st__arcs">' + arcs + "</g>" +
-      '<text x="150" y="176" class="st__num">20°</text><text x="150" y="206" class="st__lbl">температура</text></svg>' +
-      '<ol class="st__list">' + steps.map(function (s, i) { return '<li><i><svg viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7"/></svg></i><span><small>Етап ' + (i + 1) + "</small>" + s + "</span></li>"; }).join("") + "</ol>" +
-      '<div class="st__seal"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/></svg>Пакет відкриваємо при вас</div>';
-    var ap = $$(".st__arcs path", el), li = $$(".st__list li", el), num = $(".st__num", el), seal = $(".st__seal", el);
-    return { el: el, set: function (p) {
-      ap.forEach(function (a, i) { var f = clamp(p * 4 - i, 0, 1); a.style.strokeDashoffset = 1 - f; li[i].classList.toggle("on", f >= 1); li[i].classList.toggle("cur", f > 0 && f < 1); });
-      num.textContent = Math.round(20 + 114 * clamp((p - .72) / .26, 0, 1)) + "°";
-      seal.classList.toggle("on", p > .97);
-    } };
-  }
-
-  function scenePlan() {
-    var el = document.createElement("div"); el.className = "scene scene--plan";
-    var rows = [["3D-діагностика і консультація", "", 0, "600 ₴ → 0 ₴"], ["Лікування каналів під мікроскопом", "зуб 16", 4200], ["Керамічна вкладка E.max", "зуб 16", 9800], ["Професійна гігієна", "", 1900]];
-    el.innerHTML = '<div class="plan"><div class="plan__head"><div><small>План лікування</small><b>Марина К.</b></div><span class="plan__id">№ 2417</span></div>' +
-      '<ul class="plan__rows">' + rows.map(function (r) {
-        return "<li><span>" + r[0] + (r[1] ? "<small>" + r[1] + "</small>" : "") + "</span><b>" + (r[3] || money(r[2])) + "</b></li>";
-      }).join("") + "</ul>" +
-      '<div class="plan__total"><span>Разом</span><b class="plan__sum">0 ₴</b></div>' +
-      '<div class="plan__foot"><span>3 візити · 2 тижні</span><span>Гарантія 5 років</span></div>' +
-      '<div class="stamp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Ціна фіксована</div></div>';
-    var li = $$(".plan__rows li", el), sum = $(".plan__sum", el), stamp = $(".stamp", el);
-    return { el: el, set: function (p) {
-      var tot = 0;
-      li.forEach(function (l, i) { var f = clamp((p - i * .17) / .17, 0, 1); l.style.opacity = f; l.style.transform = "translateY(" + (1 - f) * 12 + "px)"; tot += rows[i][2] * f; });
-      sum.textContent = money(Math.round(tot / 10) * 10);
-      stamp.classList.toggle("on", p > .8);
-    } };
-  }
-
-  var builders = { scan: sceneScan, calm: sceneCalm, micro: sceneMicro, steril: sceneSteril, plan: scenePlan };
-  var list = $("#storyList"), stage = $("#stage"), track = $("#storyTrack");
-  list.innerHTML = CH.map(function (c, i) {
-    return '<li class="ch" data-i="' + i + '"><button type="button" class="ch__h"><span class="ch__n">0' + (i + 1) + '</span><span class="ch__t">' + esc(c.t) + '</span></button>' +
-      '<div class="ch__body"><div><p class="ch__tag">' + esc(c.tag) + "</p><p>" + esc(c.d) + '</p><span class="ch__bar"><i></i></span></div></div><div class="ch__slot"></div></li>';
-  }).join("");
-  var chEls = $$(".ch", list);
-  var scenes = CH.map(function (c) { var s = builders[c.k](); s.p = -1; return s; });
-  var desk = window.matchMedia("(min-width: 960px)"), mode = "";
-  function setScene(s, p) { if (Math.abs(s.p - p) < .0005) return; s.p = p; s.set(p); }
   function layout() {
     var m = desk.matches && !reduced ? "desk" : "mob";
     if (m === mode) return; mode = m;
     document.documentElement.classList.toggle("story-desk", m === "desk");
-    scenes.forEach(function (s, i) { (m === "desk" ? stage : $(".ch__slot", chEls[i])).appendChild(s.el); s.p = -1; });
-    if (m === "desk") { track.style.height = (CH.length * 75 + 100) + "vh"; storyScroll(); }
-    else {
-      track.style.height = "";
-      chEls.forEach(function (c) { c.classList.add("is-on"); });
-      scenes.forEach(function (s) { s.el.classList.add("is-on"); setScene(s, reduced ? 1 : (s.played ? 1 : 0)); });
-    }
+    if (m === "desk") { track.style.height = (CH.length * 90 + 60) + "vh"; active = -1; storyScroll(); }
+    else { track.style.height = ""; }
+    if (reduced) $$(".wf", mob).forEach(function (f) { f.classList.add("is-on"); paint(f, 1); });
   }
-  var active = -1;
   function storyScroll() {
     if (mode !== "desk") return;
     var r = track.getBoundingClientRect(), len = track.offsetHeight - window.innerHeight;
-    var prog = clamp(-r.top / len, 0, .9999), f = prog * CH.length, idx = Math.floor(f), lp = f - idx;
+    var prog = clamp(-r.top / len, 0, .9999), fl = prog * CH.length, idx = Math.floor(fl), lp = fl - idx;
     if (idx !== active) {
       active = idx;
-      chEls.forEach(function (c, i) { c.classList.toggle("is-on", i === idx); c.classList.toggle("is-past", i < idx); });
-      scenes.forEach(function (s, i) { s.el.classList.toggle("is-on", i === idx); s.el.classList.toggle("is-past", i < idx); });
+      dFigs.forEach(function (f, i) { f.classList.toggle("is-on", i <= idx); f.classList.toggle("is-cur", i === idx); });
+      dCopy.forEach(function (c, i) { c.classList.toggle("is-on", i === idx); c.classList.toggle("is-past", i < idx); });
     }
-    scenes.forEach(function (s, i) { setScene(s, i < idx ? 1 : i > idx ? 0 : clamp((lp - .06) / .72, 0, 1)); });
-    chEls.forEach(function (c, i) { $(".ch__bar i", c).style.transform = "scaleX(" + (i < idx ? 1 : i > idx ? 0 : lp).toFixed(3) + ")"; });
+    dFigs.forEach(function (f, i) { paint(f, i < idx ? 1 : i > idx ? 0 : lp); });
+    dProg.forEach(function (b, i) { b.style.transform = "scaleX(" + (i < idx ? 1 : i > idx ? 0 : lp).toFixed(3) + ")"; });
   }
-  list.addEventListener("click", function (e) {
-    var b = e.target.closest(".ch__h"); if (!b || mode !== "desk") return;
-    var i = +b.parentNode.dataset.i, len = track.offsetHeight - window.innerHeight;
-    go(track.getBoundingClientRect().top + window.scrollY + (i + .5) / CH.length * len);
+  $("#wprog").addEventListener("click", function (e) {
+    var i = $$("#wprog i").indexOf(e.target.closest("i")); if (i < 0) return;
+    var len = track.offsetHeight - window.innerHeight;
+    go(track.getBoundingClientRect().top + window.scrollY + (i + .3) / CH.length * len);
   });
-  // телефон: сцена програється сама, коли з'являється на екрані
-  function play(s) {
-    if (s.played || reduced) return; s.played = true;
-    var t0 = null, dur = 2600;
-    requestAnimationFrame(function step(t) {
-      if (mode !== "mob") return;
-      if (!t0) t0 = t; var k = clamp((t - t0) / dur, 0, 1); setScene(s, ease(k));
-      if (k < 1) requestAnimationFrame(step);
-    });
-  }
-  var visible = {};
-  if ("IntersectionObserver" in window) {
-    var sio = new IntersectionObserver(function (en) {
+  // телефон: кадр розкривається і виноски малюються самі, коли кадр на екрані
+  if ("IntersectionObserver" in window && !reduced) {
+    var wio = new IntersectionObserver(function (en) {
       en.forEach(function (x) {
-        var i = scenes.map(function (s) { return s.el; }).indexOf(x.target);
-        visible[i] = x.isIntersecting;
-        if (x.isIntersecting && x.intersectionRatio > .45 && mode === "mob") play(scenes[i]);
+        if (!x.isIntersecting || mode !== "mob") return;
+        wio.unobserve(x.target); var f = $(".wf", x.target); f.classList.add("is-on");
+        var t0 = null;
+        requestAnimationFrame(function step(t) { if (!t0) t0 = t; var k = clamp((t - t0) / 3200, 0, 1); paint(f, k); if (k < 1) requestAnimationFrame(step); });
       });
-    }, { threshold: [0, .45, .6] });
-    scenes.forEach(function (s) { sio.observe(s.el); });
+    }, { threshold: .25 });
+    $$(".wm", mob).forEach(function (f) { wio.observe(f); });
   }
-  // постійний «подих» для хвилі
-  var lastT = 0;
-  function loop(t) {
-    var dt = lastT ? Math.min(.05, (t - lastT) / 1000) : 0; lastT = t;
-    scenes.forEach(function (s, i) { if (s.tick && visible[i] && (mode === "mob" || i === active)) s.tick(dt); });
-    requestAnimationFrame(loop);
-  }
-  if (!reduced) requestAnimationFrame(loop);
+  var scenes = [];
+  function setScene() {}
 
   /* ---------- Цифри ---------- */
   /* Цифри: кожна цифра — барабан, що прокручується до свого значення (як табло) */
@@ -658,7 +479,7 @@
     storyScroll(); stepsScroll();
   }
   window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
-  window.addEventListener("resize", function () { layout(); scenes.forEach(function (s) { var p = s.p; s.p = -1; setScene(s, p < 0 ? 0 : p); }); onScroll(); });
+  window.addEventListener("resize", function () { layout(); onScroll(); });
   layout(); onScroll();
   document.documentElement.classList.add("is-loaded");
 })();
