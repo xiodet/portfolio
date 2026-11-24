@@ -20,17 +20,10 @@
   function checkImgs(root) { $$("img", root).forEach(function (i) { if (i.complete && !i.naturalWidth) markNoImg(i); }); }
   function probe(src, ok, fail) { var i = new Image(); i.onload = ok; i.onerror = fail; i.src = src; }
 
-  /* ---------- Плавний «повітряний» скрол на десктопі (Lenis) ---------- */
-  var lenis = null;
-  if (window.Lenis && !reduced && window.matchMedia("(pointer: fine)").matches) {
-    lenis = new window.Lenis({ duration: 1.25, easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); }, smoothWheel: true });
-    requestAnimationFrame(function raf(t) { lenis.raf(t); requestAnimationFrame(raf); });
-    document.documentElement.classList.add("lenis");
-  }
   function go(target, offset) {
     var navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--nav")) || 72;
     var top = typeof target === "number" ? target : target.getBoundingClientRect().top + window.scrollY - navH - (offset || 0);
-    if (lenis) lenis.scrollTo(top, { duration: 1.4 }); else window.scrollTo({ top: top, behavior: reduced ? "auto" : "smooth" });
+    window.scrollTo({ top: top, behavior: reduced ? "auto" : "smooth" });
   }
   document.addEventListener("click", function (e) {
     var a = e.target.closest('a[href^="#"]'); if (!a || a.getAttribute("href").length < 2) return;
@@ -338,32 +331,17 @@
   if (!reduced) requestAnimationFrame(loop);
 
   /* ---------- Цифри ---------- */
-  /* Маніфест: слова «проявляються» під час скролу, цифри рахуються, коли до них доходить черга */
-  var mani = $("#mani"), mWords = [];
-  (function split(node) {
-    Array.prototype.slice.call(node.childNodes).forEach(function (n) {
-      if (n.nodeType === 3) {
-        var frag = document.createDocumentFragment();
-        n.textContent.split(/(\s+)/).forEach(function (part) {
-          if (!part) return;
-          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
-          var s = document.createElement("span"); s.className = "w"; s.textContent = part; frag.appendChild(s); mWords.push(s);
-        });
-        n.parentNode.replaceChild(frag, n);
-      } else if (n.nodeType === 1) { n.classList.add("w"); mWords.push(n); }
-    });
-  })(mani);
-  var maniLit = -1;
-  function maniScroll() {
-    var r = mani.getBoundingClientRect(), vh = window.innerHeight;
-    var p = reduced ? 1 : clamp((vh * .88 - r.top) / (r.height + vh * .3), 0, 1), lit = Math.round(p * mWords.length * 1.15);
-    if (lit === maniLit) return; maniLit = lit;
-    mWords.forEach(function (w, i) {
-      var on = i < lit;
-      if (on && !w.classList.contains("on") && w.classList.contains("num")) countUp(w);
-      w.classList.toggle("on", on);
-    });
-  }
+  /* Цифри: кожна цифра — барабан, що прокручується до свого значення (як табло) */
+  $("#stats").innerHTML = D.stats.map(function (s, si) {
+    var di = 0, num = s.v.split("").map(function (ch) {
+      if (!/\d/.test(ch)) return ch === " " ? '<span class="odo__gap"></span>' : '<span class="odo__sep">' + esc(ch) + "</span>";
+      var cells = ""; for (var k = 0; k < 20; k++) cells += "<i>" + (k % 10) + "</i>";
+      return '<span class="odo__d" style="--n:' + (10 + +ch) + ";--di:" + (di++) + '"><span class="odo__s">' + cells + "</span></span>";
+    }).join("");
+    return '<div class="stat reveal" style="--rd:' + si * .1 + 's"><span class="stat__line" aria-hidden="true"></span>' +
+      '<b class="odo" aria-label="' + esc(s.v + (s.suf ? " " + s.suf : "")) + '"><span aria-hidden="true">' + num + "</span>" + (s.suf ? '<span class="stat__suf" aria-hidden="true">' + esc(s.suf) + "</span>" : "") + "</b>" +
+      "<span class=\"stat__lbl\">" + esc(s.label) + "</span></div>";
+  }).join("");
   function countUp(el) {
     var n = +el.dataset.count, dec = +(el.dataset.dec || 0), plain = el.dataset.plain === "1", suf = el.dataset.suf || "", t0 = null, from = plain ? n - 10 : 0;
     function out(v) { return (dec ? v.toFixed(dec).replace(".", ",") : plain ? String(Math.round(v)) : fmt(Math.round(v))) + suf; }
@@ -677,7 +655,7 @@
     bar.style.transform = "scaleX(" + (h > 0 ? y / h : 0).toFixed(4) + ")";
     mbar.classList.toggle("is-shown", y > window.innerHeight * .7);
     if (!reduced && y < window.innerHeight * 1.2) arch.style.transform = "translateY(" + (y * .08).toFixed(1) + "px) scale(1.08)";
-    storyScroll(); stepsScroll(); maniScroll();
+    storyScroll(); stepsScroll();
   }
   window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
   window.addEventListener("resize", function () { layout(); scenes.forEach(function (s) { var p = s.p; s.p = -1; setScene(s, p < 0 ? 0 : p); }); onScroll(); });
