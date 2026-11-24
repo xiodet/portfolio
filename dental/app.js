@@ -512,20 +512,89 @@
     paintZoom(Z1);
   }
 
-  /* ---------- Заставка: камера влітає в зуб ---------- */
-  var intro = $("#intro"), iCam = $("#introTooth .intro__cam"), iTooth = $("#introTooth"), iVeil = $(".intro__veil", intro), iLetters = $$(".intro__t span", intro), iIn = $(".intro__in", intro), iLbl = $(".it__w", intro);
+  /* =====================================================================
+     Заставка: власний векторний зуб.
+     Зовні — глянцева емаль; під нею розріз: емаль, дентин, пульпа з нервами.
+     Скрол: оболонка розходиться на дві половинки → шари розлітаються з підписами →
+     шари збираються → камера пірнає в пульпу → сайт.
+     ===================================================================== */
+  var T_OUT = "M95 268C88 245 78 222 70 190C60 140 70 90 105 70C130 55 150 62 165 80C180 95 190 95 200 88C212 80 222 70 240 66C270 60 300 70 318 95C338 125 340 165 330 195C322 225 312 245 305 265C300 320 305 400 292 470C286 505 262 512 255 480C248 440 240 380 222 330C214 312 188 312 180 330C165 375 155 440 145 480C138 510 112 505 108 470C98 400 102 320 95 268Z";
+  var T_EN = "M95 268C88 245 78 222 70 190C60 140 70 90 105 70C130 55 150 62 165 80C180 95 190 95 200 88C212 80 222 70 240 66C270 60 300 70 318 95C338 125 340 165 330 195C322 225 312 245 305 265C262 284 140 286 95 268Z";
+  var T_PULP = "M150 178C144 152 149 128 160 126C169 128 173 148 181 158C191 167 209 167 219 158C228 148 232 126 242 126C253 130 257 152 250 180C246 200 240 215 245 240C252 300 262 380 272 470C273 478 268 481 265 473C251 400 238 322 222 266C214 244 186 244 178 266C162 322 147 400 133 473C130 481 125 478 126 470C134 380 145 300 152 240C157 215 154 200 150 178Z";
+  function toothExt() {
+    return '<path d="' + T_OUT + '" fill="url(#gExt)"/><path d="' + T_OUT + '" fill="url(#gRootX)"/>' +
+      '<path d="M95 268C140 286 262 284 305 265" fill="none" stroke="#B9CCEE" stroke-width="1.2"/>' +
+      '<g fill="none" stroke="#2A62E8" stroke-width="1" opacity=".2"><path d="M86 200C120 214 280 214 318 200"/><path d="M96 232C140 246 262 246 310 232"/><path d="M118 300C120 360 122 420 126 470"/><path d="M278 300C278 360 276 420 274 470"/><path d="M150 112C170 132 230 132 250 110"/><path d="M200 300C200 304 200 306 200 310"/></g>' +
+      '<path d="M108 92C92 120 88 160 96 196" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/>' +
+      '<path d="M252 80C280 78 300 88 310 104" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/>' +
+      '<path d="' + T_OUT + '" class="tz-line" fill="none" stroke="#2A62E8" stroke-width="1.6" pathLength="1"/>';
+  }
+  function lbl(k, x, y, x2, t, s) {
+    var end = x2 < x, tx = end ? x2 - 10 : x2 + 10, a = end ? ' text-anchor="end"' : "";
+    return '<g class="tz-lbl tz-lbl--' + k + '"><path d="M' + x + " " + y + "H" + x2 + '" pathLength="1"/><circle cx="' + x + '" cy="' + y + '" r="4"/>' +
+      '<text x="' + tx + '" y="' + (y - 5) + '"' + a + ">" + t + '</text><text class="s" x="' + tx + '" y="' + (y + 16) + '"' + a + ">" + s + "</text></g>";
+  }
+  var toothSVG = '<svg class="tz" viewBox="-200 -60 800 680" aria-hidden="true"><defs>' +
+    '<clipPath id="cOut"><path d="' + T_OUT + '"/></clipPath><clipPath id="cL"><rect x="-200" y="-60" width="400" height="680"/></clipPath><clipPath id="cR"><rect x="200" y="-60" width="400" height="680"/></clipPath>' +
+    '<linearGradient id="gExt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#F1F5FC"/><stop offset="1" stop-color="#D3DFF4"/></linearGradient>' +
+    '<linearGradient id="gRootX" x1="0" y1="0" x2="0" y2="1"><stop offset=".45" stop-color="#7C97C8" stop-opacity="0"/><stop offset="1" stop-color="#7C97C8" stop-opacity=".3"/></linearGradient>' +
+    '<linearGradient id="gEn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#E6EEFB"/></linearGradient>' +
+    '<linearGradient id="gDen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D6E3F8"/><stop offset="1" stop-color="#BFD1EF"/></linearGradient>' +
+    '<linearGradient id="gCem" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EEF3FB"/><stop offset="1" stop-color="#DCE6F6"/></linearGradient>' +
+    '<radialGradient id="gPulp" cx=".5" cy=".28" r=".8"><stop offset="0" stop-color="#7AA3FF"/><stop offset=".45" stop-color="#2A62E8"/><stop offset="1" stop-color="#173B9E"/></radialGradient>' +
+    "</defs>" +
+    '<g class="tz-orbit"><circle cx="200" cy="290" r="290" class="o1"/><circle cx="200" cy="290" r="240" class="o2"/><circle cx="200" cy="290" r="340" class="o3"/></g>' +
+    '<g class="tz-sec">' +
+      '<path d="' + T_OUT + '" fill="url(#gCem)" stroke="#AFC4EA" stroke-width="1.2"/>' +
+      '<g class="tz-en"><path d="' + T_EN + '" fill="url(#gEn)" stroke="#BFD0EE" stroke-width="1"/>' +
+        '<g fill="none" stroke="#C9D8F2" stroke-width="1"><path d="M96 150Q120 160 130 190M110 100Q130 115 145 140M160 85Q170 100 180 125M240 80Q232 100 222 125M292 92Q275 110 262 135M318 150Q290 160 278 190"/></g>' +
+        lbl(1, 82, 150, -30, "Емаль", "найтвердіша тканина тіла") + "</g>" +
+      '<g clip-path="url(#cOut)"><path d="' + T_OUT + '" fill="url(#gDen)" transform="translate(200 300) scale(.86 .93) translate(-200 -300)"/>' +
+        '<g stroke="#9FB7E4" stroke-width="1" fill="none" opacity=".6"><path d="M120 150Q105 170 100 200M132 120Q112 130 98 150M175 105Q168 90 160 82M225 105Q232 88 242 80M268 120Q288 128 302 150M280 150Q295 170 300 200M130 235Q112 240 104 255M270 235Q288 240 296 255M150 300Q128 305 118 320M250 300Q272 305 282 320M140 380Q124 385 116 395M262 380Q278 385 286 395"/></g></g>' +
+      '<g class="tz-pulp"><path d="' + T_PULP + '" fill="url(#gPulp)"/>' +
+        '<g class="tz-nerve" fill="none" stroke-linecap="round"><path d="M200 162C186 182 170 200 166 240C160 300 146 390 130 470" stroke="#C9DAFF" stroke-width="1.6" pathLength="1"/><path d="M200 162C214 182 232 200 236 240C244 300 258 390 268 470" stroke="#C9DAFF" stroke-width="1.6" pathLength="1"/><path d="M162 140C170 160 186 170 200 162C214 170 230 160 238 140" stroke="#fff" stroke-width="1.3" pathLength="1"/><path d="M174 250C168 320 156 400 142 468" stroke="#FF9DB0" stroke-width="1.1" pathLength="1"/><path d="M226 250C236 320 248 400 260 468" stroke="#FF9DB0" stroke-width="1.1" pathLength="1"/></g></g>' +
+      lbl(2, 296, 330, 430, "Дентин", "70% мінералів") + lbl(3, 238, 205, 430, "Пульпа", "нерв, тут діє анестезія") + lbl(4, 126, 430, -30, "Корені", "канали до 0,2 мм") +
+    "</g>" +
+    '<g class="tz-shell tz-shell--l"><g clip-path="url(#cL)">' + toothExt() + "</g></g>" +
+    '<g class="tz-shell tz-shell--r"><g clip-path="url(#cR)">' + toothExt() + "</g></g>" +
+    '<g class="tz-scan"><rect x="40" y="0" width="320" height="2" rx="1"/></g>' +
+    "</svg>";
+  var intro = $("#intro"), iTooth = $("#introTooth");
+  iTooth.innerHTML = toothSVG;
+  var tzMq = window.matchMedia("(max-width: 959px)");
+  function tzBox() { $(".tz", iTooth).setAttribute("viewBox", tzMq.matches ? "-130 -60 660 680" : "-200 -60 800 680"); }
+  tzBox(); if (tzMq.addEventListener) tzMq.addEventListener("change", tzBox);
+  var tz = $(".tz", iTooth), tzL = $(".tz-shell--l", tz), tzR = $(".tz-shell--r", tz), tzEn = $(".tz-en", tz), tzPulp = $(".tz-pulp", tz),
+    tzLbl = $$(".tz-lbl", tz), tzNerve = $(".tz-nerve", tz), tzOrbit = $(".tz-orbit", tz), tzScan = $(".tz-scan", tz),
+    iTitle = $(".intro__head", intro), iVeil = $(".intro__veil", intro), iHint = $(".intro__hint", intro);
+  function seg(p, a, b) { return clamp((p - a) / (b - a), 0, 1); }
+  function sm(x) { return x * x * (3 - 2 * x); }
   function introScroll() {
     var r = intro.getBoundingClientRect(), len = intro.offsetHeight - window.innerHeight;
-    if (r.bottom < -50 || reduced) return;
-    var p = clamp(-r.top / len, 0, 1), e = p * p * (3 - 2 * p), z = Math.pow(p, 2.4);
-    // точка на емалі (30% / 15% зображення) їде в центр екрана і розростається на весь екран
-    var tr = iTooth.getBoundingClientRect(), ox = tr.left + tr.width * .30, oy = tr.top + tr.height * .15;
-    var tx = (window.innerWidth / 2 - ox) * e, ty = (window.innerHeight / 2 - oy) * e;
-    iCam.style.transform = "translate(" + tx.toFixed(1) + "px," + ty.toFixed(1) + "px) scale(" + (1 + 22 * z).toFixed(3) + ")";
-    iLetters.forEach(function (l, i) { l.style.setProperty("--ty", (-p * (120 + i * 90)).toFixed(1) + "px"); l.style.setProperty("--o", clamp(1 - p * 2.6 + i * .05, 0, 1).toFixed(3)); });
-    iIn.style.opacity = clamp(1 - p * 2.2, 0, 1).toFixed(3);
-    iLbl.style.opacity = clamp(1 - p * 5, 0, 1).toFixed(3);
-    iVeil.style.opacity = clamp((p - .72) / .22, 0, 1).toFixed(3);
+    if (r.bottom < -50) return;
+    var p = reduced ? 0 : clamp(-r.top / len, 0, 1);
+    var a = sm(seg(p, 0, .16)),        // назва йде вгору, зуб у центр
+      b = sm(seg(p, .12, .34)),         // оболонка розходиться
+      c = sm(seg(p, .3, .46)),           // шари розлітаються
+      d = sm(seg(p, .64, .74)),          // шари збираються
+      e = seg(p, .7, .97);             // пірнання в пульпу
+    iTitle.style.transform = "translateY(" + (-a * 34).toFixed(2) + "vh) scale(" + (1 - a * .25).toFixed(3) + ")";
+    iTitle.style.opacity = (1 - a * 1.3).toFixed(3);
+    iHint.style.opacity = (1 - a * 3).toFixed(3);
+    var dive = Math.pow(e, 3.2) * 60;
+    iTooth.style.transform = "translate(-50%, -50%) translateY(" + (-a * 12).toFixed(2) + "vh) scale(" + (1 + a * (tzMq.matches ? -.04 : .22) + dive).toFixed(3) + ") rotate(" + ((1 - a) * -6).toFixed(2) + "deg)";
+    tzL.style.transform = "translateX(" + (-b * 120).toFixed(1) + "px) rotate(" + (-b * 14).toFixed(2) + "deg)";
+    tzR.style.transform = "translateX(" + (b * 120).toFixed(1) + "px) rotate(" + (b * 14).toFixed(2) + "deg)";
+    tzL.style.opacity = tzR.style.opacity = (1 - sm(seg(p, .22, .36))).toFixed(3);
+    var ex = c * (1 - d);
+    tzEn.style.transform = "translateY(" + (-ex * 150).toFixed(1) + "px) rotate(" + (-ex * 4).toFixed(2) + "deg)";
+    tzPulp.style.transform = "scale(" + (1 + ex * .06).toFixed(3) + ")";
+    tzNerve.style.setProperty("--n", (1 - seg(p, .3, .52)).toFixed(3));
+    tzLbl.forEach(function (l, i) { var on = seg(p, .34 + i * .035, .42 + i * .035) * (1 - seg(p, .62, .67)); l.style.opacity = on.toFixed(3); l.style.setProperty("--l", (1 - on).toFixed(3)); });
+    tzOrbit.style.opacity = (1 - seg(p, .6, .7)).toFixed(3);
+    tzOrbit.style.transform = "rotate(" + (p * 120).toFixed(1) + "deg) scale(" + (1 + b * .12).toFixed(3) + ")";
+    var sc = seg(p, .02, .2); tzScan.style.transform = "translateY(" + (60 + sc * 460).toFixed(1) + "px)"; tzScan.style.opacity = (sc > 0 && sc < 1 ? 1 : 0);
+    iVeil.style.opacity = seg(p, .9, .99).toFixed(3);
   }
   // hero з'являється, коли до нього доскролили
   var heroEl = $("#hero"), heroImg = $("#heroBg img");
