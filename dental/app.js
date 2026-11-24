@@ -13,6 +13,7 @@
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var arrow = '<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5"/></svg>';
   document.documentElement.classList.add("js");
+  var RC = { vh: window.innerHeight, introH: 1, trackH: 1 };
 
   /* ---------- Фото: якщо файлу ще немає, показуємо акуратну заглушку ---------- */
   function markNoImg(img) { var p = img.closest(".ph"); if (p) p.classList.add("noimg"); }
@@ -115,13 +116,13 @@
     var m = desk.matches && !reduced ? "desk" : "mob";
     if (m === mode) return; mode = m;
     document.documentElement.classList.toggle("story-desk", m === "desk");
-    if (m === "desk") { track.style.height = (CH.length * 90 + 60) + "vh"; active = -1; storyScroll(); }
+    if (m === "desk") { track.style.height = (CH.length * 90 + 60) + "vh"; active = -1; RC.vh = window.innerHeight; RC.track = track.getBoundingClientRect(); RC.trackH = track.offsetHeight; storyScroll(); }
     else { track.style.height = ""; }
     if (reduced) $$(".wf", mob).forEach(function (f) { f.classList.add("is-on"); paint(f, 1); });
   }
   function storyScroll() {
     if (mode !== "desk") return;
-    var r = track.getBoundingClientRect(), len = track.offsetHeight - window.innerHeight;
+    var r = RC.track || track.getBoundingClientRect(), len = RC.trackH - RC.vh;
     var prog = clamp(-r.top / len, 0, .9999), fl = prog * CH.length, idx = Math.floor(fl), lp = fl - idx;
     if (idx !== active) {
       active = idx;
@@ -152,16 +153,30 @@
   function setScene() {}
 
   /* ---------- Цифри ---------- */
-  /* Цифри: кожна цифра — барабан, що прокручується до свого значення (як табло) */
+  /* Цифри: кожна має свою міні-візуалізацію (зірки, шкала років, точки-пацієнти, кільце гарантії) */
+  var STAR = "M12 2.2l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17l-5.9 3.3 1.3-6.6L2.5 9.1l6.6-.8z";
+  function statVis(s) {
+    if (s.kind === "stars") {
+      var st = ""; for (var i = 0; i < 5; i++) st += '<svg viewBox="0 0 24 24"><path d="' + STAR + '"/></svg>';
+      return '<div class="sv sv--stars"><div class="sv__row">' + st + '</div><div class="sv__row sv__fill" style="--f:' + (s.n / 5 * 100).toFixed(1) + '%">' + st + "</div></div>";
+    }
+    if (s.kind === "year") {
+      var now = new Date().getFullYear(), ticks = "";
+      for (var y = s.n; y <= now; y++) ticks += '<i style="--k:' + (y - s.n) + '"></i>';
+      return '<div class="sv sv--year" style="--yrs:' + (now - s.n) + '"><div class="sv__ticks">' + ticks + '</div><div class="sv__ends"><span>' + s.n + "</span><span>" + now + "</span></div></div>";
+    }
+    if (s.kind === "dots") {
+      var dots = "", N = 60; // кожна точка ≈ 250 пацієнтів
+      for (var k = 0; k < N; k++) dots += '<i style="--k:' + ((k * 37) % N) + '"></i>';
+      return '<div class="sv sv--dots">' + dots + "</div>";
+    }
+    return '<div class="sv sv--ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" class="sv__bg"/><circle cx="50" cy="50" r="44" class="sv__arc" pathLength="1"/></svg><svg class="sv__ok" viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.3-3 7.9-7 9.5-4-1.6-7-5.2-7-9.5V6z"/><path d="M8.5 12.2l2.4 2.4 4.6-4.8" pathLength="1" class="sv__tick"/></svg></div>';
+  }
   $("#stats").innerHTML = D.stats.map(function (s, si) {
-    var di = 0, num = s.v.split("").map(function (ch) {
-      if (!/\d/.test(ch)) return ch === " " ? '<span class="odo__gap"></span>' : '<span class="odo__sep">' + esc(ch) + "</span>";
-      var cells = ""; for (var k = 0; k < 20; k++) cells += "<i>" + (k % 10) + "</i>";
-      return '<span class="odo__d" style="--n:' + (10 + +ch) + ";--di:" + (di++) + '"><span class="odo__s">' + cells + "</span></span>";
-    }).join("");
-    return '<div class="stat reveal" style="--rd:' + si * .1 + 's"><span class="stat__line" aria-hidden="true"></span>' +
-      '<b class="odo" aria-label="' + esc(s.v + (s.suf ? " " + s.suf : "")) + '"><span aria-hidden="true">' + num + "</span>" + (s.suf ? '<span class="stat__suf" aria-hidden="true">' + esc(s.suf) + "</span>" : "") + "</b>" +
-      "<span class=\"stat__lbl\">" + esc(s.label) + "</span></div>";
+    var big = s.kind === "ring" ? s.v + " " + s.suf : s.v + (s.suf || "");
+    return '<div class="stat stat--' + s.kind + ' reveal" style="--rd:' + si * .12 + 's">' + statVis(s) +
+      '<b class="stat__n"><span data-count="' + s.n + '"' + (s.kind === "stars" ? ' data-dec="1"' : "") + (s.kind === "year" ? ' data-plain="1"' : "") + (s.suf && s.kind !== "ring" ? ' data-suf="' + esc(s.suf) + '"' : "") + ">" + esc(big.replace(/ ?років$/, "")) + "</span>" + (s.kind === "ring" ? '<small>' + esc(s.suf) + "</small>" : "") + "</b>" +
+      '<span class="stat__lbl">' + esc(s.label) + "</span></div>";
   }).join("");
   function countUp(el) {
     var n = +el.dataset.count, dec = +(el.dataset.dec || 0), plain = el.dataset.plain === "1", suf = el.dataset.suf || "", t0 = null, from = plain ? n - 10 : 0;
@@ -297,7 +312,7 @@
   }).join(""));
   var stepsEl = $("#steps"), stepEls = $$(".step", stepsEl);
   function stepsScroll() {
-    var r = stepsEl.getBoundingClientRect(), vh = window.innerHeight;
+    var r = RC.steps || stepsEl.getBoundingClientRect(), vh = RC.vh;
     var p = reduced ? 1 : clamp((vh * .82 - r.top) / (r.height + vh * .2), 0, 1);
     stepsEl.style.setProperty("--p", p.toFixed(3));
     stepEls.forEach(function (s, i) { s.classList.toggle("is-on", p >= i / stepEls.length + .02 || p >= .98); });
@@ -497,6 +512,8 @@
       en.forEach(function (x) {
         if (!x.isIntersecting) return;
         x.target.classList.add("is-in"); io.unobserve(x.target);
+        var cnt = x.target.classList.contains("stat") && $("[data-count]", x.target);
+        if (cnt) setTimeout(function () { countUp(cnt); }, 350 + parseFloat(x.target.style.getPropertyValue("--rd") || 0) * 1000);
       });
     }, { rootMargin: "0px 0px -8% 0px", threshold: .08 });
     $$(".reveal").forEach(function (x) { io.observe(x); });
@@ -570,7 +587,7 @@
   function seg(p, a, b) { return clamp((p - a) / (b - a), 0, 1); }
   function sm(x) { return x * x * (3 - 2 * x); }
   function introScroll() {
-    var r = intro.getBoundingClientRect(), len = intro.offsetHeight - window.innerHeight;
+    var r = RC.intro || intro.getBoundingClientRect(), len = RC.introH - RC.vh;
     if (r.bottom < -50) return;
     var p = reduced ? 0 : clamp(-r.top / len, 0, 1);
     var a = sm(seg(p, 0, .16)),        // назва йде вгору, зуб у центр
@@ -581,7 +598,7 @@
     iTitle.style.transform = "translateY(" + (-a * 34).toFixed(2) + "vh) scale(" + (1 - a * .25).toFixed(3) + ")";
     iTitle.style.opacity = (1 - a * 1.3).toFixed(3);
     iHint.style.opacity = (1 - a * 3).toFixed(3);
-    var dive = Math.pow(e, 3.2) * 60;
+    var dive = Math.pow(e, 2.6) * 16;
     iTooth.style.transform = "translate(-50%, -50%) translateY(" + (-a * 12).toFixed(2) + "vh) scale(" + (1 + a * (tzMq.matches ? -.04 : .22) + dive).toFixed(3) + ") rotate(" + ((1 - a) * -6).toFixed(2) + "deg)";
     tzL.style.transform = "translateX(" + (-b * 120).toFixed(1) + "px) rotate(" + (-b * 14).toFixed(2) + "deg)";
     tzR.style.transform = "translateX(" + (b * 120).toFixed(1) + "px) rotate(" + (b * 14).toFixed(2) + "deg)";
@@ -594,7 +611,7 @@
     tzOrbit.style.opacity = (1 - seg(p, .6, .7)).toFixed(3);
     tzOrbit.style.transform = "rotate(" + (p * 120).toFixed(1) + "deg) scale(" + (1 + b * .12).toFixed(3) + ")";
     var sc = seg(p, .02, .2); tzScan.style.transform = "translateY(" + (60 + sc * 460).toFixed(1) + "px)"; tzScan.style.opacity = (sc > 0 && sc < 1 ? 1 : 0);
-    iVeil.style.opacity = seg(p, .9, .99).toFixed(3);
+    iVeil.style.opacity = seg(p, .84, .97).toFixed(3);
   }
   // hero з'являється, коли до нього доскролили
   var heroEl = $("#hero"), heroImg = $("#heroBg img");
@@ -604,7 +621,7 @@
   } else heroEl.classList.add("is-in");
   function heroScroll() {
     if (reduced) return;
-    var r = heroEl.getBoundingClientRect(); if (r.bottom < 0 || r.top > window.innerHeight) return;
+    var r = RC.hero || heroEl.getBoundingClientRect(); if (r.bottom < 0 || r.top > RC.vh) return;
     heroImg.style.translate = "0 " + (-r.top * .12).toFixed(1) + "px";
   }
 
@@ -612,7 +629,10 @@
   var ticking = false;
   function onScroll() {
     ticking = false;
-    var y = window.scrollY, h = document.documentElement.scrollHeight - window.innerHeight;
+    // спершу всі виміри, потім усі записи: без примусових перерахунків layout посеред кадру
+    RC.vh = window.innerHeight; RC.intro = intro.getBoundingClientRect(); RC.introH = intro.offsetHeight;
+    RC.hero = heroEl.getBoundingClientRect(); RC.track = track.getBoundingClientRect(); RC.trackH = track.offsetHeight; RC.steps = stepsEl.getBoundingClientRect();
+    var y = window.scrollY, h = document.documentElement.scrollHeight - RC.vh;
     nav.classList.toggle("is-scrolled", y > 10);
     bar.style.transform = "scaleX(" + (h > 0 ? y / h : 0).toFixed(4) + ")";
     mbar.classList.toggle("is-shown", y > window.innerHeight * .7);
