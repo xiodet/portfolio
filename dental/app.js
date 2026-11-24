@@ -108,8 +108,9 @@
   // стан кадру: p — прогрес усередині розділу (0..1)
   function paint(f, p) {
     var c = CH[+f.dataset.i], n = (c.notes || []).length, e = ease(clamp(p / .85, 0, 1));
-    f.style.setProperty("--z", e.toFixed(3));
-    if (c.scan) f.style.setProperty("--scan", (clamp((p - .02) / .55, 0, 1) * 100).toFixed(1) + "%");
+    var z = e.toFixed(3), sc = c.scan ? (clamp((p - .02) / .55, 0, 1) * 100).toFixed(1) + "%" : "";
+    if (f._z !== z) { f._z = z; var fs = c.focus ? c.focus[2] : 1.12; (f._cam || (f._cam = f.querySelector(".wf__cam"))).style.transform = "scale(" + (1.04 + (fs - 1.04) * e).toFixed(4) + ")"; }
+    if (c.scan && f._sc !== sc) { f._sc = sc; f.style.setProperty("--scan", sc); }
     for (var k = 0; k < n; k++) f.classList.toggle("n" + k, p > (c.scan ? .3 : .12) + k * (.6 / Math.max(n, 1)));
   }
   function layout() {
@@ -551,7 +552,8 @@
     return '<g class="tz-lbl tz-lbl--' + k + '"><path d="M' + x + " " + y + "H" + x2 + '" pathLength="1"/><circle cx="' + x + '" cy="' + y + '" r="4"/>' +
       '<text x="' + tx + '" y="' + (y - 5) + '"' + a + ">" + t + '</text><text class="s" x="' + tx + '" y="' + (y + 16) + '"' + a + ">" + s + "</text></g>";
   }
-  var toothSVG = '<svg class="tz" viewBox="-200 -60 800 680" aria-hidden="true"><defs>' +
+  function tzLayer(cls, inner) { return '<svg class="tzl ' + cls + '" viewBox="-200 -60 800 680" aria-hidden="true">' + inner + '</svg>'; }
+  var tzDefs = '<defs>' +
     '<clipPath id="cOut"><path d="' + T_OUT + '"/></clipPath><clipPath id="cL"><rect x="-200" y="-60" width="400" height="680"/></clipPath><clipPath id="cR"><rect x="200" y="-60" width="400" height="680"/></clipPath>' +
     '<linearGradient id="gExt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#F1F5FC"/><stop offset="1" stop-color="#D3DFF4"/></linearGradient>' +
     '<linearGradient id="gRootX" x1="0" y1="0" x2="0" y2="1"><stop offset=".45" stop-color="#7C97C8" stop-opacity="0"/><stop offset="1" stop-color="#7C97C8" stop-opacity=".3"/></linearGradient>' +
@@ -559,30 +561,31 @@
     '<linearGradient id="gDen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D6E3F8"/><stop offset="1" stop-color="#BFD1EF"/></linearGradient>' +
     '<linearGradient id="gCem" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EEF3FB"/><stop offset="1" stop-color="#DCE6F6"/></linearGradient>' +
     '<radialGradient id="gPulp" cx=".5" cy=".28" r=".8"><stop offset="0" stop-color="#7AA3FF"/><stop offset=".45" stop-color="#2A62E8"/><stop offset="1" stop-color="#173B9E"/></radialGradient>' +
-    "</defs>" +
-    '<g class="tz-orbit"><circle cx="200" cy="290" r="290" class="o1"/><circle cx="200" cy="290" r="240" class="o2"/><circle cx="200" cy="290" r="340" class="o3"/></g>' +
-    '<g class="tz-sec">' +
-      '<path d="' + T_OUT + '" fill="url(#gCem)" stroke="#AFC4EA" stroke-width="1.2"/>' +
-      '<g class="tz-en"><path d="' + T_EN + '" fill="url(#gEn)" stroke="#BFD0EE" stroke-width="1"/>' +
+    "</defs>";
+  var toothSVG = '<div class="tz">' +
+    tzLayer('tzl-orbit', '<g class="tz-orbit"><circle cx="200" cy="290" r="290" class="o1"/><circle cx="200" cy="290" r="240" class="o2"/><circle cx="200" cy="290" r="340" class="o3"/></g>') +
+    tzLayer('tzl-cem', tzDefs + '<path d="' + T_OUT + '" fill="url(#gCem)" stroke="#AFC4EA" stroke-width="1.2"/>') +
+    tzLayer('tzl-en', '<g class="tz-en"><path d="' + T_EN + '" fill="url(#gEn)" stroke="#BFD0EE" stroke-width="1"/>' +
         '<g fill="none" stroke="#C9D8F2" stroke-width="1"><path d="M96 150Q120 160 130 190M110 100Q130 115 145 140M160 85Q170 100 180 125M240 80Q232 100 222 125M292 92Q275 110 262 135M318 150Q290 160 278 190"/></g>' +
-        lbl(1, 82, 150, -30, "Емаль", "найтвердіша тканина тіла") + "</g>" +
-      '<g clip-path="url(#cOut)"><path d="' + T_OUT + '" fill="url(#gDen)" transform="translate(200 300) scale(.86 .93) translate(-200 -300)"/>' +
+        lbl(1, 82, 150, -30, "Емаль", "найтвердіша тканина тіла") + "</g>") +
+    tzLayer('tzl-core', '<g clip-path="url(#cOut)"><path d="' + T_OUT + '" fill="url(#gDen)" transform="translate(200 300) scale(.86 .93) translate(-200 -300)"/>' +
         '<g stroke="#9FB7E4" stroke-width="1" fill="none" opacity=".6"><path d="M120 150Q105 170 100 200M132 120Q112 130 98 150M175 105Q168 90 160 82M225 105Q232 88 242 80M268 120Q288 128 302 150M280 150Q295 170 300 200M130 235Q112 240 104 255M270 235Q288 240 296 255M150 300Q128 305 118 320M250 300Q272 305 282 320M140 380Q124 385 116 395M262 380Q278 385 286 395"/></g></g>' +
       '<g class="tz-pulp"><path d="' + T_PULP + '" fill="url(#gPulp)"/>' +
         '<g class="tz-nerve" fill="none" stroke-linecap="round"><path d="M200 162C186 182 170 200 166 240C160 300 146 390 130 470" stroke="#C9DAFF" stroke-width="1.6" pathLength="1"/><path d="M200 162C214 182 232 200 236 240C244 300 258 390 268 470" stroke="#C9DAFF" stroke-width="1.6" pathLength="1"/><path d="M162 140C170 160 186 170 200 162C214 170 230 160 238 140" stroke="#fff" stroke-width="1.3" pathLength="1"/><path d="M174 250C168 320 156 400 142 468" stroke="#FF9DB0" stroke-width="1.1" pathLength="1"/><path d="M226 250C236 320 248 400 260 468" stroke="#FF9DB0" stroke-width="1.1" pathLength="1"/></g></g>' +
-      lbl(2, 296, 330, 430, "Дентин", "70% мінералів") + lbl(3, 238, 205, 430, "Пульпа", "нерв, тут діє анестезія") + lbl(4, 126, 430, -30, "Корені", "канали до 0,2 мм") +
-    "</g>" +
-    '<g class="tz-shell tz-shell--l"><g clip-path="url(#cL)">' + toothExt() + "</g></g>" +
-    '<g class="tz-shell tz-shell--r"><g clip-path="url(#cR)">' + toothExt() + "</g></g>" +
-    '<g class="tz-scan"><rect x="40" y="0" width="320" height="2" rx="1"/></g>' +
-    "</svg>";
+      lbl(2, 296, 330, 430, "Дентин", "70% мінералів") + lbl(3, 238, 205, 430, "Пульпа", "нерв, тут діє анестезія") + lbl(4, 126, 430, -30, "Корені", "канали до 0,2 мм")) +
+    tzLayer('tzl-shell tzl-l', '<g class="tz-shell tz-shell--l"><g clip-path="url(#cL)">' + toothExt() + "</g></g>") +
+    tzLayer('tzl-shell tzl-r', '<g class="tz-shell tz-shell--r"><g clip-path="url(#cR)">' + toothExt() + "</g></g>") +
+    tzLayer('tzl-scan', '<g class="tz-scan"><rect x="40" y="0" width="320" height="2" rx="1"/></g>') +
+    '</div>';
   var intro = $("#intro"), iTooth = $("#introTooth");
   iTooth.innerHTML = toothSVG;
   var tzMq = window.matchMedia("(max-width: 959px)");
-  function tzBox() { $(".tz", iTooth).setAttribute("viewBox", tzMq.matches ? "-130 -60 660 680" : "-200 -60 800 680"); }
+  var tzVB = 800;
+  function tzBox() { tzVB = tzMq.matches ? 660 : 800; $$(".tzl", iTooth).forEach(function (s) { s.setAttribute("viewBox", tzMq.matches ? "-130 -60 660 680" : "-200 -60 800 680"); }); }
   tzBox(); if (tzMq.addEventListener) tzMq.addEventListener("change", tzBox);
-  var tz = $(".tz", iTooth), tzL = $(".tz-shell--l", tz), tzR = $(".tz-shell--r", tz), tzEn = $(".tz-en", tz), tzPulp = $(".tz-pulp", tz),
-    tzLbl = $$(".tz-lbl", tz), tzNerve = $(".tz-nerve", tz), tzOrbit = $(".tz-orbit", tz), tzScan = $(".tz-scan", tz),
+  var tz = $(".tz", iTooth), tzL = $(".tzl-l", tz), tzR = $(".tzl-r", tz), tzEn = $(".tzl-en", tz),
+    tzLbl = $$(".tz-lbl", tz), tzNerve = $(".tz-nerve", tz), tzOrbit = $(".tzl-orbit", tz), tzScan = $(".tzl-scan", tz), tzLast = {},
+    tzSet = function (el, k, prop, v) { if (tzLast[k] === v) return; tzLast[k] = v; if (prop[0] === "-") el.style.setProperty(prop, v); else el.style[prop] = v; },
     iTitle = $(".intro__head", intro), iVeil = $(".intro__veil", intro), iHint = $(".intro__hint", intro);
   function seg(p, a, b) { return clamp((p - a) / (b - a), 0, 1); }
   function sm(x) { return x * x * (3 - 2 * x); }
@@ -598,20 +601,21 @@
     iTitle.style.transform = "translateY(" + (-a * 34).toFixed(2) + "vh) scale(" + (1 - a * .25).toFixed(3) + ")";
     iTitle.style.opacity = (1 - a * 1.3).toFixed(3);
     iHint.style.opacity = (1 - a * 3).toFixed(3);
-    var dive = Math.pow(e, 2.6) * 16;
+    var dive = Math.pow(e, 2.4) * 10;
     iTooth.style.transform = "translate(-50%, -50%) translateY(" + (-a * 12).toFixed(2) + "vh) scale(" + (1 + a * (tzMq.matches ? -.04 : .22) + dive).toFixed(3) + ") rotate(" + ((1 - a) * -6).toFixed(2) + "deg)";
-    tzL.style.transform = "translateX(" + (-b * 120).toFixed(1) + "px) rotate(" + (-b * 14).toFixed(2) + "deg)";
-    tzR.style.transform = "translateX(" + (b * 120).toFixed(1) + "px) rotate(" + (b * 14).toFixed(2) + "deg)";
-    tzL.style.opacity = tzR.style.opacity = (1 - sm(seg(p, .22, .36))).toFixed(3);
+    var u = (RC.toothW || iTooth.offsetWidth) / tzVB; // px на одиницю viewBox: шари рухаються як окремі HTML-шари, SVG не перемальовується
+    tzSet(tzL, "lt", "transform", "translateX(" + (-b * 120 * u).toFixed(1) + "px) rotate(" + (-b * 14).toFixed(2) + "deg)");
+    tzSet(tzR, "rt", "transform", "translateX(" + (b * 120 * u).toFixed(1) + "px) rotate(" + (b * 14).toFixed(2) + "deg)");
+    var so = (1 - sm(seg(p, .22, .36))).toFixed(3); tzSet(tzL, "lo", "opacity", so); tzSet(tzR, "ro", "opacity", so);
+    var sv = +so > 0 ? "visible" : "hidden"; tzSet(tzL, "lv", "visibility", sv); tzSet(tzR, "rv", "visibility", sv);
     var ex = c * (1 - d);
-    tzEn.style.transform = "translateY(" + (-ex * 150).toFixed(1) + "px) rotate(" + (-ex * 4).toFixed(2) + "deg)";
-    tzPulp.style.transform = "scale(" + (1 + ex * .06).toFixed(3) + ")";
-    tzNerve.style.setProperty("--n", (1 - seg(p, .3, .52)).toFixed(3));
-    tzLbl.forEach(function (l, i) { var on = seg(p, .34 + i * .035, .42 + i * .035) * (1 - seg(p, .62, .67)); l.style.opacity = on.toFixed(3); l.style.setProperty("--l", (1 - on).toFixed(3)); });
-    tzOrbit.style.opacity = (1 - seg(p, .6, .7)).toFixed(3);
-    tzOrbit.style.transform = "rotate(" + (p * 120).toFixed(1) + "deg) scale(" + (1 + b * .12).toFixed(3) + ")";
-    var sc = seg(p, .02, .2); tzScan.style.transform = "translateY(" + (60 + sc * 460).toFixed(1) + "px)"; tzScan.style.opacity = (sc > 0 && sc < 1 ? 1 : 0);
-    iVeil.style.opacity = seg(p, .84, .97).toFixed(3);
+    tzSet(tzEn, "et", "transform", "translateY(" + (-ex * 150 * u).toFixed(1) + "px) rotate(" + (-ex * 4).toFixed(2) + "deg)");
+    tzSet(tzNerve, "n", "--n", (1 - seg(p, .3, .52)).toFixed(2));
+    tzLbl.forEach(function (l, i) { var on = seg(p, .34 + i * .035, .42 + i * .035) * (1 - seg(p, .62, .67)); tzSet(l, "lo" + i, "opacity", on.toFixed(2)); tzSet(l, "ll" + i, "--l", (1 - on).toFixed(2)); });
+    tzSet(tzOrbit, "oo", "opacity", (1 - seg(p, .6, .7)).toFixed(3));
+    tzSet(tzOrbit, "ot", "transform", "rotate(" + (p * 120).toFixed(1) + "deg) scale(" + (1 + b * .12).toFixed(3) + ")");
+    var sc = seg(p, .02, .2); tzSet(tzScan, "st", "transform", "translateY(" + ((60 + sc * 460) * u).toFixed(1) + "px)"); tzSet(tzScan, "so", "opacity", sc > 0 && sc < 1 ? "1" : "0");
+    iVeil.style.opacity = seg(p, .78, .93).toFixed(3);
   }
   // hero з'являється, коли до нього доскролили
   var heroEl = $("#hero"), heroImg = $("#heroBg img");
@@ -630,7 +634,7 @@
   function onScroll() {
     ticking = false;
     // спершу всі виміри, потім усі записи: без примусових перерахунків layout посеред кадру
-    RC.vh = window.innerHeight; RC.intro = intro.getBoundingClientRect(); RC.introH = intro.offsetHeight;
+    RC.vh = window.innerHeight; RC.intro = intro.getBoundingClientRect(); RC.introH = intro.offsetHeight; RC.toothW = iTooth.offsetWidth;
     RC.hero = heroEl.getBoundingClientRect(); RC.track = track.getBoundingClientRect(); RC.trackH = track.offsetHeight; RC.steps = stepsEl.getBoundingClientRect();
     var y = window.scrollY, h = document.documentElement.scrollHeight - RC.vh;
     nav.classList.toggle("is-scrolled", y > 10);
