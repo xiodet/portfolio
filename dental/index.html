@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ясна — стоматологія на Подолі, Київ</title>
+<meta name="description" content="Стоматологія на Подолі, 7 хвилин від метро «Контрактова площа». Лікування під мікроскопом, 3D-діагностика, імплантація, вініри, елайнери. Ціна фіксується до початку лікування.">
+<meta name="theme-color" content="#FFFFFF">
+<meta property="og:title" content="Ясна — спокійна стоматологія на Подолі">
+<meta property="og:image" content="img/hero.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%232A62E8'/%3E%3Cpath d='M16 27c5 11 27 11 32 0' fill='none' stroke='%23fff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="img/hero.jpg">
+<link rel="stylesheet" href="styles.css?v=1">
+</head>
+<body>
+<a class="skip" href="#booking">Перейти до запису</a>
+<div class="progress" aria-hidden="true"><i id="progress"></i></div>
+
+<header class="nav" id="nav">
+  <div class="wrap nav__in">
+    <a href="#top" class="logo" aria-label="Ясна, на початок">
+      <svg class="logo__mark" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18.5"/><path d="M11 17.5c4 8 14 8 18 0"/></svg>
+      <span>Ясна</span>
+    </a>
+    <nav class="nav__links" id="navLinks" aria-label="Розділи">
+      <a href="#why">Чому ми</a>
+      <a href="#services">Послуги і ціни</a>
+      <a href="#results">Результати</a>
+      <a href="#doctors">Лікарі</a>
+      <a href="#visit">Перший візит</a>
+      <a href="#contacts">Контакти</a>
+    </nav>
+    <a href="tel:+380440003737" class="nav__tel" id="navTel">+380 44 000 37 37</a>
+    <a href="#booking" class="btn btn--acc nav__cta">Записатися</a>
+    <button class="nav__burger" aria-label="Меню" aria-expanded="false" id="burger"><span></span><span></span></button>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero">
+  <svg class="hero__rings" viewBox="0 0 800 800" aria-hidden="true">
+    <circle cx="400" cy="400" r="390"/><circle cx="400" cy="400" r="310"/><circle cx="400" cy="400" r="230" class="dash"/>
+  </svg>
+  <div class="wrap hero__in">
+    <div class="hero__text">
+      <p class="kicker load" style="--d:.05s"><i class="dot"></i>Стоматологія на Подолі · з 2016</p>
+      <h1 class="hero__title">
+        <span class="line"><span style="--d:.15s">Зуби, про які</span></span>
+        <span class="line"><span style="--d:.27s">можна <em class="smile">не думати<svg viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true"><path d="M4 8 C 70 40, 230 40, 296 8"/></svg></em></span></span>
+      </h1>
+      <p class="hero__sub load" style="--d:.5s">Плануємо лікування за 3D-знімком, лікуємо під мікроскопом і називаємо ціну до початку. Без болю, без поспіху і без зайвих процедур.</p>
+      <div class="hero__cta load" style="--d:.62s">
+        <a href="#booking" class="btn btn--acc btn--lg">Записатися на консультацію <svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5"/></svg></a>
+        <a href="#why" class="btn btn--ghost btn--lg">Чому нам довіряють</a>
+      </div>
+      <ul class="hero__facts load" style="--d:.74s">
+        <li><b>4.9</b><span>612 відгуків у Google</span></li>
+        <li><b>0 ₴</b><span>консультація, якщо лікуєтесь у нас</span></li>
+        <li><b>7 хв</b><span>від метро «Контрактова площа»</span></li>
+      </ul>
+    </div>
+    <div class="hero__visual load" style="--d:.2s">
+      <div class="arch ph" id="heroArch"><img src="img/hero.jpg" alt="Лікарка розмовляє з пацієнткою в кабінеті" width="900" height="1100" fetchpriority="high"></div>
+      <div class="glass glass--slot">
+        <span class="glass__lbl"><i class="dot dot--live"></i>Найближчий вільний час</span>
+        <b id="heroSlot">сьогодні о 16:30</b>
+      </div>
+      <div class="glass glass--calm">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 3 7 4 7 9a7 7 0 0 1-14 0c0-5 4-6 7-9z"/><path d="M9 13.5c1.6 1.8 4.4 1.8 6 0"/></svg>
+        <span>Комп'ютерна анестезія<small>укол майже не відчувається</small></span>
+      </div>
+    </div>
+  </div>
+  <a href="#why" class="hero__scroll" aria-label="Гортати далі"><span></span></a>
+</section>
+
+<!-- WHY: SCROLL STORY -->
+<section class="story" id="why">
+  <div class="wrap story__head">
+    <p class="kicker reveal">01 — Чому «Ясна»</p>
+    <h2 class="h2 reveal">П'ять причин, чому до нас <span class="soft">повертаються без страху</span></h2>
+  </div>
+  <div class="story__track" id="storyTrack">
+    <div class="story__sticky">
+      <div class="wrap story__grid">
+        <ol class="story__list" id="storyList"></ol>
+        <div class="stage" id="stage" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="wrap stats__grid" id="stats"></div>
+</section>
+
+<!-- SERVICES -->
+<section class="sec" id="services">
+  <div class="wrap">
+    <div class="sec__head">
+      <div>
+        <p class="kicker reveal">02 — Послуги і ціни</p>
+        <h2 class="h2 reveal">Ціни відкрито. <span class="soft">Точну суму фіксуємо в плані</span></h2>
+      </div>
+      <div class="tabs reveal" id="svcTabs" role="group" aria-label="Категорії послуг"></div>
+    </div>
+    <div class="svc" id="svcGrid"></div>
+    <p class="svc__note reveal"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.5"/></svg>Оплата частинами до 10 платежів без переплат. Для імплантації та елайнерів є розстрочка на весь курс.</p>
+  </div>
+</section>
+
+<!-- BEFORE / AFTER -->
+<section class="sec sec--pale" id="results">
+  <div class="wrap ba">
+    <div class="ba__text">
+      <p class="kicker reveal">03 — Результати</p>
+      <h2 class="h2 reveal">До і після. <span class="soft">Потягніть повзунок</span></h2>
+      <div class="tabs reveal" id="baTabs" role="group" aria-label="Кейси"></div>
+      <div class="ba__case" id="baCase" aria-live="polite"></div>
+    </div>
+    <div class="ba__frame reveal" id="baFrame">
+      <div class="ba__img ph"><img id="baAfter" src="img/smile1.jpg" alt="Після лікування"></div>
+      <div class="ba__img ba__img--before ph" id="baBeforeWrap"><img id="baBefore" src="img/smile1.jpg" alt="До лікування"></div>
+      <span class="ba__tag ba__tag--l">До</span><span class="ba__tag ba__tag--r">Після</span>
+      <div class="ba__handle" id="baHandle" role="slider" tabindex="0" aria-label="Порівняння до і після" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+        <span class="ba__knob"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l-5 6 5 6M15 6l5 6-5 6"/></svg></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DOCTORS -->
+<section class="sec" id="doctors">
+  <div class="wrap">
+    <div class="sec__head">
+      <div>
+        <p class="kicker reveal">04 — Лікарі</p>
+        <h2 class="h2 reveal">Шість лікарів, <span class="soft">кожен у своїй справі</span></h2>
+      </div>
+      <p class="sec__lead reveal">Ми не робимо все підряд одним лікарем. Канали лікує ендодонтист, імпланти ставить хірург, а план узгоджують між собою.</p>
+    </div>
+    <div class="docs" id="docs"></div>
+  </div>
+</section>
+
+<!-- FIRST VISIT -->
+<section class="sec sec--pale visit" id="visit">
+  <div class="wrap">
+    <div class="sec__head">
+      <div>
+        <p class="kicker reveal">05 — Перший візит</p>
+        <h2 class="h2 reveal">Що буде на першому прийомі</h2>
+      </div>
+      <p class="sec__lead reveal">Близько 45 хвилин. Ви йдете з розумінням, що відбувається з зубами, скільки коштує лікування і скільки часу займе.</p>
+    </div>
+    <div class="steps" id="steps"><div class="steps__line" aria-hidden="true"><i></i></div></div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="sec" id="reviews">
+  <div class="wrap">
+    <div class="sec__head">
+      <div>
+        <p class="kicker reveal">06 — Відгуки</p>
+        <h2 class="h2 reveal">Що кажуть пацієнти</h2>
+      </div>
+      <div class="gscore reveal"><b>4.9</b><span><i class="stars" aria-hidden="true">★★★★★</i>612 відгуків у Google</span></div>
+    </div>
+    <div class="revs" id="revs"></div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section class="sec sec--pale booking" id="booking">
+  <div class="wrap">
+    <div class="sec__head">
+      <div>
+        <p class="kicker reveal">07 — Запис</p>
+        <h2 class="h2 reveal">Запишіться онлайн <span class="soft">за хвилину</span></h2>
+      </div>
+      <p class="sec__lead reveal">Оберіть послугу, лікаря і зручний час. Адміністраторка підтвердить запис дзвінком або в месенджері.</p>
+    </div>
+    <div class="bk">
+      <div class="bk__steps">
+        <div class="bk__step reveal">
+          <h3><span>1</span>Що потрібно</h3>
+          <div class="chips" id="bSvc"></div>
+        </div>
+        <div class="bk__step reveal">
+          <h3><span>2</span>Лікар</h3>
+          <div class="bdocs" id="bDocs"></div>
+        </div>
+        <div class="bk__step reveal">
+          <h3><span>3</span>День і час</h3>
+          <div class="days" id="bDays"></div>
+          <div class="times" id="bTimes"></div>
+        </div>
+      </div>
+      <aside class="ticket reveal" id="ticket">
+        <p class="ticket__h">Ваш запис</p>
+        <dl id="tSum"></dl>
+        <form id="bForm" novalidate>
+          <label class="fld"><span>Ім'я</span><input name="name" autocomplete="name" required placeholder="Як до вас звертатися"></label>
+          <label class="fld"><span>Телефон</span><input name="phone" type="tel" autocomplete="tel" inputmode="tel" required placeholder="+380"></label>
+          <label class="fld"><span>Що турбує <i>(необов'язково)</i></span><textarea name="note" rows="2" placeholder="Наприклад: болить зуб знизу зліва"></textarea></label>
+          <label class="chk"><input type="checkbox" name="first" checked><span>Я вперше у «Ясній»</span></label>
+          <p class="form__err" id="bErr" role="alert"></p>
+          <button class="btn btn--acc btn--lg btn--full" type="submit" id="bSubmit">Записатися</button>
+          <p class="ticket__fine">Натискаючи кнопку, ви погоджуєтесь, що ми зателефонуємо для підтвердження.</p>
+        </form>
+        <div class="done" id="bDone" hidden>
+          <svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24"/><path d="M15 27l7 7 15-16"/></svg>
+          <h3>Ви записані</h3>
+          <p id="bDoneText"></p>
+          <button type="button" class="btn btn--ghost" id="bIcs">Додати в календар</button>
+          <button type="button" class="link" id="bAgain">Новий запис</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="faq">
+  <div class="wrap faq">
+    <div>
+      <p class="kicker reveal">08 — Питання</p>
+      <h2 class="h2 reveal">Часті питання</h2>
+      <p class="sec__lead reveal">Не знайшли відповіді? Напишіть нам у Telegram або зателефонуйте, відповідаємо протягом 15 хвилин у робочий час.</p>
+    </div>
+    <div class="faq__list" id="faqList"></div>
+  </div>
+</section>
+
+<!-- CONTACTS -->
+<section class="sec sec--pale" id="contacts">
+  <div class="wrap contact">
+    <div class="contact__info">
+      <p class="kicker reveal">09 — Контакти</p>
+      <h2 class="h2 reveal">Поділ, <span class="soft">Ярославська, 37</span></h2>
+      <ul class="cinfo reveal" id="cinfo"></ul>
+      <div class="contact__btns reveal">
+        <a class="btn btn--acc" href="#booking">Записатися</a>
+        <a class="btn btn--ghost" id="routeBtn" target="_blank" rel="noopener" href="#">Прокласти маршрут <svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14L14 6M7 6h7v7"/></svg></a>
+      </div>
+    </div>
+    <div class="cmap reveal" id="cmap"><div class="cmap__layers"></div><span class="cmap__pin" aria-hidden="true"></span><span class="cmap__tag">Ясна · Ярославська, 37</span><span class="cmap__src">© OpenStreetMap, © CARTO</span></div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot__in">
+    <div>
+      <a href="#top" class="logo"><svg class="logo__mark" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18.5"/><path d="M11 17.5c4 8 14 8 18 0"/></svg><span>Ясна</span></a>
+      <p>Стоматологія на Подолі. Лікування, естетика, хірургія та дитячий прийом в одній клініці.</p>
+    </div>
+    <nav class="foot__nav" aria-label="Розділи">
+      <a href="#why">Чому ми</a><a href="#services">Послуги і ціни</a><a href="#results">Результати</a><a href="#doctors">Лікарі</a><a href="#booking">Запис</a><a href="#contacts">Контакти</a>
+    </nav>
+    <div class="foot__soc" id="socials"></div>
+  </div>
+  <div class="wrap foot__bottom">
+    <p>Концепт-сайт для портфоліо. Назва клініки, лікарі та відгуки вигадані. Фото: StockSnap (CC0).</p>
+  </div>
+</footer>
+
+<a href="#booking" class="mbar" id="mbar"><span>Записатися на консультацію</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5"/></svg></a>
+
+<script src="config.js?v=1"></script>
+<script src="data.js?v=1"></script>
+<script src="app.js?v=1"></script>
+</body>
+</html>
