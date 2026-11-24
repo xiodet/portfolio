@@ -68,73 +68,54 @@
   })();
 
   /* =====================================================================
-     «Чому ми»: повноекранний атлас. Кожен розділ — справжнє зображення на весь екран:
-     кадри змінюються круглою шторкою з точки фокуса, виноски з підписами прорисовуються
-     по черзі, «камера» наїжджає на деталь, текст лежить поверх зображення.
-     Десктоп: усе прив'язано до скролу. Телефон: програється при появі.
-     Координати виносок — у відсотках від зображення: x,y — точка, lx,ly — підпис, side — бік підпису.
-     fit: "cover" (на весь екран, ax — вирівнювання по горизонталі 0..1) або "contain" (праворуч, фон bg).
+     «Чому ми»: атлас. Кожен розділ — справжнє зображення як ілюстрація з підручника:
+     виноски з підписами прорисовуються по черзі, «камера» наїжджає на деталь,
+     кадри змінюються шторкою. Десктоп: усе прив'язано до скролу. Телефон: програється при появі.
+     Координати виносок — у відсотках від зображення: x,y — точка на зображенні, lx,ly — де підпис.
      ===================================================================== */
   var CH = D.why;
-  var track = $("#storyTrack"), stage = $("#whyStage"), figs = $("#whyFigs"), copy = $("#whyCopy"), mob = $("#whyMob");
+  var track = $("#storyTrack"), figs = $("#whyFigs"), copy = $("#whyCopy"), mob = $("#whyMob");
   function figHTML(c, i) {
     var notes = (c.notes || []).map(function (n, k) {
-      return '<g class="k' + k + '"><line x1="' + (n.x * c.ar).toFixed(2) + '" y1="' + n.y + '" x2="' + (n.lx * c.ar).toFixed(2) + '" y2="' + n.ly + '" pathLength="1"/></g>';
+      var right = n.side ? n.side === "r" : n.lx >= n.x;
+      return '<g class="wn__g k' + k + '"><line x1="' + (n.x * c.ar).toFixed(2) + '" y1="' + n.y + '" x2="' + (n.lx * c.ar).toFixed(2) + '" y2="' + n.ly + '" pathLength="1"/><circle cx="' + n.x + '" cy="' + n.y + '" r=".9"/></g>';
     }).join("");
     var labels = (c.notes || []).map(function (n, k) {
       var right = n.side ? n.side === "r" : n.lx >= n.x;
       return '<span class="wn__l k' + k + (right ? "" : " wn__l--r") + '" style="left:' + n.lx + "%;top:" + n.ly + '%"><i>' + (k + 1) + "</i><span><b>" + esc(n.t) + "</b>" + (n.s ? "<small>" + esc(n.s) + "</small>" : "") + "</span></span>" +
         '<span class="wn__dot k' + k + '" style="left:' + n.x + "%;top:" + n.y + '%"></span>';
     }).join("");
-    var fx = c.focus || [50, 50, 1.1], fit = c.fit || "cover";
-    return '<figure class="wf wf--' + fit + (c.scan ? " wf--scan" : "") + (c.dark ? " wf--dark" : "") + '" data-i="' + i + '" style="--ar:' + c.ar + ";--fx:" + fx[0] + "%;--fy:" + fx[1] + "%;--fs:" + fx[2] + ";--bg:" + (c.bg || (c.dark ? "#060D19" : "#fff")) + '">' +
-      '<div class="wf__cam">' +
+    var fx = c.focus || [50, 50, 1.12];
+    return '<figure class="wf' + (c.scan ? " wf--scan" : "") + (c.dark ? " wf--dark" : "") + '" data-i="' + i + '" style="--ar:' + c.ar + ";--fx:" + fx[0] + "%;--fy:" + fx[1] + "%;--fs:" + fx[2] + '">' +
+      '<div class="wf__frame ph"><div class="wf__cam">' +
       '<img src="' + c.img + '" alt="' + esc(c.alt || c.t) + '" loading="lazy">' +
       (c.scan ? '<img class="wf__scanimg" src="' + c.img + '" alt=""><span class="wf__beam"></span>' : "") +
       '<svg class="wn" viewBox="0 0 ' + (100 * c.ar).toFixed(2) + ' 100" preserveAspectRatio="none" aria-hidden="true">' + notes + "</svg>" + labels +
-      "</div>" +
+      "</div></div>" +
       '<figcaption><span>Рис. ' + (i + 1) + "</span>" + esc(c.cap) + "</figcaption></figure>";
   }
   function copyHTML(c, i) {
-    var t = esc(c.t).split(" ").map(function (w, k) { return '<span class="ww" style="--wi:' + k + '"><span>' + w + "</span></span>"; }).join(" ");
-    return '<div class="wc" data-i="' + i + '"><p class="wc__tag"><span>0' + (i + 1) + "</span>" + esc(c.tag) + '</p><h3 class="wc__t">' + t + '</h3><p class="wc__d">' + esc(c.d) + "</p>" +
+    return '<div class="wc" data-i="' + i + '"><p class="wc__tag"><span>0' + (i + 1) + "</span>" + esc(c.tag) + '</p><h3 class="wc__t"><span>' + esc(c.t) + '</span></h3><p class="wc__d">' + esc(c.d) + "</p>" +
       (c.facts ? '<ul class="wc__facts">' + c.facts.map(function (f) { return "<li><b>" + esc(f[0]) + "</b>" + esc(f[1]) + "</li>"; }).join("") + "</ul>" : "") + "</div>";
   }
   figs.innerHTML = CH.map(figHTML).join("");
-  copy.innerHTML = CH.map(copyHTML).join("") +
-    '<div class="why__foot"><div class="why__count"><span class="why__cn"><span>' + CH.map(function (c, i) { return "<i>0" + (i + 1) + "</i>"; }).join("") + "</span></span><em>/ 0" + CH.length + "</em></div>" +
-    '<div class="wprog" id="wprog">' + CH.map(function () { return "<i><b></b></i>"; }).join("") + "</div></div>";
+  copy.innerHTML = CH.map(copyHTML).join("") + '<div class="wprog" id="wprog">' + CH.map(function () { return "<i><b></b></i>"; }).join("") + "</div>";
   mob.innerHTML = CH.map(function (c, i) { return '<article class="wm">' + figHTML(c, i) + copyHTML(c, i) + "</article>"; }).join("");
   checkImgs(figs); checkImgs(mob);
-  var dFigs = $$(".wf", figs), dCopy = $$(".wc", copy), dProg = $$("#wprog b"), cn = $(".why__cn > span", copy);
+  var dFigs = $$(".wf", figs), dCopy = $$(".wc", copy), dProg = $$("#wprog b");
   var desk = window.matchMedia("(min-width: 960px)"), mode = "", active = -1;
   // стан кадру: p — прогрес усередині розділу (0..1)
   function paint(f, p) {
     var c = CH[+f.dataset.i], n = (c.notes || []).length, e = ease(clamp(p / .85, 0, 1));
     f.style.setProperty("--z", e.toFixed(3));
-    if (c.scan) f.style.setProperty("--scan", (clamp((p - .02) / .5, 0, 1) * 100).toFixed(1) + "%");
-    for (var k = 0; k < n; k++) f.classList.toggle("n" + k, p > (c.scan ? .28 : .1) + k * (.55 / Math.max(n, 1)));
-  }
-  // розмір і місце «камери» на повноекранній сцені
-  function place() {
-    var W = stage.clientWidth, H = stage.clientHeight;
-    dFigs.forEach(function (f) {
-      var c = CH[+f.dataset.i], cam = f.firstChild, w, h, x, y;
-      if (c.fit === "contain") {
-        var L = W * (c.ar > 1 ? .4 : .44), R = c.ar > 1 ? W : W - Math.max(32, (W - 1240) / 2 + 28), T = c.ar > 1 ? 88 : 104, B = H - (c.ar > 1 ? 40 : 84), aw = R - L, ah = B - T;
-        w = Math.min(aw, ah * c.ar); h = w / c.ar; x = L + (aw - w) / 2; y = T + (ah - h) / 2;
-      } else {
-        w = Math.max(W, H * c.ar); h = w / c.ar; x = (W - w) * (c.ax == null ? .5 : c.ax); y = (H - h) * (c.ay == null ? .5 : c.ay);
-      }
-      cam.style.cssText = "width:" + w.toFixed(1) + "px;height:" + h.toFixed(1) + "px;left:" + x.toFixed(1) + "px;top:" + y.toFixed(1) + "px";
-    });
+    if (c.scan) f.style.setProperty("--scan", (clamp((p - .02) / .55, 0, 1) * 100).toFixed(1) + "%");
+    for (var k = 0; k < n; k++) f.classList.toggle("n" + k, p > (c.scan ? .3 : .12) + k * (.6 / Math.max(n, 1)));
   }
   function layout() {
     var m = desk.matches && !reduced ? "desk" : "mob";
-    if (m === "desk") place();
     if (m === mode) return; mode = m;
     document.documentElement.classList.toggle("story-desk", m === "desk");
-    if (m === "desk") { track.style.height = (CH.length * 100 + 40) + "vh"; active = -1; storyScroll(); }
+    if (m === "desk") { track.style.height = (CH.length * 90 + 60) + "vh"; active = -1; storyScroll(); }
     else { track.style.height = ""; }
     if (reduced) $$(".wf", mob).forEach(function (f) { f.classList.add("is-on"); paint(f, 1); });
   }
@@ -144,16 +125,10 @@
     var prog = clamp(-r.top / len, 0, .9999), fl = prog * CH.length, idx = Math.floor(fl), lp = fl - idx;
     if (idx !== active) {
       active = idx;
-      var c = CH[idx];
-      stage.dataset.tone = c.fit === "contain" ? "plain" : c.dark ? "dark" : "light";
       dFigs.forEach(function (f, i) { f.classList.toggle("is-on", i <= idx); f.classList.toggle("is-cur", i === idx); });
       dCopy.forEach(function (c, i) { c.classList.toggle("is-on", i === idx); c.classList.toggle("is-past", i < idx); });
-      cn.style.transform = "translateY(" + (-idx) + "em)";
     }
-    dFigs.forEach(function (f, i) {
-      paint(f, i < idx ? 1 : i > idx ? 0 : lp);
-      if (i === idx) f.style.setProperty("--py", ((.5 - lp) * 36).toFixed(1) + "px");
-    });
+    dFigs.forEach(function (f, i) { paint(f, i < idx ? 1 : i > idx ? 0 : lp); });
     dProg.forEach(function (b, i) { b.style.transform = "scaleX(" + (i < idx ? 1 : i > idx ? 0 : lp).toFixed(3) + ")"; });
   }
   $("#wprog").addEventListener("click", function (e) {
@@ -162,18 +137,19 @@
     go(track.getBoundingClientRect().top + window.scrollY + (i + .3) / CH.length * len);
   });
   // телефон: кадр розкривається і виноски малюються самі, коли кадр на екрані
-  // (спостерігаємо за .wm: clip-path ховає сам кадр від IntersectionObserver)
   if ("IntersectionObserver" in window && !reduced) {
     var wio = new IntersectionObserver(function (en) {
       en.forEach(function (x) {
         if (!x.isIntersecting || mode !== "mob") return;
-        wio.unobserve(x.target); var f = $(".wf", x.target); f.classList.add("is-on"); x.target.classList.add("is-on");
+        wio.unobserve(x.target); var f = $(".wf", x.target); f.classList.add("is-on");
         var t0 = null;
-        requestAnimationFrame(function step(t) { if (!t0) t0 = t; var k = clamp((t - t0) / 3400, 0, 1); paint(f, k); if (k < 1) requestAnimationFrame(step); });
+        requestAnimationFrame(function step(t) { if (!t0) t0 = t; var k = clamp((t - t0) / 3200, 0, 1); paint(f, k); if (k < 1) requestAnimationFrame(step); });
       });
     }, { threshold: .25 });
     $$(".wm", mob).forEach(function (f) { wio.observe(f); });
   }
+  var scenes = [];
+  function setScene() {}
 
   /* ---------- Цифри ---------- */
   /* Цифри: кожна цифра — барабан, що прокручується до свого значення (як табло) */
@@ -210,18 +186,18 @@
   };
   function icon(k) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + (IC[k] || "") + "</svg>"; }
   /* ---------- Послуги і ціни: прайс-лист рядками + велике превью ---------- */
+  var PCOL = { treat: ["#9DBBFF", "#C9D8FF", "#BDE3FF"], est: ["#C7B8FF", "#FFD3E6", "#BFD0FF"], surg: ["#9FE0E0", "#B9CCFF", "#CFE9FF"], kids: ["#FFD6A8", "#BFE3FF", "#FFE7C2"] };
   var SIMG = { consult: "w1", hyg: "smile1", caries: "micro", endo: "w3", impl: "w5", extr: "hero", crown: "smile3", ven: "ven-after", white: "smile2", align: "al-after", kids: "calm" };
   var svcCat = "all", pvId = null, tabsEl = $("#svcTabs"), plPv = $("#plPv"), svcList = $("#svcGrid");
   var check = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg>';
   function priceHTML(s) { return "<small>від</small> " + money(s.price) + (s.unit ? " <small>" + s.unit + "</small>" : ""); }
   tabsEl.innerHTML = D.cats.map(function (c) { return '<button type="button" class="tab' + (c.id === svcCat ? " is-on" : "") + '" aria-pressed="' + (c.id === svcCat) + '" data-cat="' + c.id + '">' + esc(c.name) + "</button>"; }).join("") + '<span class="tabs__ind" aria-hidden="true"></span>';
   plPv.innerHTML = D.services.map(function (s) {
-    return '<div class="pv" data-id="' + s.id + '"><img src="img/' + (SIMG[s.id] || "hero") + '.jpg" alt="" loading="lazy">' +
+    return '<div class="pv" data-id="' + s.id + '"><span class="pv__num">' + (D.services.indexOf(s) < 9 ? "0" : "") + (D.services.indexOf(s) + 1) + "</span>" +
       '<div class="pv__body"><p class="pv__dur">' + s.dur + " хв · " + esc(D.cats.filter(function (c) { return c.id === s.cat; })[0].name) + '</p><h3>' + esc(s.name) + '</h3><p class="pv__price">' + priceHTML(s) + "</p>" +
       (s.inc ? '<ul class="pv__inc">' + s.inc.map(function (x) { return "<li>" + check + esc(x) + "</li>"; }).join("") + "</ul>" : "") +
       '<button type="button" class="pv__book" data-book-svc="' + s.id + '">Записатися ' + arrow + "</button></div></div>";
   }).join("");
-  checkImgs(plPv);
   function moveInd() {
     var t = $(".tab.is-on", tabsEl), ind = $(".tabs__ind", tabsEl); if (!t) return;
     ind.style.width = t.offsetWidth + "px"; ind.style.transform = "translateX(" + t.offsetLeft + "px)";
@@ -231,6 +207,17 @@
     var prev = pvId; pvId = id;
     $$(".pv", plPv).forEach(function (p) { p.classList.toggle("was", p.dataset.id === prev); p.classList.toggle("is-on", p.dataset.id === id); });
     $$(".pr", svcList).forEach(function (r) { r.classList.toggle("is-on", r.dataset.id === id); });
+    var s = svcById(id), col = PCOL[s.cat] || PCOL.treat, pane = plPv.parentNode;
+    pane.style.setProperty("--c1", col[0]); pane.style.setProperty("--c2", col[1]); pane.style.setProperty("--c3", col[2]);
+    // ціна «набирається» від попередньої
+    var el = $('.pv[data-id="' + id + '"] .pv__price', plPv), from = prev ? svcById(prev).price : 0, to = s.price, t0 = null;
+    if (reduced || !el) return;
+    var tail = el.innerHTML.slice(el.innerHTML.indexOf("₴"));
+    requestAnimationFrame(function step(t) {
+      if (!t0) t0 = t; var k = clamp((t - t0) / 900, 0, 1), v = Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3)));
+      el.innerHTML = "<small>від</small> " + fmt(v) + " " + tail;
+      if (k < 1 && pvId === id) requestAnimationFrame(step);
+    });
   }
   function renderSvc() {
     var list = D.services.filter(function (s) { return svcCat === "all" || s.cat === svcCat; });
@@ -315,12 +302,6 @@
     stepsEl.style.setProperty("--p", p.toFixed(3));
     stepEls.forEach(function (s, i) { s.classList.toggle("is-on", p >= i / stepEls.length + .02 || p >= .98); });
   }
-
-  /* ---------- Відгуки ---------- */
-  $("#revs").innerHTML = D.reviews.map(function (r, i) {
-    return '<figure class="rv reveal" style="--rd:' + (i % 3) * .08 + 's"><span class="stars" aria-label="5 з 5">★★★★★</span><blockquote>' + esc(r.text) + "</blockquote>" +
-      '<figcaption><span class="rv__av">' + esc(r.name[0]) + "</span><span><b>" + esc(r.name) + "</b><small>" + esc(r.when) + " · Google</small></span></figcaption></figure>";
-  }).join("");
 
   /* ---------- FAQ ---------- */
   $("#faqList").innerHTML = D.faq.map(function (f, i) {
@@ -531,15 +512,42 @@
     paintZoom(Z1);
   }
 
+  /* ---------- Заставка: камера влітає в зуб ---------- */
+  var intro = $("#intro"), iCam = $("#introTooth .intro__cam"), iTooth = $("#introTooth"), iVeil = $(".intro__veil", intro), iLetters = $$(".intro__t span", intro), iIn = $(".intro__in", intro), iLbl = $(".it__w", intro);
+  function introScroll() {
+    var r = intro.getBoundingClientRect(), len = intro.offsetHeight - window.innerHeight;
+    if (r.bottom < -50 || reduced) return;
+    var p = clamp(-r.top / len, 0, 1), e = p * p * (3 - 2 * p), z = Math.pow(p, 2.4);
+    // точка на емалі (30% / 15% зображення) їде в центр екрана і розростається на весь екран
+    var tr = iTooth.getBoundingClientRect(), ox = tr.left + tr.width * .30, oy = tr.top + tr.height * .15;
+    var tx = (window.innerWidth / 2 - ox) * e, ty = (window.innerHeight / 2 - oy) * e;
+    iCam.style.transform = "translate(" + tx.toFixed(1) + "px," + ty.toFixed(1) + "px) scale(" + (1 + 22 * z).toFixed(3) + ")";
+    iLetters.forEach(function (l, i) { l.style.setProperty("--ty", (-p * (120 + i * 90)).toFixed(1) + "px"); l.style.setProperty("--o", clamp(1 - p * 2.6 + i * .05, 0, 1).toFixed(3)); });
+    iIn.style.opacity = clamp(1 - p * 2.2, 0, 1).toFixed(3);
+    iLbl.style.opacity = clamp(1 - p * 5, 0, 1).toFixed(3);
+    iVeil.style.opacity = clamp((p - .72) / .22, 0, 1).toFixed(3);
+  }
+  // hero з'являється, коли до нього доскролили
+  var heroEl = $("#hero"), heroImg = $("#heroBg img");
+  if ("IntersectionObserver" in window && !reduced) {
+    var hio = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { heroEl.classList.add("is-in"); hio.disconnect(); } }, { threshold: .25 });
+    hio.observe(heroEl);
+  } else heroEl.classList.add("is-in");
+  function heroScroll() {
+    if (reduced) return;
+    var r = heroEl.getBoundingClientRect(); if (r.bottom < 0 || r.top > window.innerHeight) return;
+    heroImg.style.translate = "0 " + (-r.top * .12).toFixed(1) + "px";
+  }
+
   /* ---------- Скрол: шапка, прогрес, параллакс hero, кроки ---------- */
-  var arch = $("#heroArch img"), ticking = false;
+  var ticking = false;
   function onScroll() {
     ticking = false;
     var y = window.scrollY, h = document.documentElement.scrollHeight - window.innerHeight;
     nav.classList.toggle("is-scrolled", y > 10);
     bar.style.transform = "scaleX(" + (h > 0 ? y / h : 0).toFixed(4) + ")";
     mbar.classList.toggle("is-shown", y > window.innerHeight * .7);
-    if (!reduced && y < window.innerHeight * 1.2) arch.style.transform = "translateY(" + (y * .08).toFixed(1) + "px) scale(1.08)";
+    introScroll(); heroScroll();
     storyScroll(); stepsScroll();
   }
   window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
