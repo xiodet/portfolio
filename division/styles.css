@@ -63,6 +63,8 @@ em{font-style:italic;color:var(--green)}
 .nav__in{display:flex;align-items:center;gap:28px;height:76px}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none}
 .brand img{width:44px;height:44px;border-radius:50%;box-shadow:0 0 0 1px var(--line)}
+.brand__mark{position:relative;display:grid;place-items:center;flex:none}
+.brand__ring{display:none}
 .brand__txt{display:flex;flex-direction:column;line-height:1.1}
 .brand__txt b{font-family:var(--serif);font-size:20px;letter-spacing:.12em}
 .brand__txt small{font-size:11px;color:var(--muted);letter-spacing:.08em}
@@ -306,11 +308,17 @@ html.lock{overflow:hidden}
   .num:nth-child(odd){border-left:0;padding-left:0}
   .num:nth-child(n+3){border-top:1px solid rgba(201,163,90,.25)}
   .hero__in{flex-direction:column;align-items:flex-start}
-  .badge{position:absolute;right:0;top:-40px;width:150px;height:150px;align-self:auto}
-  .badge img{width:95px;height:95px}
-  .badge__ring text{font-size:15px}
-  .nav__in{gap:12px;height:66px}
-  .nav__links{position:fixed;inset:calc(66px + env(safe-area-inset-top)) 0 auto;flex-direction:column;gap:0;background:var(--cream);padding:8px 20px 24px;box-shadow:0 20px 30px -20px rgba(0,0,0,.25);transform:translateY(-12px);opacity:0;pointer-events:none;transition:.3s var(--ease)}
+  .badge{display:none}
+  /* phones/tablets: the hero badge merges into the header logo, ring spins while over the video */
+  .brand__ring{display:block;position:absolute;inset:-13px;opacity:0;transition:opacity .4s}
+  .brand__ring svg{width:100%;height:100%;display:block;animation:spin 20s linear infinite;animation-play-state:paused;will-change:transform}
+  .brand__ring text{font-family:var(--sans);font-size:25px;font-weight:700;fill:var(--gold-2)}
+  .nav.on-dark:not(.open) .brand__ring{opacity:1}
+  .nav.on-dark:not(.open) .brand__ring svg{animation-play-state:running}
+  .nav.on-dark:not(.open) .brand{gap:22px;margin-left:13px}
+  .brand{transition:gap .4s var(--ease),margin .4s var(--ease)}
+  .nav__in{gap:12px;height:76px}
+  .nav__links{position:fixed;inset:calc(76px + env(safe-area-inset-top)) 0 auto;flex-direction:column;gap:0;background:var(--cream);padding:8px 20px 24px;box-shadow:0 20px 30px -20px rgba(0,0,0,.25);transform:translateY(-12px);opacity:0;pointer-events:none;transition:.3s var(--ease)}
   .nav__links a{font-size:22px;font-family:var(--serif);padding:14px 0;border-bottom:1px solid var(--line)}
   .nav__links a::after{display:none}
   .nav.open{background:var(--cream)}
@@ -341,7 +349,6 @@ html.lock{overflow:hidden}
   .hero__bg::after{background:linear-gradient(0deg,rgba(20,40,30,.95) 0%,rgba(20,40,30,.78) 42%,rgba(24,46,35,.2) 72%,rgba(24,46,35,.45) 100%)}
   .hero__title{font-size:clamp(46px,13vw,60px)}
   .hero__sub{font-size:16.5px}
-  .badge{top:-190px;right:-6px}
   .hero__scroll{display:none}
   .num b{font-size:44px}
   .book{width:100%;height:100dvh;border-radius:0;max-width:none}
