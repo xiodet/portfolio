@@ -38,6 +38,25 @@
     }
   }
 
+  // phones: lock the hero to a fixed pixel height. In-app browsers (Google, Instagram) resize the
+  // viewport when their toolbars hide, so any vh/svh/lvh hero jumps while you scroll.
+  // Height = full screen (so the next band never peeks in), text sits right above the first visible fold.
+  var heroEl = $(".hero"), heroIn = $(".hero__in"), heroW = 0;
+  function sizeHero() {
+    if (!heroEl || window.innerWidth === heroW) return;
+    heroW = window.innerWidth;
+    if (!window.matchMedia("(max-width: 680px)").matches) {
+      heroEl.style.minHeight = heroEl.style.paddingTop = "";
+      return;
+    }
+    var vis = window.innerHeight, full = Math.max(vis, screen.height || 0);
+    heroEl.style.minHeight = full + "px";
+    heroEl.style.paddingTop = Math.max(110, vis - heroIn.offsetHeight - 40) + "px";
+  }
+  sizeHero();
+  window.addEventListener("resize", sizeHero);
+  if (document.fonts) document.fonts.ready.then(function () { heroW = 0; sizeHero(); });
+
   // booking links
   document.querySelectorAll(".js-book, .js-book-tab").forEach(function (a) { a.href = D.bookingUrl; });
   var dlg = $("#book"), frame = $("#bookFrame"), loading = $("#bookLoading");

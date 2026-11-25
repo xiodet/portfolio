@@ -16,7 +16,7 @@
   --ease:cubic-bezier(.2,.7,.2,1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;scroll-padding-top:84px;-webkit-text-size-adjust:100%}
+html{scroll-padding-top:84px;-webkit-text-size-adjust:100%}
 body{font-variant-numeric:lining-nums;font-family:var(--sans);color:var(--ink);background:var(--cream);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 img{display:block;max-width:100%}
 a{color:inherit}
@@ -375,7 +375,7 @@ html.lock{overflow:hidden}
   .perk h3{font-size:30px}
   .perk p{font-size:16px}
   /* lvh: fill the screen even when the browser bars overlay it, so the next band never peeks in */
-  .hero{min-height:100vh;min-height:100lvh;align-items:flex-end;padding:120px 0 100px}
+  .hero{min-height:100vh;min-height:100lvh;align-items:flex-start;padding:120px 0 60px}
   .hero__bg::after{background:linear-gradient(0deg,rgba(20,40,30,.95) 0%,rgba(20,40,30,.78) 42%,rgba(24,46,35,.2) 72%,rgba(24,46,35,.45) 100%)}
   .hero__title{font-size:clamp(46px,13vw,60px)}
   .hero__sub{font-size:16.5px}
