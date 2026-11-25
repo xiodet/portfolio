@@ -36,9 +36,14 @@ em{font-style:italic;color:var(--green)}
 .lead{font-size:18px;color:var(--muted);max-width:560px;margin-top:16px}
 
 /* buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:50px;padding:0 24px;border-radius:999px;font-weight:700;font-size:15px;text-decoration:none;border:1.5px solid transparent;transition:transform .25s var(--ease),background .25s,color .25s,border-color .25s;white-space:nowrap;cursor:pointer}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:50px;padding:0 24px;border-radius:999px;font-weight:600;font-size:15px;letter-spacing:.01em;text-decoration:none;border:1.5px solid transparent;transition:transform .25s var(--ease),background .25s,color .25s,border-color .25s;white-space:nowrap;cursor:pointer}
 .btn:active{transform:scale(.97)}
-.btn--lg{height:58px;padding:0 30px;font-size:16px}
+.btn--lg{height:56px;padding:0 28px;font-size:15.5px}
+.btn--icon{padding-right:7px;gap:16px}
+.btn__i{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--green-2);color:var(--paper);transition:transform .35s var(--ease)}
+.btn__i .arr{width:16px;height:16px}
+.btn--icon:hover .btn__i{transform:rotate(-45deg)}
+.btn--icon:hover .arr{transform:none}
 .btn--green{background:var(--green);color:var(--paper)}
 .btn--green:hover{background:var(--green-2)}
 .btn--gold{background:var(--gold);color:#fff}
@@ -194,7 +199,7 @@ section.numbers{padding-bottom:36px}
 .foot .muted{color:rgba(251,248,242,.45)}
 
 /* hero */
-.hero{position:relative;min-height:min(100svh,860px);display:flex;align-items:center;color:var(--paper);overflow:hidden;padding:130px 0 110px;background:var(--green-2)}
+.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:center;color:var(--paper);overflow:hidden;padding:130px 0 110px;background:var(--green-2)}
 .hero__bg{position:absolute;inset:0}
 .hero__bg video{width:100%;height:100%;object-fit:cover;display:block;background:var(--green-2) center/cover no-repeat}
 @keyframes kb{to{transform:scale(1)}}
@@ -212,14 +217,14 @@ section.numbers{padding-bottom:36px}
 @keyframes pulse{0%{transform:scale(1);opacity:.7}80%,100%{transform:scale(3);opacity:0}}
 .btn--cream{background:var(--paper);color:var(--green-2)}
 .btn--cream:hover{background:#fff}
-.btn--glass{border-color:rgba(246,241,230,.45);color:var(--paper);background:rgba(255,255,255,.07)}
+.btn--glass{border-width:1px;border-color:rgba(246,241,230,.4);color:var(--paper);background:rgba(255,255,255,.07)}
 .btn--glass:hover{background:var(--paper);color:var(--green-2)}
-.badge{position:relative;flex:none;width:190px;height:190px;display:grid;place-items:center;align-self:flex-end}
+.badge{position:relative;flex:none;width:236px;height:236px;display:grid;place-items:center;align-self:flex-end}
 .badge__spin{position:absolute;inset:0;will-change:transform;animation:spin 24s linear infinite}
 .paused .badge__spin,.paused .dot::after,.paused .hero__scroll span{animation-play-state:paused}
 .badge__ring{position:absolute;inset:0;width:100%;height:100%}
 .badge__ring text{font-family:var(--sans);font-size:14px;font-weight:700;fill:var(--gold-2)}
-.badge img{width:104px;height:104px;border-radius:50%;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
+.badge img{width:150px;height:150px;border-radius:50%;box-shadow:0 18px 40px -16px rgba(0,0,0,.6)}
 @keyframes spin{to{transform:rotate(360deg)}}
 .hero__scroll{position:absolute;left:50%;bottom:28px;width:26px;height:42px;margin-left:-13px;border:1.5px solid rgba(251,248,242,.5);border-radius:14px}
 .hero__scroll span{position:absolute;left:50%;top:8px;width:4px;height:8px;margin-left:-2px;border-radius:2px;background:var(--paper);animation:wheel 1.8s var(--ease) infinite}
@@ -303,8 +308,8 @@ html.lock{overflow:hidden}
   .num:nth-child(odd){border-left:0;padding-left:0}
   .num:nth-child(n+3){border-top:1px solid rgba(201,163,90,.25)}
   .hero__in{flex-direction:column;align-items:flex-start}
-  .badge{position:absolute;right:0;top:-40px;width:120px;height:120px;align-self:auto}
-  .badge img{width:64px;height:64px}
+  .badge{position:absolute;right:0;top:-40px;width:150px;height:150px;align-self:auto}
+  .badge img{width:95px;height:95px}
   .badge__ring text{font-size:15px}
   .nav__in{gap:12px;height:66px}
   .nav__links{position:fixed;inset:calc(66px + env(safe-area-inset-top)) 0 auto;flex-direction:column;gap:0;background:var(--cream);padding:8px 20px 24px;box-shadow:0 20px 30px -20px rgba(0,0,0,.25);transform:translateY(-12px);opacity:0;pointer-events:none;transition:.3s var(--ease)}
@@ -338,13 +343,17 @@ html.lock{overflow:hidden}
   .hero__bg::after{background:linear-gradient(0deg,rgba(20,40,30,.95) 0%,rgba(20,40,30,.78) 42%,rgba(24,46,35,.2) 72%,rgba(24,46,35,.45) 100%)}
   .hero__title{font-size:clamp(46px,13vw,60px)}
   .hero__sub{font-size:16.5px}
-  .badge{top:-150px}
+  .badge{top:-190px;right:-6px}
   .hero__scroll{display:none}
   .num b{font-size:44px}
   .book{width:100%;height:100dvh;border-radius:0;max-width:none}
   body{font-size:16px}
   .wrap{width:calc(100% - 32px)}
-  .hero__cta .btn{flex:1}
+  .hero__cta{gap:10px}
+  .hero__cta .btn{height:52px;font-size:15px}
+  .hero__cta .btn--icon{flex:1;justify-content:space-between;padding-left:22px}
+  .hero__cta .btn--glass{padding:0 22px}
+  .btn__i{width:38px;height:38px}
   .levels{display:flex;width:100%}
   .levels button{flex:1;padding:0 8px;font-size:14px}
   .menu__cat{padding:22px 18px 10px}
