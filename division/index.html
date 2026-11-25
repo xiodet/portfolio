@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>DIVISION barbershop & coffee — барбершоп біля Золотих воріт, Київ</title>
 <meta name="description" content="Барбершоп і кава на вулиці Івана Драча, 6, біля Золотих воріт. Стрижки, борода, королівське гоління. Щодня 10:00–20:00. Онлайн-запис до свого барбера.">
-<meta name="theme-color" content="#F5EFE4">
+<meta name="theme-color" content="#163625">
 <meta property="og:title" content="DIVISION barbershop & coffee">
 <meta property="og:description" content="Барбершоп і кава біля Золотих воріт. Щодня 10:00–20:00.">
 <meta property="og:image" content="img/team.jpg">
 <link rel="icon" href="img/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=1">
+<link href="https://fonts.googleapis.com/css2?family=Brygada+1918:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Alice&family=Lora:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
 
@@ -38,40 +38,36 @@
 
 <!-- HERO -->
 <section class="hero">
+  <div class="hero__bg" aria-hidden="true">
+    <picture><source media="(max-width: 680px)" srcset="img/hero-m.jpg"><img src="img/hero.jpg" alt="" width="960" height="640" fetchpriority="high"></picture>
+  </div>
   <div class="wrap hero__in">
     <div class="hero__text">
-      <p class="eyebrow up">Барбершоп і кава · Золоті ворота</p>
+      <p class="eyebrow eyebrow--light up"><i class="dot"></i>Щодня 10:00–20:00 · Золоті ворота</p>
       <h1 class="hero__title up" style="--d:.08s">Стрижка, кава <em>і&nbsp;свої люди</em></h1>
-      <p class="hero__sub up" style="--d:.16s">Чоловічі стрижки, борода і королівське гоління в самому центрі Києва. Поки чекаєш, тобі вже несуть каву. Обирай барбера і зручний час онлайн.</p>
+      <p class="hero__sub up" style="--d:.16s">Барбершоп і кав'ярня в самому центрі Києва. Чоловічі стрижки, борода і королівське гоління, а поки чекаєш, тобі вже несуть каву.</p>
       <div class="hero__cta up" style="--d:.24s">
-        <a class="btn btn--green btn--lg js-book" href="#" target="_blank" rel="noopener">Записатися онлайн <svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5"/></svg></a>
-        <a class="btn btn--ghost btn--lg" href="#prices">Ціни</a>
+        <a class="btn btn--cream btn--lg js-book" href="#" target="_blank" rel="noopener">Записатися онлайн <svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5"/></svg></a>
+        <a class="btn btn--glass btn--lg" href="#prices">Ціни</a>
       </div>
-      <a class="hero__rating up" style="--d:.32s" href="#reviews">
-        <span class="stars" aria-hidden="true">★★★★★</span>
-        <span><b>5.0</b> у Google · 231 відгук</span>
-      </a>
     </div>
-
-    <div class="hero__art up" style="--d:.15s" aria-hidden="true">
-      <figure class="arch arch--a"><img src="img/tetiana.jpg" alt="" width="900" height="1052"></figure>
-      <figure class="arch arch--b"><img src="img/yevhen.jpg" alt="" width="900" height="1136"></figure>
-      <div class="badge">
-        <svg class="badge__ring" viewBox="0 0 200 200"><defs><path id="circ" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs><text><textPath href="#circ" textLength="486" lengthAdjust="spacing">BARBERSHOP · COFFEE · KYIV · ЗОЛОТІ ВОРОТА ·</textPath></text></svg>
-        <img src="img/logo.png" alt="" width="96" height="96">
-      </div>
-      <div class="chip chip--open"><i></i> Щодня 10:00–20:00</div>
+    <div class="badge up" style="--d:.3s" aria-hidden="true">
+      <svg class="badge__ring" viewBox="0 0 200 200"><defs><path id="circ" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs><text><textPath href="#circ" textLength="486" lengthAdjust="spacing">BARBERSHOP · COFFEE · KYIV · ЗОЛОТІ ВОРОТА ·</textPath></text></svg>
+      <img src="img/logo.png" alt="" width="96" height="96">
     </div>
   </div>
+  <a class="hero__scroll" href="#numbers" aria-label="Гортати далі"><span></span></a>
 </section>
 
-<!-- STRIP -->
-<div class="strip" aria-hidden="true">
-  <div class="strip__track">
-    <span>Стрижки</span><i>✦</i><span>Борода</span><i>✦</i><span>Королівське гоління</span><i>✦</i><span>Кава</span><i>✦</i><span>Шахові турніри</span><i>✦</i><span>Speaks English</span><i>✦</i>
-    <span>Стрижки</span><i>✦</i><span>Борода</span><i>✦</i><span>Королівське гоління</span><i>✦</i><span>Кава</span><i>✦</i><span>Шахові турніри</span><i>✦</i><span>Speaks English</span><i>✦</i>
+<!-- NUMBERS -->
+<section class="numbers" id="numbers" aria-label="DIVISION у цифрах">
+  <div class="wrap numbers__in">
+    <div class="num reveal"><b data-count="5.0">5.0</b><span>рейтинг у Google</span><small class="stars" aria-hidden="true">★★★★★</small></div>
+    <div class="num reveal"><b data-count="231">231</b><span>відгук від гостей</span><small>у Google Maps</small></div>
+    <div class="num reveal"><b data-count="3">3</b><span>рівні майстрів</span><small>барбер, ТОП і бренд</small></div>
+    <div class="num reveal"><b>7/7</b><span>без вихідних</span><small>з 10:00 до 20:00</small></div>
   </div>
-</div>
+</section>
 
 <!-- ABOUT -->
 <section class="about" id="about">
@@ -84,11 +80,6 @@
       <p class="eyebrow reveal">Про нас</p>
       <h2 class="title reveal">Місце, куди хочеться <em>повертатися</em></h2>
       <p class="lead reveal">DIVISION поєднує барбершоп і кав'ярню. Білі цеглини, живі рослини, кава з собою або на місці. Ми стрижемо уважно і без поспіху, а після стрижки можна лишитися на каву чи партію в шахи.</p>
-      <ul class="facts reveal">
-        <li><b>5.0</b><span>у Google</span></li>
-        <li><b>231</b><span>відгук</span></li>
-        <li><b>10–20</b><span>щодня</span></li>
-      </ul>
       <ul class="ticks reveal">
         <li>Можна з дітьми, є дитяча стрижка</li>
         <li>Майстри, які говорять англійською</li>
@@ -217,12 +208,25 @@
   </div>
 </footer>
 
+<dialog class="book" id="book" aria-label="Онлайн-запис">
+  <div class="book__head">
+    <img src="img/logo.png" alt="" width="36" height="36">
+    <div><b>Онлайн-запис</b><small>DIVISION barbershop &amp; coffee</small></div>
+    <button class="book__close" id="bookClose" aria-label="Закрити">×</button>
+  </div>
+  <div class="book__body">
+    <div class="book__loading" id="bookLoading"><i></i>Завантажуємо вільний час…</div>
+    <iframe id="bookFrame" title="Онлайн-запис DIVISION" allow="payment"></iframe>
+  </div>
+  <a class="book__alt js-book-tab" href="#" target="_blank" rel="noopener">Не відкривається? Записатися в новій вкладці</a>
+</dialog>
+
 <div class="sticky" id="sticky">
   <a class="btn btn--green js-book" href="#" target="_blank" rel="noopener">Записатися онлайн</a>
   <a class="sticky__call" href="tel:+380673573800" aria-label="Зателефонувати"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></a>
 </div>
 
-<script src="data.js?v=1"></script>
-<script src="app.js?v=1"></script>
+<script src="data.js?v=2"></script>
+<script src="app.js?v=2"></script>
 </body>
 </html>
