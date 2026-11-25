@@ -235,6 +235,14 @@ section.numbers{padding-bottom:36px}
 .tlink--sm{font-size:22px}
 .tlink--sm .tlink__i{width:42px;height:42px}
 .paused .tlink__i .arr{animation-play-state:paused}
+/* secondary links (reviews, route): no arrow/underline motion, the whole link swells on hover */
+.tlink:not(.tlink--hero):not(.tlink--sub){transform-origin:left center;transition:transform .35s var(--ease)}
+.tlink:not(.tlink--hero):not(.tlink--sub) .tlink__i .arr{animation:none}
+.tlink:not(.tlink--hero):not(.tlink--sub):hover{transform:scale(1.08)}
+.tlink:not(.tlink--hero):not(.tlink--sub):hover .tlink__t{background-size:100% 2px}
+.tlink:not(.tlink--hero):not(.tlink--sub):hover .tlink__i{transform:none}
+.tlink:not(.tlink--hero):not(.tlink--sub):active{transform:scale(1.04)}
+
 .hero__cta{align-items:center;gap:24px 44px!important}
 .btn--cream{background:var(--paper);color:var(--green-2)}
 .btn--cream:hover{background:#fff}
