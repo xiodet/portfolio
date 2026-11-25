@@ -146,15 +146,31 @@
   });
   var sticky = $("#sticky"), contacts = $("#contacts"), heroH = $(".hero").offsetHeight;
   window.addEventListener("resize", function () { heroH = $(".hero").offsetHeight; });
+  var ticking = false, hero = $(".hero");
   function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }
+  function update() {
+    ticking = false;
     var y = window.scrollY;
     nav.classList.toggle("scrolled", y > 10);
     nav.classList.toggle("on-dark", y < heroH - 70);
-    var nearEnd = contacts.getBoundingClientRect().top < window.innerHeight * 0.6;
+    var nearEnd = y + window.innerHeight * 0.6 > contactsTop;
     sticky.classList.toggle("show", y > 500 && !nearEnd);
   }
+  var contactsTop = 0;
+  function measure() { contactsTop = contacts.offsetTop; heroH = hero.offsetHeight; }
+  window.addEventListener("load", measure);
+  window.addEventListener("resize", measure);
+  measure();
   window.addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
+  update();
+  // pause hero loops when it is off-screen
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (es) { hero.classList.toggle("paused", !es[0].isIntersecting); }).observe(hero);
+  }
 
   // count-up numbers
   function countUp(el) {
