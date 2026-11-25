@@ -40,7 +40,7 @@
 
   // phones: lock the hero to a fixed pixel height. In-app browsers (Google, Instagram) resize the
   // viewport when their toolbars hide, so any vh/svh/lvh hero jumps while you scroll.
-  // Height = full screen (so the next band never peeks in), text sits right above the first visible fold.
+  // Height = full screen (so the next band never peeks in); text placed inside the first visible fold.
   var heroEl = $(".hero"), heroIn = $(".hero__in"), heroW = 0;
   function sizeHero() {
     if (!heroEl || window.innerWidth === heroW) return;
@@ -51,7 +51,9 @@
     }
     var vis = window.innerHeight, full = Math.max(vis, screen.height || 0);
     heroEl.style.minHeight = full + "px";
-    heroEl.style.paddingTop = Math.max(110, vis - heroIn.offsetHeight - 40) + "px";
+    // free space under the header: ~40% above the text, ~60% below, so it reads as one block, not a hole
+    var navH = ($("#nav") || {}).offsetHeight || 76, free = vis - navH - heroIn.offsetHeight;
+    heroEl.style.paddingTop = Math.round(navH + Math.max(24, free * 0.4)) + "px";
   }
   sizeHero();
   window.addEventListener("resize", sizeHero);
