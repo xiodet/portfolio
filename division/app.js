@@ -11,6 +11,18 @@
   };
   var pick = function (v, i) { return Array.isArray(v) ? v[i] : v; };
 
+  // hero video: vertical file for phones, landscape crop for wider screens
+  var vid = $("#heroVideo");
+  if (vid) {
+    var mob = window.matchMedia("(max-width: 680px)").matches;
+    if (mob) vid.poster = vid.getAttribute("data-pm");
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduce) {
+      vid.src = vid.getAttribute(mob ? "data-m" : "data-d");
+      var p = vid.play(); if (p && p.catch) p.catch(function () {});
+    }
+  }
+
   // booking links
   document.querySelectorAll(".js-book, .js-book-tab").forEach(function (a) { a.href = D.bookingUrl; });
   var dlg = $("#book"), frame = $("#bookFrame"), loading = $("#bookLoading");
@@ -169,7 +181,11 @@
   update();
   // pause hero loops when it is off-screen
   if ("IntersectionObserver" in window) {
-    new IntersectionObserver(function (es) { hero.classList.toggle("paused", !es[0].isIntersecting); }).observe(hero);
+    new IntersectionObserver(function (es) {
+      var on = es[0].isIntersecting;
+      hero.classList.toggle("paused", !on);
+      if (vid && vid.src) { if (on) { var pp = vid.play(); if (pp && pp.catch) pp.catch(function () {}); } else vid.pause(); }
+    }).observe(hero);
   }
 
   // count-up numbers
@@ -189,6 +205,11 @@
     }, { threshold: .6 });
     document.querySelectorAll("[data-count]").forEach(function (el) { cio.observe(el); });
   }
+
+  // icons: normalise path lengths so strokes can "draw" in
+  document.querySelectorAll(".ico *").forEach(function (el) {
+    if (el.tagName !== "g" && !el.classList.contains("f")) el.setAttribute("pathLength", "1");
+  });
 
   // reveal
   var els = document.querySelectorAll(".reveal");
