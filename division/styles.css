@@ -65,6 +65,8 @@ em{font-style:italic;color:var(--green)}
 .brand img{width:44px;height:44px;border-radius:50%;box-shadow:0 0 0 1px var(--line)}
 .brand__mark{position:relative;display:grid;place-items:center;flex:none}
 .brand__ring{display:none}
+/* desktop: wordmark only, bigger */
+@media (min-width:861px){.brand__mark{display:none}.nav .brand__txt b{font-size:27px;letter-spacing:.14em}.nav .brand__txt small{font-size:13px;letter-spacing:.1em}}
 .brand__txt{display:flex;flex-direction:column;line-height:1.1}
 .brand__txt b{font-family:var(--serif);font-size:20px;letter-spacing:.12em}
 .brand__txt small{font-size:11px;color:var(--muted);letter-spacing:.08em}
@@ -176,7 +178,7 @@ section.numbers{padding-bottom:36px}
 .score p{color:var(--muted);font-size:15px;margin-top:10px;line-height:1.4}
 .score p strong{display:block;font-family:var(--serif);font-weight:600;font-size:19px;color:var(--ink);margin-bottom:2px}
 .reviews__text .lead{max-width:640px}
-.reviews__text .btn{margin-top:30px}
+.reviews__text .tlink{margin-top:32px}
 
 /* contacts */
 .contacts{padding-top:0}
@@ -186,7 +188,7 @@ section.numbers{padding-bottom:36px}
 .info dt{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);padding-top:3px}
 .info dd{font-weight:600}
 .info a{text-decoration-color:var(--gold);text-underline-offset:3px}
-.contacts__cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.contacts__cta{display:flex;gap:18px 36px;flex-wrap:wrap;align-items:center;margin-top:28px}
 .map{border-radius:var(--r);overflow:hidden;min-height:420px;background:var(--sand)}
 .map iframe{width:100%;height:100%;min-height:420px;border:0;filter:saturate(.75) sepia(.12)}
 
@@ -215,6 +217,25 @@ section.numbers{padding-bottom:36px}
 .eyebrow .dot+*{margin:0}
 .hero .eyebrow::before{display:none}
 @keyframes pulse{0%{transform:scale(1);opacity:.7}80%,100%{transform:scale(3);opacity:0}}
+/* text links: no outline, big type, arrow in a circle */
+.tlink{display:inline-flex;white-space:nowrap;align-items:center;gap:16px;font-family:var(--serif);font-weight:600;font-size:26px;line-height:1.15;color:var(--green-2);text-decoration:none;-webkit-tap-highlight-color:transparent}
+.tlink__t{background:linear-gradient(currentColor,currentColor) 0 100%/100% 2px no-repeat;padding-bottom:3px;transition:background-size .4s var(--ease)}
+.tlink:hover .tlink__t{background-size:0 2px;background-position:100% 100%}
+.tlink__i{width:48px;height:48px;border-radius:50%;flex:none;display:grid;place-items:center;background:var(--green);color:var(--paper);overflow:hidden;transition:transform .35s var(--ease)}
+.tlink__i .arr{width:18px;height:18px;animation:nudge 2.6s var(--ease) infinite}
+.tlink:hover .tlink__i{transform:rotate(-45deg)}
+.tlink:active .tlink__i{transform:scale(.92)}
+@keyframes nudge{0%,55%,100%{transform:none}70%{transform:translateX(26px)}70.01%{transform:translateX(-26px)}88%{transform:none}}
+.tlink--hero{font-size:32px;color:var(--paper)}
+.tlink--hero .tlink__t{background-image:linear-gradient(var(--gold-2),var(--gold-2))}
+.tlink--hero .tlink__i{width:56px;height:56px;background:var(--gold-2);color:var(--green-2)}
+.tlink--hero .tlink__i .arr{width:20px;height:20px;stroke-width:2.2}
+.tlink--sub{font-family:var(--sans);font-size:19px;font-weight:600;color:rgba(251,248,242,.82)}
+.tlink--sub .tlink__t{background-size:100% 1px;background-image:linear-gradient(rgba(251,248,242,.5),rgba(251,248,242,.5))}
+.tlink--sm{font-size:22px}
+.tlink--sm .tlink__i{width:42px;height:42px}
+.paused .tlink__i .arr{animation-play-state:paused}
+.hero__cta{align-items:center;gap:24px 44px!important}
 .btn--cream{background:var(--paper);color:var(--green-2)}
 .btn--cream:hover{background:#fff}
 .btn--glass{border-width:1px;border-color:rgba(246,241,230,.4);color:var(--paper);background:rgba(255,255,255,.07)}
@@ -345,19 +366,21 @@ html.lock{overflow:hidden}
   .ico{width:72px;height:72px}
   .perk h3{font-size:30px}
   .perk p{font-size:16px}
-  .hero{min-height:100svh;align-items:flex-end;padding:120px 0 90px}
+  /* lvh: fill the screen even when the browser bars overlay it, so the next band never peeks in */
+  .hero{min-height:100vh;min-height:100lvh;align-items:flex-end;padding:120px 0 100px}
   .hero__bg::after{background:linear-gradient(0deg,rgba(20,40,30,.95) 0%,rgba(20,40,30,.78) 42%,rgba(24,46,35,.2) 72%,rgba(24,46,35,.45) 100%)}
   .hero__title{font-size:clamp(46px,13vw,60px)}
   .hero__sub{font-size:16.5px}
+  .tlink--hero{font-size:28px;gap:14px}
+  .tlink--hero .tlink__i{width:52px;height:52px}
+  .hero__cta{gap:22px 28px!important;margin-top:30px;justify-content:space-between}
+  .tlink{font-size:23px}
+  .tlink--sub{font-size:18px}
   .hero__scroll{display:none}
   .num b{font-size:44px}
   .book{width:100%;height:100dvh;border-radius:0;max-width:none}
   body{font-size:16px}
   .wrap{width:calc(100% - 32px)}
-  .hero__cta{gap:10px}
-  .hero__cta .btn{height:52px;font-size:15px}
-  .hero__cta .btn--icon{flex:1;justify-content:space-between;padding-left:22px}
-  .hero__cta .btn--glass{padding:0 22px}
   .btn__i{width:38px;height:38px}
   .levels{display:flex;width:100%}
   .levels button{flex:1;padding:0 8px;font-size:14px}
