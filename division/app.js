@@ -1,5 +1,20 @@
 (function () {
   var D = window.DATA;
+  // always open at the top: drop a leftover #hash and the browser's restored scroll
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+  window.scrollTo(0, 0);
+  // in-page links scroll smoothly without writing #hash into the address bar
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var id = a.getAttribute("href");
+    if (id === "#") return;
+    var el = id === "#top" ? document.body : document.querySelector(id);
+    if (!el) return;
+    e.preventDefault();
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
   var f = new URLSearchParams(location.search).get("f");
   if (f === "2" || f === "3") document.documentElement.setAttribute("data-font", f);
   var $ = function (s, r) { return (r || document).querySelector(s); };
