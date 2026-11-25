@@ -57,6 +57,9 @@
   window.addEventListener("resize", sizeHero);
   if (document.fonts) document.fonts.ready.then(function () { heroW = 0; sizeHero(); });
 
+  // lets iOS apply :active (gold flash on tap)
+  document.addEventListener("touchstart", function () {}, { passive: true });
+
   // booking links
   document.querySelectorAll(".js-book, .js-book-tab").forEach(function (a) { a.href = D.bookingUrl; });
   var dlg = $("#book"), frame = $("#bookFrame"), loading = $("#bookLoading");
