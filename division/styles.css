@@ -239,7 +239,7 @@ section.numbers{padding-bottom:36px}
 .tlink:not(.tlink--hero):not(.tlink--sub){transform-origin:left center;transition:transform .35s var(--ease)}
 .tlink:not(.tlink--hero):not(.tlink--sub) .tlink__i .arr{animation:none}
 .tlink:not(.tlink--hero):not(.tlink--sub):hover{transform:scale(1.08)}
-.tlink:not(.tlink--hero):not(.tlink--sub):hover .tlink__t{background-size:100% 2px}
+.tlink:not(.tlink--hero):not(.tlink--sub) .tlink__t,.tlink:not(.tlink--hero):not(.tlink--sub):hover .tlink__t{background:none;padding-bottom:0}
 .tlink:not(.tlink--hero):not(.tlink--sub):hover .tlink__i{transform:none}
 .tlink:not(.tlink--hero):not(.tlink--sub):active{transform:scale(1.04)}
 
